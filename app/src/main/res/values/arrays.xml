@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="allergy_info_value" translatable="false">
+        <item>①</item>
+        <item>②</item>
+        <item>③</item>
+        <item>④</item>
+        <item>⑤</item>
+        <item>⑥</item>
+        <item>⑦</item>
+        <item>⑧</item>
+        <item>⑨</item>
+        <item>⑩</item>
+        <item>⑪</item>
+        <item>⑫</item>
+        <item>⑬</item>
+    </string-array>
+
+    <string-array name="allergy_info_name">
+        <item>Egg</item>
+        <item>Milk</item>
+        <item>Buckwheat</item>
+        <item>Peanuts</item>
+        <item>Soybeans</item>
+        <item>Wheat</item>
+        <item>Mackerel</item>
+        <item>Crab</item>
+        <item>Lobster</item>
+        <item>Pork</item>
+        <item>Peaches</item>
+        <item>Tomatoes</item>
+        <item>Sulfates</item>
+    </string-array>
+
+    <string-array name="path_name_arrays">
+        <item>Seoul</item>
+        <item>Busan</item>
+        <item>Daegu</item>
+        <item>Incheon</item>
+        <item>Gwangju</item>
+        <item>Daejeon</item>
+        <item>Ulsan</item>
+        <item>Sejong</item>
+        <item>Gyeonggi-do</item>
+        <item>Gangwon-do</item>
+        <item>Chuncheongbuk-do</item>
+        <item>Chungcheongnam-do</item>
+        <item>Jeollakbuk-do</item>
+        <item>Jeollanam-do</item>
+        <item>Gyeongsangbuk-do</item>
+        <item>Gyeongsangnam-do</item>
+        <item>Jeju</item>
+    </string-array>
+
+    <string-array name="path_arrays" translatable="false">
+        <item>sen.go.kr</item>
+        <item>pen.go.kr</item>
+        <item>dge.go.kr</item>
+        <item>ice.go.kr</item>
+        <item>gen.go.kr</item>
+        <item>dje.go.kr</item>
+        <item>use.go.kr</item>
+        <item>sje.go.kr</item>
+        <item>goe.go.kr</item>
+        <item>kwe.go.kr</item>
+        <item>cbe.go.kr</item>
+        <item>cne.go.kr</item>
+        <item>jbe.go.kr</item>
+        <item>jne.go.kr</item>
+        <item>gbe.kr</item>
+        <item>gne.go.kr</item>
+        <item>jje.go.kr</item>
+    </string-array>
+
+    <string-array name="month_name" translatable="false">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+    <string-array name="day_name">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+
+
+    <string-array name="default_menu_array">
+        <item>@string/action_breakfast</item>
+        <item>@string/action_lunch</item>
+        <item>@string/action_dinner</item>
+    </string-array>
+
+    <string-array name="default_menu_array_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

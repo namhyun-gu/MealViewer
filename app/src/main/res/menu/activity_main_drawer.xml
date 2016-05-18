@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings" />
+    <item
+        android:id="@+id/nav_info"
+        android:icon="@drawable/ic_info"
+        android:title="@string/action_information" />
+    <!--<item-->
+        <!--android:id="@+id/nav_send_suggest"-->
+        <!--android:icon="@drawable/ic_send_suggest"-->
+        <!--android:title="@string/action_send_suggest" />-->
+</menu>

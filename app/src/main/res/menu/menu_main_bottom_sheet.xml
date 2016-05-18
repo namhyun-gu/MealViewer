@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_prev"
+        android:icon="@drawable/ic_prev"
+        android:title="@string/button_prev_text" />
+    <item
+        android:id="@+id/menu_next"
+        android:icon="@drawable/ic_next"
+        android:title="@string/button_next_text" />
+    <item
+        android:id="@+id/menu_today"
+        android:icon="@drawable/ic_today"
+        android:title="@string/button_today_text" />
+    <item
+        android:id="@+id/menu_date_select"
+        android:icon="@drawable/ic_date_select"
+        android:title="@string/button_date_select_text" />
+</menu>

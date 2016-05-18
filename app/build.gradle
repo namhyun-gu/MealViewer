@@ -1,0 +1,103 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
+    defaultConfig {
+        applicationId "com.earlier.yma"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode getVersionCodeFromProperties()
+        versionName "2.1.0"
+        multiDexEnabled true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        releaseFlavor {
+            versionName android.defaultConfig.versionName + " (build. ${getDate()})"
+        }
+        betaFlavor {
+            versionName android.defaultConfig.versionName + "-beta (build. ${getDate()})"
+        }
+    }
+}
+
+def getVersionCodeFromProperties() {
+    def versionPropsFile = file('version.properties')
+    def code = null
+    if (versionPropsFile.exists()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        code = versionProps["VERSION_CODE"].toInteger()
+    } else {
+        throw new GradleException("Could not read version.properties")
+    }
+    return code
+}
+
+def setVersionCodeToProperties(code) {
+    def versionPropsFile = file("version.properties")
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+    versionProps['VERSION_CODE'] = code.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
+}
+
+// How-to : gradlew -q -b app\build.gradle increaseVersionCode
+task increaseVersionCode << {
+    def code = getVersionCodeFromProperties()
+    setVersionCodeToProperties(code + 1)
+    println(String.format("increased version code (before : %d, after : %d)", code, code + 1))
+}
+
+ext {
+    supportLibVersion = '23.4.0'
+    playServicesVersion = '8.4.0'
+}
+
+// Fix conflict dependency
+configurations.all {
+    resolutionStrategy {
+        force "com.android.support:support-annotations:${supportLibVersion}"
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile "com.android.support:support-v4:${supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:cardview-v7:${supportLibVersion}"
+    compile "com.google.android.gms:play-services-ads:${playServicesVersion}"
+    compile "com.google.android.gms:play-services-analytics:${playServicesVersion}"
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
+        transitive = true
+    }
+
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+}
