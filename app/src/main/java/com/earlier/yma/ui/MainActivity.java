@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Namhyun, Gu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.earlier.yma.ui;
 
 import android.content.BroadcastReceiver;
@@ -27,22 +43,15 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.earlier.yma.BaseApplication;
 import com.earlier.yma.R;
 import com.earlier.yma.data.MealDataManager;
 import com.earlier.yma.data.model.RequestObject;
 import com.earlier.yma.data.model.preference.Time;
 import com.earlier.yma.service.MealFetchService;
 import com.earlier.yma.ui.fragment.MainFragment;
-import com.earlier.yma.util.IabConfig;
 import com.earlier.yma.util.Prefs;
 import com.earlier.yma.util.RxBus;
 import com.earlier.yma.util.Util;
-import com.earlier.yma.util.iab.IabHelper;
-import com.earlier.yma.util.iab.IabResult;
-import com.earlier.yma.util.iab.Inventory;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -53,36 +62,22 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Namhyun, Gu on 2016-02-19.
- */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private final String TAG = getClass().getSimpleName();
 
     private MealFetchReceiver mBroadcastReceiver = new MealFetchReceiver();
-    private IabHelper mIabHelper;
-    private AdRequest mAdRequest;
     private Snackbar mSnackbar;
 
     private int dateIndex = Util.getDayIndexFromCalendar(Util.getTodayCalender());
 
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
-    @Bind(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @Bind(R.id.view_pager)
-    ViewPager mViewPager;
-    @Bind(R.id.tab_layout)
-    TabLayout mTabLayout;
-    @Bind(R.id.nav_view)
-    NavigationView mNavigationView;
-    @Bind(R.id.shadow_view)
-    View mShadowView;
-    @Bind(R.id.ad_view)
-    AdView mAdView;
-    @Bind(R.id.coordinator_layout)
-    CoordinatorLayout mCoordinatorLayout;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.view_pager) ViewPager mViewPager;
+    @Bind(R.id.tab_layout) TabLayout mTabLayout;
+    @Bind(R.id.nav_view) NavigationView mNavigationView;
+    @Bind(R.id.shadow_view) View mShadowView;
+    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     @OnClick(R.id.fab)
     public void onClickFab() {
@@ -154,44 +149,6 @@ public class MainActivity extends AppCompatActivity
         // Initial NavigationView
         mNavigationView.setNavigationItemSelectedListener(this);
         initNavigationViewHeader();
-
-        // Initial Ads
-        mAdRequest = new AdRequest.Builder().build();
-        mAdView.setVisibility(View.VISIBLE);
-        mAdView.loadAd(mAdRequest);
-
-        // Initial Iab
-        final IabHelper.QueryInventoryFinishedListener queryInventoryFinishedListener
-                = new IabHelper.QueryInventoryFinishedListener() {
-            @Override
-            public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-                boolean hasPurchaseRemoveAd = inv.hasPurchase(IabConfig.SKU_REMOVE_AD);
-                if (!hasPurchaseRemoveAd) {
-                    mAdView.setVisibility(View.VISIBLE);
-                    mAdView.loadAd(mAdRequest);
-                } else {
-                    mAdView.setVisibility(View.GONE);
-                    mAdView.destroy();
-                }
-            }
-        };
-
-        final IabHelper.OnIabSetupFinishedListener setupFinishedListener
-                = new IabHelper.OnIabSetupFinishedListener() {
-            @Override
-            public void onIabSetupFinished(IabResult result) {
-                if (result.isFailure()) {
-                    Log.e(TAG, "Problem setting up In-app Billing: " + result);
-                } else {
-                    List additionalSkuList = new ArrayList();
-                    additionalSkuList.add(IabConfig.SKU_REMOVE_AD);
-                    mIabHelper.queryInventoryAsync(true, additionalSkuList, queryInventoryFinishedListener);
-                }
-            }
-        };
-
-        mIabHelper = new IabHelper(this, ((BaseApplication) getApplication()).base64publicKey);
-        mIabHelper.startSetup(setupFinishedListener);
     }
 
     @Override
@@ -264,17 +221,10 @@ public class MainActivity extends AppCompatActivity
             IntentFilter intentFilter = new IntentFilter(MealFetchService.ACTION_FETCH_SIGNAL);
             registerReceiver(mBroadcastReceiver, intentFilter);
         }
-
-        if (mAdView != null) {
-            mAdView.resume();
-        }
     }
 
     @Override
     protected void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
         super.onPause();
     }
 
@@ -283,16 +233,6 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "Unregister receiver");
         if (mBroadcastReceiver != null) {
             unregisterReceiver(mBroadcastReceiver);
-        }
-
-        Log.d(TAG, "Destroying iab helper");
-        if (mIabHelper != null) {
-            mIabHelper.dispose();
-            mIabHelper = null;
-        }
-
-        if (mAdView != null) {
-            mAdView.destroy();
         }
         super.onDestroy();
     }

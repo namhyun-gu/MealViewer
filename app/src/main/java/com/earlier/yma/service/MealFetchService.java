@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Namhyun, Gu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.earlier.yma.service;
 
 import android.app.IntentService;
@@ -25,12 +41,6 @@ import java.util.Date;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * helper methods.
- */
 public class MealFetchService extends IntentService {
     public static final String ACTION_FETCH_SIGNAL = "com.earlier.yma.broadcast.fetch_data";
     public static final String EXTRA_FLAG = "com.earlier.yma.service.extra.flag";
@@ -48,12 +58,6 @@ public class MealFetchService extends IntentService {
         super("MealFetchService");
     }
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
     public static void startAction(Context context, RequestObject requestObject) {
         Intent intent = new Intent(context, MealFetchService.class);
         intent.setAction(ACTION_FETCH_DATA);

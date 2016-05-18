@@ -2,10 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
-        android:enabled="false"
-        android:key="@string/pref_remove_ads_key"
-        android:title="@string/pref_remove_ads" />
-    <Preference
         android:key="@string/pref_reset_key"
         android:title="@string/pref_reset" />
     <ListPreference

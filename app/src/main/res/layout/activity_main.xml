@@ -19,15 +19,6 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/ad_view" />
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/ad_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"
-            app:adSize="BANNER"
-            app:adUnitId="@string/ad_unit_id" />
-
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
