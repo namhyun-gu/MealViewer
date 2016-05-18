@@ -87,9 +87,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_menu_key)));
 
         // Set click listener
-        final Preference removeAdsPreference = findPreference(getString(R.string.pref_remove_ads_key));
-        removeAdsPreference.setOnPreferenceClickListener(this);
-        setPriceToPreference(removeAdsPreference, "Unknown");
         Preference resetPreference = findPreference(getString(R.string.pref_reset_key));
         resetPreference.setOnPreferenceClickListener(this);
 
@@ -150,10 +147,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 return false;
             }
         });
-    }
-
-    private void setPriceToPreference(Preference preference, String price) {
-        preference.setTitle(String.format(getString(R.string.pref_remove_ads), price));
     }
 
     private boolean getBooleanFromPreference(@StringRes int preferenceKey, boolean defaultValue) {

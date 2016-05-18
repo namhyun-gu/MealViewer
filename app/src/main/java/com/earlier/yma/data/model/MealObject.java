@@ -19,20 +19,14 @@ package com.earlier.yma.data.model;
 import java.util.List;
 
 public class MealObject {
-    private String date;
-    private int resultCode;
     private List<Meal> data;
-
-    public String getDate() {
-        return date;
-    }
-
-    public int getResultCode() {
-        return resultCode;
-    }
 
     public List<Meal> getData() {
         return data;
+    }
+
+    public void setData(List<Meal> data) {
+        this.data = data;
     }
 
     public static class Meal {
@@ -60,6 +54,26 @@ public class MealObject {
 
         public double getFat() {
             return fat;
+        }
+
+        public void setMeal(List<String> meal) {
+            this.meal = meal;
+        }
+
+        public void setKcal(double kcal) {
+            this.kcal = kcal;
+        }
+
+        public void setCarbohydrate(double carbohydrate) {
+            this.carbohydrate = carbohydrate;
+        }
+
+        public void setProtein(double protein) {
+            this.protein = protein;
+        }
+
+        public void setFat(double fat) {
+            this.fat = fat;
         }
     }
 }

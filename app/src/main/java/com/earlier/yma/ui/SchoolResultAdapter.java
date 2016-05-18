@@ -33,7 +33,7 @@ import com.earlier.yma.data.model.item.school.SubHeaderItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SchoolResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -143,10 +143,8 @@ public class SchoolResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class DefaultHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.default_title)
-        TextView title;
-        @Bind(R.id.default_summary)
-        TextView summary;
+        @BindView(R.id.default_title) TextView title;
+        @BindView(R.id.default_summary) TextView summary;
 
         public DefaultHolder(View itemView) {
             super(itemView);
@@ -165,8 +163,7 @@ public class SchoolResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class SubHeaderHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.default_title)
-        TextView title;
+        @BindView(R.id.default_title) TextView title;
 
         public SubHeaderHolder(View itemView) {
             super(itemView);

@@ -33,7 +33,7 @@ import com.earlier.yma.data.model.item.meal.KcalItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -128,41 +128,35 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @NonNull
     private DefaultHolder createDefaultHolder(ViewGroup parent) {
-        final DefaultHolder holder = new DefaultHolder(layoutInflater.inflate(
+        return new DefaultHolder(layoutInflater.inflate(
                 R.layout.item_default, parent, false
         ));
-        return holder;
     }
 
     @NonNull
     private DividerHolder createDividerHolder(ViewGroup parent) {
-        final DividerHolder holder = new DividerHolder(layoutInflater.inflate(
+        return new DividerHolder(layoutInflater.inflate(
                 R.layout.item_divider, parent, false
         ));
-        return holder;
     }
 
     @NonNull
     private GraphHolder createGraphHolder(ViewGroup parent) {
-        final GraphHolder holder = new GraphHolder(layoutInflater.inflate(
+        return new GraphHolder(layoutInflater.inflate(
                 R.layout.item_graph, parent, false
         ));
-        return holder;
     }
 
     @NonNull
     private KcalHolder createKcalHolder(ViewGroup parent) {
-        final KcalHolder holder = new KcalHolder(layoutInflater.inflate(
+        return new KcalHolder(layoutInflater.inflate(
                 R.layout.item_kcal, parent, false
         ));
-        return holder;
     }
 
     public class DefaultHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.default_title)
-        TextView title;
-        @Bind(R.id.default_summary)
-        TextView summary;
+        @BindView(R.id.default_title) TextView title;
+        @BindView(R.id.default_summary) TextView summary;
 
         public DefaultHolder(View itemView) {
             super(itemView);
@@ -189,8 +183,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class KcalHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.default_summary)
-        TextView summary;
+        @BindView(R.id.default_summary) TextView summary;
 
         public KcalHolder(View itemView) {
             super(itemView);

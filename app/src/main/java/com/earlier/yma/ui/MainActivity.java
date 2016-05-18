@@ -58,7 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity
 
     private int dateIndex = Util.getDayIndexFromCalendar(Util.getTodayCalender());
 
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.view_pager) ViewPager mViewPager;
-    @Bind(R.id.tab_layout) TabLayout mTabLayout;
-    @Bind(R.id.nav_view) NavigationView mNavigationView;
-    @Bind(R.id.shadow_view) View mShadowView;
-    @Bind(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.view_pager) ViewPager mViewPager;
+    @BindView(R.id.tab_layout) TabLayout mTabLayout;
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.shadow_view) View mShadowView;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     @OnClick(R.id.fab)
     public void onClickFab() {
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Start school search activity
+     * Start school searchSchool activity
      */
     private void startSearchActivity() {
         this.startActivity(new Intent(this, SchoolSearchActivity.class));

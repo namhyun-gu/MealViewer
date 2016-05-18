@@ -27,19 +27,19 @@ import android.util.Log;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.MealDataManager;
-import com.earlier.yma.data.model.MealObject;
 import com.earlier.yma.data.model.RequestObject;
-import com.earlier.yma.data.service.MealService;
-import com.earlier.yma.data.service.ServiceGenerator;
+import com.earlier.yma.data.service.NeisService;
 import com.earlier.yma.util.Prefs;
+import com.earlier.yma.util.ToStringConverterFactory;
 import com.earlier.yma.util.Util;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MealFetchService extends IntentService {
     public static final String ACTION_FETCH_SIGNAL = "com.earlier.yma.broadcast.fetch_data";
@@ -51,7 +51,6 @@ public class MealFetchService extends IntentService {
     private static final String ACTION_FETCH_DATA = "com.earlier.yma.service.action.fetch_data";
     private static final String EXTRA_REQUEST = "com.earlier.yma.service.extra.request";
 
-    private MealService service;
     private MealDataManager dataManager;
 
     public MealFetchService() {
@@ -68,7 +67,6 @@ public class MealFetchService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.v("MealFetchService", "Service starting");
-        service = ServiceGenerator.createService(MealService.class);
         dataManager = MealDataManager.getInstance();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -117,17 +115,21 @@ public class MealFetchService extends IntentService {
                     sendWarningNotification(mNotificationManager, notifyId);
                     throw new IOException("reason : not connected");
                 }
-
                 sendNotification(mNotificationManager, notifyId, index);
-                Call<MealObject> call = service.execute(
-                        "AKfycbxBJuvwzBsC7eb5TDxHxma5fhco370SWbyWDbFeEYsRN7xL1Vg",
-                        object.path,
+
+                final String url = String.format(NeisService.BASE_URL, object.path);
+                Retrofit.Builder builder = new Retrofit.Builder()
+                        .baseUrl(url)
+                        .addConverterFactory(new ToStringConverterFactory());
+                Retrofit retrofit = builder.client(new OkHttpClient()).build();
+                NeisService service = retrofit.create(NeisService.class);
+                Call<String> call = service.getResponse(
                         object.schulCode,
                         object.schulCrseScCode,
                         object.schulKndScCode,
                         String.valueOf(index));
-                Response<MealObject> response = call.execute();
-                dataManager.save(response.body(), index);
+                String responseBody = call.execute().body();
+                dataManager.save(Util.toMealObjectFromResponse(responseBody), index);
             }
             // Remove notification
             mNotificationManager.cancel(notifyId);

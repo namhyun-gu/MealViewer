@@ -51,8 +51,7 @@ import com.earlier.yma.data.model.item.DividerItem;
 import com.earlier.yma.data.model.item.Item;
 import com.earlier.yma.data.model.item.school.DefaultItem;
 import com.earlier.yma.data.model.item.school.SubHeaderItem;
-import com.earlier.yma.data.service.SchoolSearchService;
-import com.earlier.yma.data.service.ServiceGenerator;
+import com.earlier.yma.data.service.NeisService;
 import com.earlier.yma.util.Prefs;
 import com.earlier.yma.util.Util;
 
@@ -61,10 +60,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SchoolSearchActivity extends AppCompatActivity
         implements SchoolResultAdapter.OnItemSelectedListener, SearchView.OnQueryTextListener {
@@ -72,16 +74,11 @@ public class SchoolSearchActivity extends AppCompatActivity
     private NetworkChangeReceiver receiver = new NetworkChangeReceiver();
     private Context mContext;
 
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
-    @Bind(R.id.shadow_view)
-    View mShadowView;
-    @Bind(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-    @Bind(R.id.stub_no_results)
-    ViewStub mViewStubNoResults;
-    @Bind(R.id.layout)
-    View mLayoutView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.shadow_view) View mShadowView;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.stub_no_results) ViewStub mViewStubNoResults;
+    @BindView(R.id.layout) View mLayoutView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -247,10 +244,14 @@ public class SchoolSearchActivity extends AppCompatActivity
                         throw new IOException("reason : not connected");
                     }
 
-                    SchoolSearchService service
-                            = ServiceGenerator.createService(SchoolSearchService.class, path);
+                    final String url = String.format(NeisService.BASE_URL, path);
+                    Retrofit.Builder builder = new Retrofit.Builder()
+                            .baseUrl(url)
+                            .addConverterFactory(GsonConverterFactory.create());
+                    Retrofit retrofit = builder.client(new OkHttpClient()).build();
+                    NeisService service = retrofit.create(NeisService.class);
 
-                    Call<SearchResultObject> call = service.search(params[0]);
+                    Call<SearchResultObject> call = service.searchSchool(params[0]);
                     Response<SearchResultObject> response = call.execute();
                     SearchResultObject resultObject = response.body();
 

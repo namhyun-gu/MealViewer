@@ -29,7 +29,7 @@ import com.earlier.yma.R;
 import com.earlier.yma.ui.fragment.InfoFragment;
 import com.earlier.yma.ui.fragment.SettingsFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PrefActivity extends AppCompatActivity {
@@ -39,10 +39,8 @@ public class PrefActivity extends AppCompatActivity {
     public static int TYPE_SETTINGS = 0x00001;
     public static int TYPE_INFORMATION = 0x0002;
 
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
-    @Bind(R.id.shadow_view)
-    View mShadowView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.shadow_view) View mShadowView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

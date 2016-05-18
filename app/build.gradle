@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
@@ -8,7 +18,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode getVersionCodeFromProperties()
-        versionName "2.1.0"
+        versionName "2.1.1"
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidUnitRunner"
@@ -88,15 +98,14 @@ dependencies {
     compile "com.android.support:cardview-v7:${supportLibVersion}"
     compile "com.google.android.gms:play-services-analytics:${playServicesVersion}"
 
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'org.jsoup:jsoup:1.9.1'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
         transitive = true
     }
-
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    compile 'com.jakewharton:butterknife:8.0.1'
+    apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }

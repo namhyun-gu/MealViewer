@@ -22,7 +22,15 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface SchoolSearchService {
-    @GET("spr_ccm_cm01_100.do")
-    Call<SearchResultObject> search(@Query("kraOrgNm") String schoolName);
+public interface NeisService {
+    String BASE_URL = "http://hes.%s";
+
+    @GET("/sts_sci_md01_001.do")
+    Call<String> getResponse(@Query("schulCode") String schulCode,
+                             @Query("schulCrseScCode") String schulCrseScCode,
+                             @Query("schulKndScCode") String schulKndScCode,
+                             @Query("schMmealScCode") String schMmealScCode);
+
+    @GET("/spr_ccm_cm01_100.do")
+    Call<SearchResultObject> searchSchool(@Query("kraOrgNm") String schoolName);
 }

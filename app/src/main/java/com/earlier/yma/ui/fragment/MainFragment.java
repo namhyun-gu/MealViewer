@@ -47,7 +47,7 @@ import com.earlier.yma.util.RxBus;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
@@ -63,10 +63,8 @@ public class MainFragment extends Fragment {
 
     private int mTypeState;
 
-    @Bind(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-    @Bind(R.id.stub_no_results)
-    ViewStub mViewStubNoResults;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.stub_no_results) ViewStub mViewStubNoResults;
 
     public static MainFragment newInstance(int type) {
         Bundle bundle = new Bundle();
