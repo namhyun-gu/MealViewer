@@ -51,8 +51,6 @@ public class Time implements Comparable<Time> {
     @Override
     public boolean equals(Object o) {
         Time another = (Time) o;
-        if (hour == another.hour && minute == another.getMinute())
-            return true;
-        return false;
+        return hour == another.hour && minute == another.getMinute();
     }
 }

@@ -81,7 +81,7 @@ public class PrefActivity extends AppCompatActivity {
         android.app.FragmentManager fragmentManager = getFragmentManager();
         android.app.Fragment fragment = fragmentManager.findFragmentById(R.id.container);
         if (fragment != null) {
-            ((SettingsFragment) fragment).onActivityResult(requestCode, resultCode, data);
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

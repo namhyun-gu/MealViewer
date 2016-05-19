@@ -22,10 +22,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class SearchResultObject {
-    @Expose
-    private String path;
-    @SerializedName("resultSVO")
-    private Result result;
+    @Expose private String path;
+    @Expose private String pathName;
+    @SerializedName("resultSVO") private Result result;
 
     public void setPath(String path) {
         this.path = path;
@@ -35,16 +34,22 @@ public class SearchResultObject {
         return path;
     }
 
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
     public Result getResult() {
         return result;
     }
 
     public class Result {
-        @SerializedName("kraOrgNm")
-        private String searchName;
+        @SerializedName("kraOrgNm") private String searchName;
 
-        @SerializedName("orgDVOList")
-        private List<SchoolInfo> schoolList;
+        @SerializedName("orgDVOList") private List<SchoolInfo> schoolList;
 
         public String getSearchName() {
             return searchName;
@@ -56,10 +61,8 @@ public class SearchResultObject {
     }
 
     public class SchoolInfo {
-        @SerializedName("kraOrgNm")
-        private String schoolName;
-        @SerializedName("orgCode")
-        private String schulCode;
+        @SerializedName("kraOrgNm") private String schoolName;
+        @SerializedName("orgCode") private String schulCode;
         private String schulCrseScCode;
         private String schulKndScCode;
 

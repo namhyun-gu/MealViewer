@@ -18,6 +18,7 @@ package com.earlier.yma.util;
 
 public class Prefs {
     public static final String IS_INITIALIZED = "is_initialized";
+    public static final String IS_UPDATE_PREV_VERSION = "is_update_prev_version";
     public static final String UPDATE_WEEK = "update_week";
 
     // School Information

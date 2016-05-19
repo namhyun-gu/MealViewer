@@ -40,9 +40,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.earlier.yma.BuildConfig;
 import com.earlier.yma.R;
 import com.earlier.yma.data.MealDataManager;
 import com.earlier.yma.data.model.RequestObject;
@@ -65,12 +67,6 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private final String TAG = getClass().getSimpleName();
-
-    private MealFetchReceiver mBroadcastReceiver = new MealFetchReceiver();
-    private Snackbar mSnackbar;
-
-    private int dateIndex = Util.getDayIndexFromCalendar(Util.getTodayCalender());
-
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
@@ -78,6 +74,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.shadow_view) View mShadowView;
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    private MealFetchReceiver mBroadcastReceiver = new MealFetchReceiver();
+    private Snackbar mSnackbar;
+    private int dateIndex = Util.getDayIndexFromCalendar(Util.getTodayCalender());
 
     @OnClick(R.id.fab)
     public void onClickFab() {
@@ -160,21 +159,35 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "Not initialized");
             initFirstRun();
         } else {
-            Log.d(TAG, "Already initialized");
-            String path = pref.getString(Prefs.SCHOOL_INFO_PATH, null);
-            String schulCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_CODE, null);
-            String schulCrseScCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_CRSE_SC_CODE, null);
-            String schulKndScCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_KND_SC_CODE, null);
+            boolean isUpdatePrevVersion = pref.getBoolean(Prefs.IS_UPDATE_PREV_VERSION, false);
+            if (!isUpdatePrevVersion) {
+                Log.d(TAG, "Update prev version");
+                Toast.makeText(this, getString(R.string.toast_update_prev_version), Toast.LENGTH_SHORT).show();
+                initFirstRun();
+            } else {
+                Log.d(TAG, "Already initialized");
+                String path = pref.getString(Prefs.SCHOOL_INFO_PATH, null);
+                String schulCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_CODE, null);
+                String schulCrseScCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_CRSE_SC_CODE, null);
+                String schulKndScCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_KND_SC_CODE, null);
 
-            if (path != null && schulCode != null
-                    && schulCrseScCode != null && schulKndScCode != null) {
-                RequestObject request = new RequestObject.Builder()
-                        .path(path)
-                        .schulCode(schulCode)
-                        .schulCrseScCode(schulCrseScCode)
-                        .schulKndScCode(schulKndScCode)
-                        .build();
-                MealFetchService.startAction(this, request);
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "debug: current user pref state");
+                    Log.d(TAG, String.format("debug: path = %s", path));
+                    Log.d(TAG, String.format("debug: schulCode = %s", schulCode));
+                    Log.d(TAG, String.format("debug: schulCrseScCode = %s", schulCrseScCode));
+                }
+
+                if (path != null && schulCode != null
+                        && schulCrseScCode != null && schulKndScCode != null) {
+                    RequestObject request = new RequestObject.Builder()
+                            .path(path)
+                            .schulCode(schulCode)
+                            .schulCrseScCode(schulCrseScCode)
+                            .schulKndScCode(schulKndScCode)
+                            .build();
+                    MealFetchService.startAction(this, request);
+                }
             }
         }
 
@@ -358,6 +371,14 @@ public class MainActivity extends AppCompatActivity
         headerPath.setText(pathName);
     }
 
+    public static class DataUpdateEvent {
+        public int dateIndex = -1;
+
+        public DataUpdateEvent(int dateIndex) {
+            this.dateIndex = dateIndex;
+        }
+    }
+
     public class MealFetchReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -373,14 +394,6 @@ public class MainActivity extends AppCompatActivity
                         throw new UnsupportedOperationException();
                 }
             }
-        }
-    }
-
-    public static class DataUpdateEvent {
-        public int dateIndex = -1;
-
-        public DataUpdateEvent(int dateIndex) {
-            this.dateIndex = dateIndex;
         }
     }
 }

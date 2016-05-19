@@ -149,7 +149,7 @@ public class SchoolSearchActivity extends AppCompatActivity
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String[] paths = getResources().getStringArray(R.array.path_arrays);
-                        String path = paths[defaultItem.getCategoryIndex()];
+                        String path = defaultItem.getPath();
 
                         String schoolName = info.getSchoolName();
                         String schulCode = info.getSchulCode();
@@ -161,6 +161,7 @@ public class SchoolSearchActivity extends AppCompatActivity
 
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean(Prefs.IS_INITIALIZED, true);
+                        editor.putBoolean(Prefs.IS_UPDATE_PREV_VERSION, true);
                         editor.putString(Prefs.SCHOOL_INFO_PATH, path);
                         editor.putString(Prefs.SCHOOL_INFO_SCHOOL_NAME, schoolName);
                         editor.putString(Prefs.SCHOOL_INFO_SCHUL_CODE, schulCode);
@@ -239,6 +240,7 @@ public class SchoolSearchActivity extends AppCompatActivity
             for (int index = 0; index < paths.length; index++) {
                 publishProgress(index + 1);
                 String path = paths[index];
+                String pathName = pathNames[index];
                 try {
                     if (!Util.isConnected(mContext)) {
                         throw new IOException("reason : not connected");
@@ -256,7 +258,8 @@ public class SchoolSearchActivity extends AppCompatActivity
                     SearchResultObject resultObject = response.body();
 
                     if (!resultObject.getResult().getSchoolList().isEmpty()) {
-                        resultObject.setPath(pathNames[index]);
+                        resultObject.setPath(path);
+                        resultObject.setPathName(pathName);
                         resultObjects.add(resultObject);
                     }
                 } catch (IOException e) {
@@ -281,10 +284,10 @@ public class SchoolSearchActivity extends AppCompatActivity
 
                     String itemCapacity = String.format(Locale.getDefault(), " (%d)", infoList.size());
                     List<Item> items = new ArrayList<>();
-                    items.add(new SubHeaderItem(object.getPath() + itemCapacity));
+                    items.add(new SubHeaderItem(object.getPathName() + itemCapacity));
                     for (SearchResultObject.SchoolInfo info : infoList) {
                         String schoolName = info.getSchoolName();
-                        items.add(new DefaultItem(schoolName, index, info));
+                        items.add(new DefaultItem(schoolName, object.getPath(), info));
                     }
                     items.add(new DividerItem());
                     adapter.addItems(items);

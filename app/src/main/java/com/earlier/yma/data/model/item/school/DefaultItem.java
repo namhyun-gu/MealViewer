@@ -16,19 +16,17 @@
 
 package com.earlier.yma.data.model.item.school;
 
-import android.support.annotation.NonNull;
-
 import com.earlier.yma.data.model.SearchResultObject;
 import com.earlier.yma.data.model.item.Item;
 
 public class DefaultItem implements Item {
     private String title;
-    private int categoryIndex;
+    private String path;
     private SearchResultObject.SchoolInfo info;
 
-    public DefaultItem(@NonNull String title, int categoryIndex, @NonNull SearchResultObject.SchoolInfo info) {
+    public DefaultItem(String title, String path, SearchResultObject.SchoolInfo info) {
         this.title = title;
-        this.categoryIndex = categoryIndex;
+        this.path = path;
         this.info = info;
     }
 
@@ -36,8 +34,8 @@ public class DefaultItem implements Item {
         return title;
     }
 
-    public int getCategoryIndex() {
-        return categoryIndex;
+    public String getPath() {
+        return path;
     }
 
     public SearchResultObject.SchoolInfo getInfo() {

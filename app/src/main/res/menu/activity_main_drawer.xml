@@ -8,8 +8,4 @@
         android:id="@+id/nav_info"
         android:icon="@drawable/ic_info"
         android:title="@string/action_information" />
-    <!--<item-->
-        <!--android:id="@+id/nav_send_suggest"-->
-        <!--android:icon="@drawable/ic_send_suggest"-->
-        <!--android:title="@string/action_send_suggest" />-->
 </menu>

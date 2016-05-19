@@ -28,10 +28,6 @@
     <string name="activity_search_result_title">Search for \"%1s\"</string>
 
     <!-- Button -->
-    <string name="button_prev_text">Prev</string>
-    <string name="button_next_text">Next</string>
-    <string name="button_date_select_text">Select date</string>
-    <string name="button_today_text">Today</string>
 
     <!-- Notification -->
     <string name="notification_meal_fetch_title">Download meal information</string>
@@ -46,13 +42,11 @@
     <string name="action_dinner">Dinner</string>
     <string name="action_information">Info</string>
     <string name="action_search">Search</string>
-    <string name="action_send_suggest">Send suggest</string>
     <string name="action_share">Share</string>
 
     <!-- Preference -->
     <string name="pref_application_info">App Info</string>
     <string name="pref_application_version_label">Version</string>
-    <string name="pref_school_settings_label">Set School</string>
     <string name="pref_time_based_menu_change">Time based Menu Changed</string>
     <string name="pref_time_based_menu_change_enabled_summary">Enable</string>
     <string name="pref_time_based_menu_change_disable_summary">Disable</string>
@@ -66,9 +60,6 @@
     <string name="pref_breakfast_enable">Enable breakfast</string>
     <string name="pref_default_menu">Default menu</string>
     <string name="pref_reset">Reset</string>
-    <string name="pref_remove_ads">Remove ads (%1$s)</string>
-    <string name="pref_remove_ads_already_summary">Already purchased</string>
-    <string name="pref_remove_ads_not_summary">Not purchased</string>
 
     <!-- Preference key -->
     <string name="pref_reset_key" translatable="false">pref_reset_key</string>
@@ -78,15 +69,13 @@
     <string name="pref_time_lunch_key" translatable="false">pref_time_lunch_key</string>
     <string name="pref_time_dinner_key" translatable="false">pref_time_dinner_key</string>
     <string name="pref_breakfast_enable_key" translatable="false">pref_breakfast_enable_key</string>
-    <string name="pref_school_settings_key" translatable="false">pref_school_settings_key</string>
     <string name="pref_default_menu_key" translatable="false">pref_default_menu_key</string>
-    <string name="pref_remove_ads_key" translatable="false">pref_remove_ads_key</string>
 
     <!-- Ads -->
-    <string name="ad_unit_id" translatable="false">ca-app-pub-8374626872967470/9770310147</string>
 
     <!-- Toast -->
     <string name="toast_cannot_save_time">Can\'t saved selected time</string>
+    <string name="toast_update_prev_version">Previous version was saved wrong data. Please re-setting school.</string>
 
     <!-- Etc -->
     <string name="shared_raw_not_content">No meal\n\n#Shared \'Meal Shuttle\'</string>
