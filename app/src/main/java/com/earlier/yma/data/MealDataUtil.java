@@ -33,7 +33,7 @@ import java.util.List;
 public class MealDataUtil {
     @Nullable
     public static List<Item> translateMealToItemList(Context context, MealObject.Meal meal) {
-        if (meal.getMeal().isEmpty())
+        if (meal.getMeal() == null || meal.getMeal().isEmpty())
             return null;
 
         List<Item> items = new ArrayList<>();
