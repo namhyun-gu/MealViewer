@@ -70,15 +70,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SchoolSearchActivity extends AppCompatActivity
         implements SchoolResultAdapter.OnItemSelectedListener, SearchView.OnQueryTextListener {
-    private SchoolResultAdapter adapter;
-    private NetworkChangeReceiver receiver = new NetworkChangeReceiver();
-    private Context mContext;
-
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.shadow_view) View mShadowView;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.stub_no_results) ViewStub mViewStubNoResults;
     @BindView(R.id.layout) View mLayoutView;
+    private SchoolResultAdapter adapter;
+    private NetworkChangeReceiver receiver = new NetworkChangeReceiver();
+    private Context mContext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -257,7 +256,7 @@ public class SchoolSearchActivity extends AppCompatActivity
                     Response<SearchResultObject> response = call.execute();
                     SearchResultObject resultObject = response.body();
 
-                    if (!resultObject.getResult().getSchoolList().isEmpty()) {
+                    if (resultObject.getResult() != null & !resultObject.getResult().getSchoolList().isEmpty()) {
                         resultObject.setPath(path);
                         resultObject.setPathName(pathName);
                         resultObjects.add(resultObject);
@@ -298,7 +297,9 @@ public class SchoolSearchActivity extends AppCompatActivity
                 mRecyclerView.setVisibility(View.GONE);
                 mViewStubNoResults.setVisibility(View.VISIBLE);
             }
-            dialog.dismiss();
+
+            if (dialog.isShowing())
+                dialog.dismiss();
         }
     }
 
