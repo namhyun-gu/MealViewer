@@ -18,7 +18,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode getVersionCodeFromProperties()
-        versionName "2.1.32"
+        versionName "2.1.4"
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidUnitRunner"

@@ -256,7 +256,7 @@ public class SchoolSearchActivity extends AppCompatActivity
                     Response<SearchResultObject> response = call.execute();
                     SearchResultObject resultObject = response.body();
 
-                    if (resultObject.getResult() != null & !resultObject.getResult().getSchoolList().isEmpty()) {
+                    if (resultObject != null & !resultObject.getResult().getSchoolList().isEmpty()) {
                         resultObject.setPath(path);
                         resultObject.setPathName(pathName);
                         resultObjects.add(resultObject);
