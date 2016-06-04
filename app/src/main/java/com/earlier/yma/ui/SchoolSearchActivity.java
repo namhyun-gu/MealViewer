@@ -256,10 +256,12 @@ public class SchoolSearchActivity extends AppCompatActivity
                     Response<SearchResultObject> response = call.execute();
                     SearchResultObject resultObject = response.body();
 
-                    if (resultObject != null & !resultObject.getResult().getSchoolList().isEmpty()) {
-                        resultObject.setPath(path);
-                        resultObject.setPathName(pathName);
-                        resultObjects.add(resultObject);
+                    if (resultObject != null && resultObject.getResult() != null) {
+                        if (!resultObject.getResult().getSchoolList().isEmpty()) {
+                            resultObject.setPath(path);
+                            resultObject.setPathName(pathName);
+                            resultObjects.add(resultObject);
+                        }
                     }
                 } catch (IOException e) {
                     Log.e("SchoolSearchTask", "Can't receive data (paths : " + path + ")");
