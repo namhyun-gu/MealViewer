@@ -1,27 +1,38 @@
 {
   "project_info": {
-    "project_number": "374502061326",
-    "firebase_url": "https://meal-shuttle.firebaseio.com",
-    "project_id": "meal-shuttle",
-    "storage_bucket": "meal-shuttle.appspot.com"
+    "project_number": "997519570331",
+    "firebase_url": "https://mealshuttle.firebaseio.com",
+    "project_id": "mealshuttle",
+    "storage_bucket": "mealshuttle.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:374502061326:android:158769bfe3bcc95e",
+        "mobilesdk_app_id": "1:997519570331:android:158769bfe3bcc95e",
         "android_client_info": {
           "package_name": "com.earlier.yma"
         }
       },
       "oauth_client": [
         {
-          "client_id": "374502061326-s45r9i84h2hr606ouric5c2eihb32s0i.apps.googleusercontent.com",
+          "client_id": "997519570331-hvtmrpju0n1saue0v8g4kr5819bjpr91.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.earlier.yma",
+            "certificate_hash": "c10eb1f0de8f9fbebc7f73ddcb5cbf239021e1fd"
+          }
+        },
+        {
+          "client_id": "997519570331-3iclklvb922kafc9084iui2srvraacgd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCtS-YPM6D2S8a2a_JjoX72Rc40KX8r7ag"
+          "current_key": "AIzaSyALAgkVSCs3512TdUC9Q2OoS7jb0UQ5nJQ"
+        },
+        {
+          "current_key": "AIzaSyCmpm9mrZdLBQ40yEqI8E8OGV3rTGRP7Wk"
         }
       ],
       "services": {
@@ -29,8 +40,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997519570331-3iclklvb922kafc9084iui2srvraacgd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

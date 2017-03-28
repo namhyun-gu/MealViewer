@@ -51,9 +51,9 @@ public class MealDataUtil {
         String[] allergy_name = context.getResources().getStringArray(R.array.allergy_info_name);
         String filteredValue = value;
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < allergy_value.length; i++) {
+        for (int i = allergy_value.length - 1; i >= 0; i--) {
             if (filteredValue.contains(allergy_value[i])) {
-                filteredValue = filteredValue.replace(allergy_value[i], "");
+                filteredValue = filteredValue.replace(allergy_value[i], "").replace(".", "");
                 builder.append(allergy_name[i]);
                 builder.append(", ");
             }

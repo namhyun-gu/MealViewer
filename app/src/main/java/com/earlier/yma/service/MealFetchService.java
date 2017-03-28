@@ -21,6 +21,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -37,8 +38,10 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MealFetchService extends IntentService {
@@ -128,7 +131,22 @@ public class MealFetchService extends IntentService {
                         object.schulCrseScCode,
                         object.schulKndScCode,
                         String.valueOf(index));
-                String responseBody = call.execute().body();
+                Response<String> response = call.execute();
+
+                Uri responseUri = Uri.parse(url).buildUpon()
+                        .appendPath("sts_sci_md01_001.do")
+                        .appendQueryParameter("schulCode", object.schulCode)
+                        .appendQueryParameter("schulCrseScCode", object.schulCrseScCode)
+                        .appendQueryParameter("schulKndScCode", object.schulKndScCode)
+                        .appendQueryParameter("schMmealScCode", String.valueOf(index))
+                        .build();
+
+                Log.d("ResponseUri", responseUri.toString());
+
+                Headers headers = response.headers();
+                Log.d("ResponseHeaders", headers.toString());
+
+                String responseBody = response.body();
                 dataManager.save(Util.toMealObjectFromResponse(responseBody), index);
             }
             // Remove notification

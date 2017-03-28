@@ -46,11 +46,11 @@ public class Util {
 
     public static MealObject toMealObjectFromResponse(String response) {
         final int mealIndex = 1;
-        final int kcalIndex = 16;
+        final int kcalIndex = 23;
 
-        final int carbohydrateIndex = 17;
-        final int proteinIndex = 18;
-        final int fatIndex = 19;
+        final int carbohydrateIndex = 24;
+        final int proteinIndex = 25;
+        final int fatIndex = 26;
 
         final String elementSelector = "td.textC";
 

@@ -54,6 +54,7 @@ import com.earlier.yma.ui.fragment.MainFragment;
 import com.earlier.yma.util.Prefs;
 import com.earlier.yma.util.RxBus;
 import com.earlier.yma.util.Util;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     private MealFetchReceiver mBroadcastReceiver = new MealFetchReceiver();
     private Snackbar mSnackbar;
     private int dateIndex = Util.getDayIndexFromCalendar(Util.getTodayCalender());
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @OnClick(R.id.fab)
     public void onClickFab() {
@@ -106,6 +108,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Bind Butterknife
         ButterKnife.bind(this);
@@ -170,6 +174,13 @@ public class MainActivity extends AppCompatActivity
                 String schulCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_CODE, null);
                 String schulCrseScCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_CRSE_SC_CODE, null);
                 String schulKndScCode = pref.getString(Prefs.SCHOOL_INFO_SCHUL_KND_SC_CODE, null);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("country_code", path);
+                bundle.putString("school_code", schulCode);
+                bundle.putString("school_classified", schulCrseScCode);
+                bundle.putString("school_category", schulKndScCode);
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
 
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "debug: current user pref state");
