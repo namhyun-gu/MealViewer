@@ -28,6 +28,7 @@ import android.util.Log;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.MealDataManager;
+import com.earlier.yma.data.MealDataUtil;
 import com.earlier.yma.data.model.RequestObject;
 import com.earlier.yma.data.service.NeisService;
 import com.earlier.yma.util.Prefs;
@@ -147,7 +148,7 @@ public class MealFetchService extends IntentService {
                 Log.d("ResponseHeaders", headers.toString());
 
                 String responseBody = response.body();
-                dataManager.save(Util.toMealObjectFromResponse(responseBody), index);
+                dataManager.save(MealDataUtil.parseResponse(responseBody), index);
             }
             // Remove notification
             mNotificationManager.cancel(notifyId);

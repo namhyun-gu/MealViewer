@@ -21,12 +21,12 @@ import java.util.List;
 public class MealObject {
     private List<Meal> data;
 
-    public List<Meal> getData() {
-        return data;
+    public MealObject(List<Meal> data) {
+        this.data = data;
     }
 
-    public void setData(List<Meal> data) {
-        this.data = data;
+    public List<Meal> getData() {
+        return data;
     }
 
     public static class Meal {
@@ -35,6 +35,14 @@ public class MealObject {
         private double carbohydrate;
         private double protein;
         private double fat;
+
+        public Meal(List<String> meal, double kcal, double carbohydrate, double protein, double fat) {
+            this.meal = meal;
+            this.kcal = kcal;
+            this.carbohydrate = carbohydrate;
+            this.protein = protein;
+            this.fat = fat;
+        }
 
         public List<String> getMeal() {
             return meal;
@@ -54,26 +62,6 @@ public class MealObject {
 
         public double getFat() {
             return fat;
-        }
-
-        public void setMeal(List<String> meal) {
-            this.meal = meal;
-        }
-
-        public void setKcal(double kcal) {
-            this.kcal = kcal;
-        }
-
-        public void setCarbohydrate(double carbohydrate) {
-            this.carbohydrate = carbohydrate;
-        }
-
-        public void setProtein(double protein) {
-            this.protein = protein;
-        }
-
-        public void setFat(double fat) {
-            this.fat = fat;
         }
     }
 }

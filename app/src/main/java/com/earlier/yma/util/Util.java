@@ -22,18 +22,9 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import com.earlier.yma.R;
-import com.earlier.yma.data.model.MealObject;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class Util {
@@ -42,70 +33,6 @@ public class Util {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
-    }
-
-    public static MealObject toMealObjectFromResponse(String response) {
-        final int mealIndex = 1;
-        final int kcalIndex = 23;
-
-        final int carbohydrateIndex = 24;
-        final int proteinIndex = 25;
-        final int fatIndex = 26;
-
-        final String elementSelector = "td.textC";
-
-        Document doc = Jsoup.parse(response);
-        Elements contents = doc.select("#contents .sub_con table tbody tr");
-
-        MealObject mealObject = new MealObject();
-        List<MealObject.Meal> mealList = new ArrayList<>();
-
-        // Get meal
-        Elements mealElements = contents.get(mealIndex).select(elementSelector);
-        if (mealElements.isEmpty()) {
-            mealObject.setData(null);
-            return mealObject;
-        }
-        // Get kcal
-        Elements kcalElements = contents.get(kcalIndex).select(elementSelector);
-
-        // Get nutrient
-        Elements carbohydrateElements = contents.get(carbohydrateIndex).select(elementSelector);
-        Elements proteinElements = contents.get(proteinIndex).select(elementSelector);
-        Elements fatElements = contents.get(fatIndex).select(elementSelector);
-
-        for (int index = 0; index < mealElements.size(); index++) {
-            MealObject.Meal meal = new MealObject.Meal();
-
-            Element mealElement = mealElements.get(index);
-            Element kcalElement = kcalElements.get(index);
-            Element carbohydrateElement = carbohydrateElements.get(index);
-            Element proteinElement = proteinElements.get(index);
-            Element fatElement = fatElements.get(index);
-
-            String mealText = mealElement.text();
-            if (mealText.replace("\\s", "").isEmpty()) {
-                meal.setMeal(null);
-            } else {
-                meal.setMeal(Arrays.asList(mealText.split("\\s")));
-            }
-
-            if (kcalElement.text().equals("")) meal.setKcal(0);
-            else meal.setKcal(Double.parseDouble(kcalElement.text()));
-
-            if (carbohydrateElement.text().equals("")) meal.setCarbohydrate(0);
-            else meal.setCarbohydrate(Double.parseDouble(carbohydrateElement.text()));
-
-            if (proteinElement.text().equals("")) meal.setProtein(0);
-            else meal.setProtein(Double.parseDouble(proteinElement.text()));
-
-            if (fatElement.text().equals("")) meal.setFat(0);
-            else meal.setFat(Double.parseDouble(fatElement.text()));
-
-            mealList.add(meal);
-        }
-        mealObject.setData(mealList);
-        return mealObject;
     }
 
     public static String getDateString(Context context, int dayIndex) {
