@@ -1,0 +1,32 @@
+ext.commitCount = "git rev-list HEAD --count".execute().text.trim()
+
+ext.showDate = {
+    return new Date().format("yyyyMMdd")
+}
+
+ext.getVersionCode = {
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.exists()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        code = versionProps["VERSION_CODE"].toInteger()
+    } else {
+        throw new GradleException("Could not read version.properties")
+    }
+    return code
+}
+
+def setVersionCode(code) {
+    def versionPropsFile = file("version.properties")
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+    versionProps['VERSION_CODE'] = code.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+}
+
+task increaseVersionCode << {
+    // How-to : gradlew -q -b app\build.gradle increaseVersionCode
+    def code = getVersionCode()
+    setVersionCode(code + 1)
+    println(String.format("increased version code (before : %d, after : %d)", code, code + 1))
+}

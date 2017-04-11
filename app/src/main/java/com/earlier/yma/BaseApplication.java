@@ -20,10 +20,16 @@ import android.app.Application;
 
 import com.earlier.yma.data.MealDataManager;
 
+import io.realm.Realm;
+
 public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Initialize Realm
+        Realm.init(this);
+
         MealDataManager.initialize(getApplicationContext());
     }
 }
