@@ -16,6 +16,8 @@
 
 package com.earlier.yma.data.service;
 
+import android.support.annotation.IntRange;
+
 import com.earlier.yma.data.model.SearchResultObject;
 
 import retrofit2.Call;
@@ -29,7 +31,7 @@ public interface NeisService {
     Call<String> getResponse(@Query("schulCode") String schulCode,
                              @Query("schulCrseScCode") String schulCrseScCode,
                              @Query("schulKndScCode") String schulKndScCode,
-                             @Query("schMmealScCode") String schMmealScCode);
+                             @Query("schMmealScCode") @IntRange(from = 1, to = 3) int schMmealScCode);
 
     @GET("/spr_ccm_cm01_100.do")
     Call<SearchResultObject> searchSchool(@Query("kraOrgNm") String schoolName);

@@ -48,8 +48,6 @@ import retrofit2.Retrofit;
 public class MealFetchService extends IntentService {
     public static final String ACTION_FETCH_SIGNAL = "com.earlier.yma.broadcast.fetch_data";
     public static final String EXTRA_FLAG = "com.earlier.yma.service.extra.flag";
-    public static final int FLAG_STARTED = 0x0001;
-    public static final int FLAG_PROGESS = 0x0002;
     public static final int FLAG_FINISH = 0x0003;
 
     private static final String ACTION_FETCH_DATA = "com.earlier.yma.service.action.fetch_data";
@@ -131,7 +129,7 @@ public class MealFetchService extends IntentService {
                         object.schulCode,
                         object.schulCrseScCode,
                         object.schulKndScCode,
-                        String.valueOf(index));
+                        index);
                 Response<String> response = call.execute();
 
                 Uri responseUri = Uri.parse(url).buildUpon()
@@ -148,7 +146,7 @@ public class MealFetchService extends IntentService {
                 Log.d("ResponseHeaders", headers.toString());
 
                 String responseBody = response.body();
-                dataManager.save(MealDataUtil.parseResponse(responseBody), index);
+                dataManager.save(MealDataUtil.parseResponseLegacy(responseBody), index);
             }
             // Remove notification
             mNotificationManager.cancel(notifyId);

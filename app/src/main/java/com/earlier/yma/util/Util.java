@@ -35,6 +35,16 @@ public class Util {
         return networkInfo != null && networkInfo.isConnected();
     }
 
+    public static Date getDateByHour(Date date, int hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
     public static String getDateString(Context context, int dayIndex) {
         final String[] monthStringArray = context.getResources().getStringArray(R.array.month_name);
         final String[] dayStringArray = context.getResources().getStringArray(R.array.day_name);

@@ -210,7 +210,7 @@ public class MainFragment extends Fragment {
                 return;
             }
             mAdapter.clearItem();
-            mAdapter.addItems(items);
+            mAdapter.setItems(items);
             mRecyclerView.setVisibility(View.VISIBLE);
             mViewStubNoResults.setVisibility(View.GONE);
         } else {

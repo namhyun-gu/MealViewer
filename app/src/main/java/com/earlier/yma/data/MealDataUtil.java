@@ -19,6 +19,7 @@ package com.earlier.yma.data;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.model.MealObject;
@@ -27,56 +28,97 @@ import com.earlier.yma.data.model.item.Item;
 import com.earlier.yma.data.model.item.meal.DefaultItem;
 import com.earlier.yma.data.model.item.meal.GraphItem;
 import com.earlier.yma.data.model.item.meal.KcalItem;
+import com.earlier.yma.util.RealmString;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import io.realm.Realm;
+import io.realm.RealmList;
 
 public class MealDataUtil {
-    private class Constants {
-        static final int INDEX_MEAL = 1;
-        static final int INDEX_KCAL = 23;
-        static final int INDEX_CARBOHYDRATE = 24;
-        static final int INDEX_PROTEIN = 25;
-        static final int INDEX_FAT = 26;
+    @Nullable
+    public static List<Meal> parseResponse(Realm realm, String response, int type) {
+        final Document doc = Jsoup.parse(response);
 
-        static final String CONTENTS_SELECTOR = "#contents .sub_con table tbody tr";
-        static final String ELEMENT_SELECTOR = "td.textC";
+        Elements dates = doc.select(Constants.DATE_SELECTOR);
+        Elements dateElements = dates.select(Constants.DATE_ELEMENT_SELECTOR);
 
-        private Constants() {
-            // No-op
-        }
-    }
+        Elements contents = doc.select(Constants.CONTENTS_SELECTOR);
 
-    private static class ParseUtil {
-        static List<String> getStrings(Element element) {
-            String elementText = element.text();
-            String removeSpacesText = elementText.replace("\\s", "");
-            if (!TextUtils.isEmpty(removeSpacesText)) {
-                return Arrays.asList(elementText.split("\\s"));
-            }
+        // Check meal is exists
+        Element mealContent = contents.get(Constants.INDEX_MEAL);
+        Elements mealElements = mealContent.select(Constants.ELEMENT_SELECTOR);
+
+        if (mealElements.isEmpty()) {
             return null;
         }
 
-        static double getDouble(Element element) {
-            String elementText = element.text();
-            if (!TextUtils.isEmpty(elementText)) {
-                return Double.parseDouble(elementText);
-            }
-            return 0;
-        }
+        Element kcalContent = contents.get(Constants.INDEX_KCAL);
+        Elements kcalElements = kcalContent.select(Constants.ELEMENT_SELECTOR);
 
-        private ParseUtil() {
-            // No-op
+        Element carbohydrateContent = contents.get(Constants.INDEX_CARBOHYDRATE);
+        Elements carbohydrateElements = carbohydrateContent.select(Constants.ELEMENT_SELECTOR);
+
+        Element proteinContent = contents.get(Constants.INDEX_PROTEIN);
+        Elements proteinElements = proteinContent.select(Constants.ELEMENT_SELECTOR);
+
+        Element fatContent = contents.get(Constants.INDEX_FAT);
+        Elements fatElements = fatContent.select(Constants.ELEMENT_SELECTOR);
+
+        List<Meal> meals = new ArrayList<>();
+        for (int index = 0; index < 7; index++) {
+            Element dateElement = dateElements.get(index);
+            Date date = ParseUtil.getDate(dateElement);
+
+            if (date == null) {
+                continue;
+            }
+
+            Element mealElement = mealElements.get(index);
+            RealmList<RealmString> mealStrings = ParseUtil.getStrings(realm, mealElement);
+
+            if (mealStrings == null) {
+                continue;
+            }
+
+            Element kcalElement = kcalElements.get(index);
+            double kcal = ParseUtil.getDouble(kcalElement);
+
+            Element carbohydrateElement = carbohydrateElements.get(index);
+            double carbohydrate = ParseUtil.getDouble(carbohydrateElement);
+
+            Element proteinElement = proteinElements.get(index);
+            double protein = ParseUtil.getDouble(proteinElement);
+
+            Element fatElement = fatElements.get(index);
+            double fat = ParseUtil.getDouble(fatElement);
+
+            Meal meal = realm.createObject(Meal.class);
+            meal.setType(type);
+            meal.setDate(date);
+            meal.setMealList(mealStrings);
+            meal.setKcal(kcal);
+            meal.setCarbohydrate(carbohydrate);
+            meal.setProtein(protein);
+            meal.setFat(fat);
+            meals.add(meal);
         }
+        return meals;
     }
 
-    public static MealObject parseResponse(String response) {
+    public static MealObject parseResponseLegacy(String response) {
         final Document doc = Jsoup.parse(response);
 
         Elements contents = doc.select(Constants.CONTENTS_SELECTOR);
@@ -104,7 +146,7 @@ public class MealDataUtil {
         List<MealObject.Meal> mealList = new ArrayList<>();
         for (int index = 0; index < 7; index++) {
             Element mealElement = mealElements.get(index);
-            List<String> meal = ParseUtil.getStrings(mealElement);
+            List<String> meal = ParseUtil.getStringsLegacy(mealElement);
 
             Element kcalElement = kcalElements.get(index);
             double kcal = ParseUtil.getDouble(kcalElement);
@@ -125,8 +167,9 @@ public class MealDataUtil {
 
     @Nullable
     public static List<Item> translateMealToItemList(Context context, MealObject.Meal meal) {
-        if (meal.getMeal() == null || meal.getMeal().isEmpty())
+        if (meal.getMeal() == null || meal.getMeal().isEmpty()) {
             return null;
+        }
 
         List<Item> items = new ArrayList<>();
         items.add(new GraphItem(meal.getCarbohydrate(), meal.getProtein(), meal.getFat()));
@@ -138,7 +181,7 @@ public class MealDataUtil {
         return items;
     }
 
-    private static DefaultItem createDefaultItem(Context context, String value) {
+    public static DefaultItem createDefaultItem(Context context, String value) {
         String[] allergy_value = context.getResources().getStringArray(R.array.allergy_info_value);
         String[] allergy_name = context.getResources().getStringArray(R.array.allergy_info_name);
         String filteredValue = value;
@@ -155,5 +198,84 @@ public class MealDataUtil {
             return new DefaultItem(filteredValue, builder.toString());
         }
         return new DefaultItem(value, null);
+    }
+
+    private static class ParseUtil {
+        private ParseUtil() {
+            // No-op
+        }
+
+        static RealmList<RealmString> getStrings(Realm realm, Element element) {
+            String elementText = element.text();
+            String removeSpacesText = elementText.replace("\\s", "");
+            if (!TextUtils.isEmpty(removeSpacesText)) {
+                RealmList<RealmString> strings = new RealmList<>();
+                for (String s : elementText.split("\\s")) {
+                    RealmString realmString = realm.createObject(RealmString.class);
+                    realmString.setValue(s);
+                    strings.add(realmString);
+                }
+                return strings;
+            }
+            return null;
+        }
+
+        static List<String> getStringsLegacy(Element element) {
+            String elementText = element.text();
+            String removeSpacesText = elementText.replace("\\s", "");
+            if (!TextUtils.isEmpty(removeSpacesText)) {
+                return Arrays.asList(elementText.split("\\s"));
+            }
+            return null;
+        }
+
+        static double getDouble(Element element) {
+            String elementText = element.text();
+            if (!TextUtils.isEmpty(elementText)) {
+                return Double.parseDouble(elementText);
+            }
+            return 0;
+        }
+
+        static Date getDate(Element element) {
+            String dateString = element.text();
+            if (dateString.length() < 3) {
+                return null;
+            }
+            dateString = dateString.substring(0, dateString.length() - 3);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.mm.dd", Locale.KOREA);
+            try {
+                Date date = dateFormat.parse(dateString);
+                Calendar calendar = Calendar.getInstance();
+                int month = calendar.get(Calendar.MONTH);
+
+                calendar.setTime(date);
+                calendar.set(Calendar.MONTH, month);
+                return calendar.getTime();
+            } catch (ParseException e) {
+                Log.e("ParseUtil", "Can't parse string to date", e);
+                return null;
+            }
+        }
+    }
+
+    private class Constants {
+        static final int INDEX_MEAL = 1;
+        static final int INDEX_KCAL = 23;
+        static final int INDEX_CARBOHYDRATE = 24;
+        static final int INDEX_PROTEIN = 25;
+        static final int INDEX_FAT = 26;
+
+        static final String DATE_SELECTOR = "#contents .sub_con table thead tr";
+        static final String DATE_ELEMENT_SELECTOR = "th";
+
+        static final String CONTENTS_SELECTOR = "#contents .sub_con table tbody tr";
+        static final String ELEMENT_SELECTOR = "td.textC";
+
+        static final String DATE_REGEX = "\\\\d{4}.\\\\d{2}.\\\\d{2}";
+
+        private Constants() {
+            // No-op
+        }
     }
 }

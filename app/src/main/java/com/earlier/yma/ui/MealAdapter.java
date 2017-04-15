@@ -49,9 +49,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.layoutInflater = LayoutInflater.from(hostActivity);
     }
 
-    public void addItems(List<Item> items) {
-        for (Item item : items)
-            itemList.add(item);
+    public void setItems(List<Item> items) {
+        itemList.clear();
+        if (items != null) itemList.addAll(items);
         notifyDataSetChanged();
     }
 
@@ -82,28 +82,24 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Item item = itemList.get(position);
-        switch (getItemViewType(position)) {
-            case TYPE_DEFAULT:
-                DefaultItem defaultItem = (DefaultItem) item;
-                DefaultHolder defaultHolder = (DefaultHolder) holder;
-                if (defaultItem.getSummary() == null)
-                    defaultHolder.summary.setVisibility(View.GONE);
-                defaultHolder.title.setText(defaultItem.getTitle());
-                defaultHolder.summary.setText(defaultItem.getSummary());
-                break;
-            case TYPE_NUTRIENT:
-                GraphItem graphItem = (GraphItem) item;
-                GraphHolder graphHolder = (GraphHolder) holder;
-                for (int index = 0; index < graphItem.getSummarys().length; index++) {
-                    String value = graphItem.getSummarys()[index] + " g";
-                    graphHolder.summarys.get(index).setText(value);
-                }
-                break;
-            case TYPE_KCAL:
-                KcalItem kcalItem = (KcalItem) item;
-                String value = kcalItem.getSummary() + " kcal";
-                ((KcalHolder) holder).summary.setText(value);
-                break;
+        if (item instanceof DefaultItem) {
+            DefaultItem defaultItem = (DefaultItem) item;
+            DefaultHolder defaultHolder = (DefaultHolder) holder;
+            if (defaultItem.getSummary() == null)
+                defaultHolder.summary.setVisibility(View.GONE);
+            defaultHolder.title.setText(defaultItem.getTitle());
+            defaultHolder.summary.setText(defaultItem.getSummary());
+        } else if (item instanceof GraphItem) {
+            GraphItem graphItem = (GraphItem) item;
+            GraphHolder graphHolder = (GraphHolder) holder;
+            for (int index = 0; index < graphItem.getSummarys().length; index++) {
+                String value = graphItem.getSummarys()[index] + " g";
+                graphHolder.summarys.get(index).setText(value);
+            }
+        } else if (item instanceof KcalItem) {
+            KcalItem kcalItem = (KcalItem) item;
+            String value = kcalItem.getSummary() + " kcal";
+            ((KcalHolder) holder).summary.setText(value);
         }
     }
 

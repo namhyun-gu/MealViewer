@@ -1,4 +1,4 @@
-package com.earlier.yma.data.model;
+package com.earlier.yma.data;
 
 import com.earlier.yma.util.RealmString;
 
@@ -8,6 +8,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class Meal extends RealmObject {
+
     private Date date;
     private int type;
 
@@ -72,4 +73,5 @@ public class Meal extends RealmObject {
     public void setFat(double fat) {
         this.fat = fat;
     }
+
 }
