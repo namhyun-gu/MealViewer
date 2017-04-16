@@ -39,7 +39,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -243,15 +242,9 @@ public class MealDataUtil {
                 return null;
             }
             dateString = dateString.substring(0, dateString.length() - 3);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.mm.dd", Locale.KOREA);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
             try {
-                Date date = dateFormat.parse(dateString);
-                Calendar calendar = Calendar.getInstance();
-                int month = calendar.get(Calendar.MONTH);
-
-                calendar.setTime(date);
-                calendar.set(Calendar.MONTH, month);
-                return calendar.getTime();
+                return dateFormat.parse(dateString);
             } catch (ParseException e) {
                 Log.e("ParseUtil", "Can't parse string to date", e);
                 return null;
@@ -267,12 +260,10 @@ public class MealDataUtil {
         static final int INDEX_FAT = 26;
 
         static final String DATE_SELECTOR = "#contents .sub_con table thead tr";
-        static final String DATE_ELEMENT_SELECTOR = "th";
+        static final String DATE_ELEMENT_SELECTOR = "th[scope='col']";
 
         static final String CONTENTS_SELECTOR = "#contents .sub_con table tbody tr";
         static final String ELEMENT_SELECTOR = "td.textC";
-
-        static final String DATE_REGEX = "\\\\d{4}.\\\\d{2}.\\\\d{2}";
 
         private Constants() {
             // No-op

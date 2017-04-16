@@ -12,6 +12,7 @@ import com.earlier.yma.data.MealDataUtil;
 import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.service.NeisService;
 import com.earlier.yma.util.ToStringConverterFactory;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
 import java.util.List;
@@ -67,10 +68,14 @@ public class MealDataService extends IntentService {
     }
 
     private Retrofit buildRetrofit(String baseUrl) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new StethoInterceptor())
+                .build();
+
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(new ToStringConverterFactory())
-                .client(new OkHttpClient())
+                .client(client)
                 .build();
     }
 }

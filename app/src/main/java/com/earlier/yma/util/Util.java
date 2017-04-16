@@ -35,11 +35,11 @@ public class Util {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    public static Date getDateByHour(Date date, int hour) {
+    public static Date getEditedDateTime(Date date, int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
