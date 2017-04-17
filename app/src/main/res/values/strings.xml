@@ -83,4 +83,8 @@
     <string name="no_results">No results</string>
     <string name="search_hint">Search School</string>
     <string name="not_connected">Not connected internet</string>
+    
+    <string name="network_error_notification_title">Can\'t download data</string>
+    <string name="network_error_notification_body">Not connected internet</string>
+    <string name="action_retry">Retry</string>
 </resources>

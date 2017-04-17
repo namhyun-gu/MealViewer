@@ -11,7 +11,9 @@ import com.earlier.yma.data.Meal;
 import com.earlier.yma.data.MealDataUtil;
 import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.service.NeisService;
-import com.earlier.yma.util.ToStringConverterFactory;
+import com.earlier.yma.utilities.NotificationUtils;
+import com.earlier.yma.utilities.ToStringConverterFactory;
+import com.earlier.yma.utilities.Util;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
@@ -33,6 +35,13 @@ public class MealDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        NotificationUtils.clearAllNotification(this);
+
+        if (!Util.isConnected(this)) {
+            NotificationUtils.networkErrorOccurred(this);
+            return;
+        }
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         MealPreferences.SchoolInfo schoolInfo = MealPreferences.getSchoolInfo(preferences);
 

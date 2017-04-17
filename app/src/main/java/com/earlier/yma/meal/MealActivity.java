@@ -20,7 +20,7 @@ import android.view.View;
 import com.earlier.yma.R;
 import com.earlier.yma.service.MealDataService;
 import com.earlier.yma.ui.PrefActivity;
-import com.earlier.yma.util.ActivityUtils;
+import com.earlier.yma.utilities.ActivityUtils;
 
 import java.util.Date;
 
@@ -34,7 +34,7 @@ public class MealActivity extends AppCompatActivity
 
     private static final String CURRENT_DATE_KEY = "CURRENT_DATE_KEY";
 
-    @Inject MealPresenter mMealPresenter;
+    @Inject MealPresenter mPresenter;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -63,7 +63,7 @@ public class MealActivity extends AppCompatActivity
                 .registerOnSharedPreferenceChangeListener(this);
 
         DaggerMealComponent.builder()
-                .mealPresenterModule(new MealPresenterModule(this, mealFragment))
+                .mealPresenterModule(new MealPresenterModule(mealFragment))
                 .build()
                 .inject(this);
 
@@ -73,8 +73,8 @@ public class MealActivity extends AppCompatActivity
             Date currentDate =
                     (Date) savedInstanceState.getSerializable(CURRENT_DATE_KEY);
 
-            mMealPresenter.setFiltering(currentFiltering);
-            mMealPresenter.setDate(currentDate);
+            mPresenter.setFiltering(currentFiltering);
+            mPresenter.setDate(currentDate);
         }
     }
 
@@ -86,8 +86,8 @@ public class MealActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(CURRENT_FILTERING_KEY, mMealPresenter.getFiltering());
-        outState.putSerializable(CURRENT_DATE_KEY, mMealPresenter.getDate());
+        outState.putSerializable(CURRENT_FILTERING_KEY, mPresenter.getFiltering());
+        outState.putSerializable(CURRENT_DATE_KEY, mPresenter.getDate());
         super.onSaveInstanceState(outState);
     }
 
@@ -167,7 +167,7 @@ public class MealActivity extends AppCompatActivity
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         int position = tab.getPosition();
-        mMealPresenter.setFiltering(MealFilterType.values()[position]);
+        mPresenter.setFiltering(MealFilterType.values()[position]);
     }
 
     @Override

@@ -51,9 +51,9 @@ import com.earlier.yma.data.model.RequestObject;
 import com.earlier.yma.data.model.preference.Time;
 import com.earlier.yma.service.MealFetchService;
 import com.earlier.yma.ui.fragment.MainFragment;
-import com.earlier.yma.util.Prefs;
-import com.earlier.yma.util.RxBus;
-import com.earlier.yma.util.Util;
+import com.earlier.yma.utilities.Prefs;
+import com.earlier.yma.utilities.RxBus;
+import com.earlier.yma.utilities.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 

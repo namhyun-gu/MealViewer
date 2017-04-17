@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.earlier.yma.util;
+package com.earlier.yma.utilities;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

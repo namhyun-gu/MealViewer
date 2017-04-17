@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.earlier.yma.util;
+package com.earlier.yma.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -32,7 +32,7 @@ public class Util {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
     public static Date getEditedDateTime(Date date, int hour, int minute) {

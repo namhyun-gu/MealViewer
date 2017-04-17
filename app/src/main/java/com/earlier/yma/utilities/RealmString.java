@@ -1,4 +1,4 @@
-package com.earlier.yma.util;
+package com.earlier.yma.utilities;
 
 import io.realm.RealmObject;
 

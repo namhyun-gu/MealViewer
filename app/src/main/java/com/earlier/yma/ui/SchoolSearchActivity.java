@@ -52,8 +52,8 @@ import com.earlier.yma.data.model.item.Item;
 import com.earlier.yma.data.model.item.school.DefaultItem;
 import com.earlier.yma.data.model.item.school.SubHeaderItem;
 import com.earlier.yma.data.service.NeisService;
-import com.earlier.yma.util.Prefs;
-import com.earlier.yma.util.Util;
+import com.earlier.yma.utilities.Prefs;
+import com.earlier.yma.utilities.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;

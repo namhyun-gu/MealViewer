@@ -1,25 +1,15 @@
 package com.earlier.yma.meal;
 
-import android.content.Context;
-
 import dagger.Module;
 import dagger.Provides;
 
 @Module
 public class MealPresenterModule {
 
-    private final Context mContext;
-
     private final MealContract.View mView;
 
-    public MealPresenterModule(Context context, MealContract.View view) {
-        mContext = context;
+    public MealPresenterModule(MealContract.View view) {
         mView = view;
-    }
-
-    @Provides
-    Context provideContext() {
-        return mContext;
     }
 
     @Provides

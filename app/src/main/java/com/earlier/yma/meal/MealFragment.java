@@ -20,7 +20,7 @@ import com.earlier.yma.data.model.item.meal.DefaultItem;
 import com.earlier.yma.data.model.item.meal.GraphItem;
 import com.earlier.yma.data.model.item.meal.KcalItem;
 import com.earlier.yma.ui.MealAdapter;
-import com.earlier.yma.util.RealmString;
+import com.earlier.yma.utilities.RealmString;
 
 import java.util.ArrayList;
 import java.util.List;

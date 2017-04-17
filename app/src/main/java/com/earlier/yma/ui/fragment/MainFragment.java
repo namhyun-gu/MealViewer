@@ -43,7 +43,7 @@ import com.earlier.yma.data.model.item.meal.GraphItem;
 import com.earlier.yma.data.model.item.meal.KcalItem;
 import com.earlier.yma.ui.MainActivity;
 import com.earlier.yma.ui.MealAdapter;
-import com.earlier.yma.util.RxBus;
+import com.earlier.yma.utilities.RxBus;
 
 import java.util.List;
 

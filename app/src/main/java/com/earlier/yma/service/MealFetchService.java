@@ -31,9 +31,9 @@ import com.earlier.yma.data.MealDataManager;
 import com.earlier.yma.data.MealDataUtil;
 import com.earlier.yma.data.model.RequestObject;
 import com.earlier.yma.data.service.NeisService;
-import com.earlier.yma.util.Prefs;
-import com.earlier.yma.util.ToStringConverterFactory;
-import com.earlier.yma.util.Util;
+import com.earlier.yma.utilities.Prefs;
+import com.earlier.yma.utilities.ToStringConverterFactory;
+import com.earlier.yma.utilities.Util;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -189,7 +189,7 @@ public class MealFetchService extends IntentService {
     private void sendWarningNotification(NotificationManager manager, int id) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_warning)
+                        .setSmallIcon(R.drawable.ic_error_white_24dp)
                         .setContentTitle(getString(R.string.notification_meal_fetch_warning_title))
                         .setContentText(getString(R.string.notification_meal_fetch_warning_content))
                         .setWhen(System.currentTimeMillis());

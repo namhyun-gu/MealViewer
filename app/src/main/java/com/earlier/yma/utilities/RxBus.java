@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.earlier.yma.util;
+package com.earlier.yma.utilities;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;

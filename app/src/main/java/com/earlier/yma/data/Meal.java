@@ -1,6 +1,6 @@
 package com.earlier.yma.data;
 
-import com.earlier.yma.util.RealmString;
+import com.earlier.yma.utilities.RealmString;
 
 import java.util.Date;
 

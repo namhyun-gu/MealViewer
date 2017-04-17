@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.earlier.yma.util;
+package com.earlier.yma.utilities;
 
 public class Prefs {
     public static final String IS_INITIALIZED = "is_initialized";

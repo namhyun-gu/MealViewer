@@ -1,9 +1,7 @@
 package com.earlier.yma.meal;
 
-import android.content.Context;
-
 import com.earlier.yma.data.Meal;
-import com.earlier.yma.util.Util;
+import com.earlier.yma.utilities.Util;
 
 import java.util.Date;
 
@@ -13,9 +11,7 @@ import io.realm.Realm;
 
 public class MealPresenter implements MealContract.Presenter {
 
-    private Context mContext;
-
-    private MealContract.View mMealView;
+    private MealContract.View mView;
 
     private MealFilterType mCurrentFiltering = MealFilterType.BREAKFAST;
 
@@ -24,14 +20,13 @@ public class MealPresenter implements MealContract.Presenter {
     private Realm mRealm;
 
     @Inject
-    MealPresenter(Context context, MealContract.View mealView) {
-        mContext = context;
-        mMealView = mealView;
+    MealPresenter(MealContract.View view) {
+        mView = view;
     }
 
     @Inject
     void setupListeners() {
-        mMealView.setPresenter(this);
+        mView.setPresenter(this);
     }
 
     @Override
@@ -56,9 +51,9 @@ public class MealPresenter implements MealContract.Presenter {
                 .findFirst();
 
         if (meal != null && meal.isValid()) {
-            mMealView.showMeal(meal);
+            mView.showMeal(meal);
         } else {
-            mMealView.showNoMeal();
+            mView.showNoMeal();
         }
     }
 

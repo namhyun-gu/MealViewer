@@ -67,4 +67,8 @@
     <string name="search_hint">학교 검색</string>
     <string name="not_connected">인터넷에 연결되지 않았습니다</string>
     <string name="no_results">가져올 데이터가 없습니다</string>
+
+    <string name="network_error_notification_title">데이터를 다운로드할 수 없습니다</string>
+    <string name="network_error_notification_body">인터넷에 연결되어 있지 않습니다</string>
+    <string name="action_retry">재시도</string>
 </resources>

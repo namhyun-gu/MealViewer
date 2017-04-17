@@ -28,7 +28,7 @@ import com.earlier.yma.data.model.item.Item;
 import com.earlier.yma.data.model.item.meal.DefaultItem;
 import com.earlier.yma.data.model.item.meal.GraphItem;
 import com.earlier.yma.data.model.item.meal.KcalItem;
-import com.earlier.yma.util.RealmString;
+import com.earlier.yma.utilities.RealmString;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
