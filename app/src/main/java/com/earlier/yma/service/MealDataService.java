@@ -55,18 +55,27 @@ public class MealDataService extends IntentService {
         realm.beginTransaction();
         realm.deleteAll();
         for (int mealKindCode = 1; mealKindCode <= 3; mealKindCode++) {
+            NotificationUtils.downloadProgress(this, mealKindCode);
+
             Call<String> call = service.getResponse(
                     schoolInfo.getSchulCode(),
                     schoolInfo.getSchulCrseScCode(),
                     schoolInfo.getSchulKindCode(),
                     mealKindCode);
 
-            String result = null;
+            String result;
             try {
                 Response<String> response = call.execute();
                 result = response.body();
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Can't receive data", e);
+                NotificationUtils.clearAllNotification(this);
+                if (!Util.isConnected(this)) {
+                    NotificationUtils.networkErrorOccurred(this);
+                } else {
+                    NotificationUtils.downloadErrorOccurred(this);
+                }
+                return;
             }
 
             List<Meal> mealList = MealDataUtil.parseResponse(realm, result, mealKindCode);
@@ -74,6 +83,8 @@ public class MealDataService extends IntentService {
         }
         realm.commitTransaction();
         realm.close();
+
+        NotificationUtils.clearAllNotification(this);
     }
 
     private Retrofit buildRetrofit(String baseUrl) {

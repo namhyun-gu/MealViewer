@@ -87,4 +87,9 @@
     <string name="network_error_notification_title">Can\'t download data</string>
     <string name="network_error_notification_body">Not connected internet</string>
     <string name="action_retry">Retry</string>
+    <string name="action_go_settings">Go Settings</string>
+    <string name="download_progress_notification_title">Meal Data Download</string>
+    <string name="download_progress_notification_text">Download in Progress</string>
+    <string name="download_complete_notification_text">Download complete</string>
+    <string name="download_error_notification_body">Server is not response</string>
 </resources>
