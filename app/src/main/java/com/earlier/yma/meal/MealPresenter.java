@@ -31,6 +31,9 @@ public class MealPresenter implements MealContract.Presenter {
 
     @Override
     public void start() {
+        if (mRealm != null && !mRealm.isClosed()) {
+            mRealm.close();
+        }
         mRealm = Realm.getDefaultInstance();
         loadData();
     }

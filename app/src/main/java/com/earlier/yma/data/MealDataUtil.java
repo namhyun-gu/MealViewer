@@ -17,17 +17,12 @@
 package com.earlier.yma.data;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.earlier.yma.R;
-import com.earlier.yma.data.model.MealObject;
-import com.earlier.yma.data.model.item.DividerItem;
-import com.earlier.yma.data.model.item.Item;
-import com.earlier.yma.data.model.item.meal.DefaultItem;
-import com.earlier.yma.data.model.item.meal.GraphItem;
-import com.earlier.yma.data.model.item.meal.KcalItem;
 import com.earlier.yma.utilities.RealmString;
 
 import org.jsoup.Jsoup;
@@ -117,86 +112,29 @@ public class MealDataUtil {
         return meals;
     }
 
-    public static MealObject parseResponseLegacy(String response) {
-        final Document doc = Jsoup.parse(response);
+    public static String[] getFilteredMealString(Context context, String value) {
+        Resources resources = context.getResources();
 
-        Elements contents = doc.select(Constants.CONTENTS_SELECTOR);
+        String[] allergyKey = resources.getStringArray(R.array.allergy_info_key);
+        String[] allergyName = resources.getStringArray(R.array.allergy_info_value);
+        String titleString = value;
 
-        // Check meal is exists
-        Element mealContent = contents.get(Constants.INDEX_MEAL);
-        Elements mealElements = mealContent.select(Constants.ELEMENT_SELECTOR);
-
-        if (mealElements.isEmpty()) {
-            return new MealObject(null);
-        }
-
-        Element kcalContent = contents.get(Constants.INDEX_KCAL);
-        Elements kcalElements = kcalContent.select(Constants.ELEMENT_SELECTOR);
-
-        Element carbohydrateContent = contents.get(Constants.INDEX_CARBOHYDRATE);
-        Elements carbohydrateElements = carbohydrateContent.select(Constants.ELEMENT_SELECTOR);
-
-        Element proteinContent = contents.get(Constants.INDEX_PROTEIN);
-        Elements proteinElements = proteinContent.select(Constants.ELEMENT_SELECTOR);
-
-        Element fatContent = contents.get(Constants.INDEX_FAT);
-        Elements fatElements = fatContent.select(Constants.ELEMENT_SELECTOR);
-
-        List<MealObject.Meal> mealList = new ArrayList<>();
-        for (int index = 0; index < 7; index++) {
-            Element mealElement = mealElements.get(index);
-            List<String> meal = ParseUtil.getStringsLegacy(mealElement);
-
-            Element kcalElement = kcalElements.get(index);
-            double kcal = ParseUtil.getDouble(kcalElement);
-
-            Element carbohydrateElement = carbohydrateElements.get(index);
-            double carbohydrate = ParseUtil.getDouble(carbohydrateElement);
-
-            Element proteinElement = proteinElements.get(index);
-            double protein = ParseUtil.getDouble(proteinElement);
-
-            Element fatElement = fatElements.get(index);
-            double fat = ParseUtil.getDouble(fatElement);
-
-            mealList.add(new MealObject.Meal(meal, kcal, carbohydrate, protein, fat));
-        }
-        return new MealObject(mealList);
-    }
-
-    @Nullable
-    public static List<Item> translateMealToItemList(Context context, MealObject.Meal meal) {
-        if (meal.getMeal() == null || meal.getMeal().isEmpty()) {
-            return null;
-        }
-
-        List<Item> items = new ArrayList<>();
-        items.add(new GraphItem(meal.getCarbohydrate(), meal.getProtein(), meal.getFat()));
-        items.add(new KcalItem(meal.getKcal()));
-        items.add(new DividerItem());
-        for (String value : meal.getMeal()) {
-            items.add(createDefaultItem(context, value));
-        }
-        return items;
-    }
-
-    public static DefaultItem createDefaultItem(Context context, String value) {
-        String[] allergy_value = context.getResources().getStringArray(R.array.allergy_info_value);
-        String[] allergy_name = context.getResources().getStringArray(R.array.allergy_info_name);
-        String filteredValue = value;
         StringBuilder builder = new StringBuilder();
-        for (int i = allergy_value.length - 1; i >= 0; i--) {
-            if (filteredValue.contains(allergy_value[i])) {
-                filteredValue = filteredValue.replace(allergy_value[i], "").replace(".", "");
-                builder.append(allergy_name[i]);
-                builder.append(", ");
+        for (int i = allergyKey.length - 1; i >= 0; i--) {
+            String key = allergyKey[i];
+            String name = allergyName[i];
+            if (titleString.contains(key)) {
+                titleString = titleString.replace(key + ".", "");
+                builder.append(name).append(", ");
             }
         }
+
+        String secondaryString = null;
         if (builder.length() > 0) {
             builder.replace(builder.lastIndexOf(","), builder.length() - 1, "");
-            return new DefaultItem(filteredValue, builder.toString());
+            secondaryString = builder.toString();
         }
-        return new DefaultItem(value, null);
+        return new String[]{titleString, secondaryString};
     }
 
     private static class ParseUtil {

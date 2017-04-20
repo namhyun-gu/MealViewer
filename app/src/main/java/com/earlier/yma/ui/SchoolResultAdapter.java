@@ -143,8 +143,8 @@ public class SchoolResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class DefaultHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.default_title) TextView title;
-        @BindView(R.id.default_summary) TextView summary;
+        @BindView(R.id.tv_title) TextView title;
+        @BindView(R.id.tv_secondary) TextView summary;
 
         public DefaultHolder(View itemView) {
             super(itemView);

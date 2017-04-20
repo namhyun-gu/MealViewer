@@ -13,17 +13,6 @@ import android.view.ViewGroup;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.Meal;
-import com.earlier.yma.data.MealDataUtil;
-import com.earlier.yma.data.model.item.DividerItem;
-import com.earlier.yma.data.model.item.Item;
-import com.earlier.yma.data.model.item.meal.DefaultItem;
-import com.earlier.yma.data.model.item.meal.GraphItem;
-import com.earlier.yma.data.model.item.meal.KcalItem;
-import com.earlier.yma.ui.MealAdapter;
-import com.earlier.yma.utilities.RealmString;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MealFragment extends Fragment implements MealContract.View {
 
@@ -49,7 +38,7 @@ public class MealFragment extends Fragment implements MealContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new MealAdapter(getActivity());
+        mAdapter = new MealAdapter(getContext());
     }
 
     @Override
@@ -82,22 +71,13 @@ public class MealFragment extends Fragment implements MealContract.View {
     public void showMeal(Meal meal) {
         mStubNoMeal.setVisibility(View.GONE);
         mMealView.setVisibility(View.VISIBLE);
-
-        List<Item> items = new ArrayList<>();
-        items.add(new GraphItem(meal.getCarbohydrate(), meal.getProtein(), meal.getFat()));
-        items.add(new KcalItem(meal.getKcal()));
-        items.add(new DividerItem());
-        for (RealmString s : meal.getMealList()) {
-            DefaultItem mealItem = MealDataUtil.createDefaultItem(getContext(), s.getValue());
-            items.add(mealItem);
-        }
-        mAdapter.setItems(items);
+        mAdapter.setMeal(meal);
     }
 
     @Override
     public void showNoMeal() {
         mStubNoMeal.setVisibility(View.VISIBLE);
         mMealView.setVisibility(View.GONE);
-        mAdapter.setItems(null);
+        mAdapter.setMeal(null);
     }
 }

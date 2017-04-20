@@ -52,6 +52,7 @@ import com.earlier.yma.data.model.item.Item;
 import com.earlier.yma.data.model.item.school.DefaultItem;
 import com.earlier.yma.data.model.item.school.SubHeaderItem;
 import com.earlier.yma.data.service.NeisService;
+import com.earlier.yma.meal.MealActivity;
 import com.earlier.yma.utilities.Prefs;
 import com.earlier.yma.utilities.Util;
 
@@ -195,7 +196,7 @@ public class SchoolSearchActivity extends AppCompatActivity
     }
 
     private void showMainActivity() {
-        this.startActivity(new Intent(this, MainActivity.class));
+        this.startActivity(new Intent(this, MealActivity.class));
         this.finish();
     }
 

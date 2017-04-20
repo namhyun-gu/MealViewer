@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="allergy_info_name">
+    <string-array name="allergy_info_value">
         <item>난류</item>
         <item>우유</item>
         <item>메밀</item>

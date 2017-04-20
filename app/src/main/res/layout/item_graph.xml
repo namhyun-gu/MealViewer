@@ -1,133 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_nutrient_height"
     android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="true"
     android:clickable="true"
     android:orientation="horizontal"
     android:weightSum="3">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_carbohydrate" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/keyline_first_minus"
+            android:text="@string/item_content_carbohydrate"
+            android:textColor="@color/black_alpha_87"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_carbohydrate" />
+        <TextView
+            android:id="@+id/tv_carbohydrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black_alpha_54"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            tools:text="Summary" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/keyline_first_minus"
-                android:text="@string/item_content_carbohydrate"
-                android:textColor="@color/black_alpha_87"
-                android:textSize="16sp"
-                android:textStyle="normal" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/nutrient_summary_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Summary"
-                android:textColor="@color/black_alpha_54"
-                android:textSize="14sp"
-                android:textStyle="normal" />
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_protein" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/keyline_first_minus"
+            android:text="@string/item_content_protein"
+            android:textColor="@color/black_alpha_87"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_protein" />
+        <TextView
+            android:id="@+id/tv_protein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black_alpha_54"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            tools:text="Summary" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/keyline_first_minus"
-                android:text="@string/item_content_protein"
-                android:textColor="@color/black_alpha_87"
-                android:textSize="16sp"
-                android:textStyle="normal" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/nutrient_summary_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Summary"
-                android:textColor="@color/black_alpha_54"
-                android:textSize="14sp"
-                android:textStyle="normal" />
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_fat" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/keyline_first_minus"
+            android:text="@string/item_content_fat"
+            android:textColor="@color/black_alpha_87"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_fat" />
+        <TextView
+            android:id="@+id/tv_fat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black_alpha_54"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            tools:text="Summary" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/keyline_first_minus"
-                android:text="@string/item_content_fat"
-                android:textColor="@color/black_alpha_87"
-                android:textSize="16sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/nutrient_summary_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Summary"
-                android:textColor="@color/black_alpha_54"
-                android:textSize="14sp"
-                android:textStyle="normal" />
-
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

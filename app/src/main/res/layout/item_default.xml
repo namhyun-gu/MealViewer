@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_twolines_height"
     android:background="?android:attr/selectableItemBackground"
@@ -15,22 +16,22 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/default_title"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sample Text"
             android:textColor="@color/black_alpha_87"
             android:textSize="16sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            tools:text="Sample Text" />
 
         <TextView
-            android:id="@+id/default_summary"
+            android:id="@+id/tv_secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sample Text Summary"
             android:textColor="@color/black_alpha_54"
             android:textSize="14sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            tools:text="Sample Text Summary" />
 
     </LinearLayout>
 

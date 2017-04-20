@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="allergy_info_value" translatable="false">
+    <string-array name="allergy_info_key" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -16,7 +16,7 @@
         <item>13</item>
     </string-array>
 
-    <string-array name="allergy_info_name">
+    <string-array name="allergy_info_value">
         <item>Egg</item>
         <item>Milk</item>
         <item>Buckwheat</item>
