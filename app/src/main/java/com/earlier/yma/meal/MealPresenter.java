@@ -45,8 +45,8 @@ public class MealPresenter implements MealContract.Presenter {
 
     @Override
     public void loadData() {
-        Date dateFrom = Util.getEditedDateTime(mCurrentDate, 0, 0);
-        Date dateTo = Util.getEditedDateTime(mCurrentDate, 23, 59);
+        Date dateFrom = Util.editDate(mCurrentDate, 0, 0);
+        Date dateTo = Util.editDate(mCurrentDate, 23, 59);
 
         Meal meal = mRealm.where(Meal.class)
                 .equalTo("type", mCurrentFiltering.ordinal() + 1)

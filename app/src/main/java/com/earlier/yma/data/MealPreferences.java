@@ -1,6 +1,8 @@
 package com.earlier.yma.data;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class MealPreferences {
 
@@ -14,7 +16,12 @@ public class MealPreferences {
 
     public static final String PREF_SCHUL_KIND = "schul_knd_sc_code";
 
-    public static SchoolInfo getSchoolInfo(SharedPreferences preferences) {
+    public static final String PREF_UPDATE_WEEK = "update_week";
+
+    public static SchoolInfo getSchoolInfo(Context context) {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+
         String path = preferences.getString(PREF_PATH, null);
         String schulCode = preferences.getString(PREF_SCHUL_CODE, null);
         String schulCrseScCode = preferences.getString(PREF_SCHUL_CRSESC, null);
@@ -23,15 +30,34 @@ public class MealPreferences {
         return new SchoolInfo(path, schulCode, schulCrseScCode, schulKndScCode);
     }
 
-    public static void setSchoolInfo(SharedPreferences preferences,
+    public static void setSchoolInfo(Context context,
             String path, String schulCode,
             String schulCrseScCode, String schulKindCode) {
+
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
 
         preferences.edit()
                 .putString(PREF_PATH, path)
                 .putString(PREF_SCHUL_CODE, schulCode)
                 .putString(PREF_SCHUL_CRSESC, schulCrseScCode)
                 .putString(PREF_SCHUL_KIND, schulKindCode)
+                .apply();
+    }
+
+    public static int getUpdateWeek(Context context) {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+
+        return preferences.getInt(PREF_UPDATE_WEEK, 0);
+    }
+
+    public static void setUpdateWeek(Context context, int week) {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+
+        preferences.edit()
+                .putInt(PREF_UPDATE_WEEK, week)
                 .apply();
     }
 

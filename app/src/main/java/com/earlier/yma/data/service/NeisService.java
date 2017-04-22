@@ -26,12 +26,13 @@ import retrofit2.http.Query;
 
 public interface NeisService {
     String BASE_URL = "http://stu.%s";
-
+    
     @GET("/sts_sci_md01_001.do")
-    Call<String> getResponse(@Query("schulCode") String schulCode,
-                             @Query("schulCrseScCode") String schulCrseScCode,
-                             @Query("schulKndScCode") String schulKndScCode,
-                             @Query("schMmealScCode") @IntRange(from = 1, to = 3) int schMmealScCode);
+    Call<String> weeklyMeal(@Query("schulCode") String schulCode,
+            @Query("schulCrseScCode") String schulCrseScCode,
+            @Query("schulKndScCode") String schulKndScCode,
+            @Query("schMmealScCode") @IntRange(from = 1, to = 3) int schMmealScCode,
+            @Query("schYmd") String requestDate);
 
     @GET("/spr_ccm_cm01_100.do")
     Call<SearchResultObject> searchSchool(@Query("kraOrgNm") String schoolName);

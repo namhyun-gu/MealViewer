@@ -33,7 +33,6 @@ import org.jsoup.select.Elements;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -153,15 +152,6 @@ public class MealDataUtil {
                     strings.add(realmString);
                 }
                 return strings;
-            }
-            return null;
-        }
-
-        static List<String> getStringsLegacy(Element element) {
-            String elementText = element.text();
-            String removeSpacesText = elementText.replace("\\s", "");
-            if (!TextUtils.isEmpty(removeSpacesText)) {
-                return Arrays.asList(elementText.split("\\s"));
             }
             return null;
         }

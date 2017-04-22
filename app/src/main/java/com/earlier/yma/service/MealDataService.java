@@ -2,8 +2,6 @@ package com.earlier.yma.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -17,6 +15,7 @@ import com.earlier.yma.utilities.Util;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -42,8 +41,7 @@ public class MealDataService extends IntentService {
             return;
         }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        MealPreferences.SchoolInfo schoolInfo = MealPreferences.getSchoolInfo(preferences);
+        MealPreferences.SchoolInfo schoolInfo = MealPreferences.getSchoolInfo(this);
 
         String baseUrl = String.format(NeisService.BASE_URL, schoolInfo.getPath());
 
@@ -57,11 +55,12 @@ public class MealDataService extends IntentService {
         for (int mealKindCode = 1; mealKindCode <= 3; mealKindCode++) {
             NotificationUtils.downloadProgress(this, mealKindCode);
 
-            Call<String> call = service.getResponse(
+            Call<String> call = service.weeklyMeal(
                     schoolInfo.getSchulCode(),
                     schoolInfo.getSchulCrseScCode(),
                     schoolInfo.getSchulKindCode(),
-                    mealKindCode);
+                    mealKindCode,
+                    Util.getFormatDateString(new Date()));
 
             String result;
             try {
