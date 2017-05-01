@@ -6,12 +6,12 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.earlier.yma.data.Meal;
-import com.earlier.yma.data.MealDataUtil;
+import com.earlier.yma.utilities.MealDataUtils;
 import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.service.NeisService;
 import com.earlier.yma.utilities.NotificationUtils;
 import com.earlier.yma.utilities.ToStringConverterFactory;
-import com.earlier.yma.utilities.Util;
+import com.earlier.yma.utilities.Utils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class MealDataService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         NotificationUtils.clearAllNotification(this);
 
-        if (!Util.isConnected(this)) {
+        if (!Utils.isConnected(this)) {
             NotificationUtils.networkErrorOccurred(this);
             return;
         }
@@ -60,7 +60,7 @@ public class MealDataService extends IntentService {
                     schoolInfo.getSchulCrseScCode(),
                     schoolInfo.getSchulKindCode(),
                     mealKindCode,
-                    Util.getFormatDateString(new Date()));
+                    Utils.getFormatDateString(new Date()));
 
             String result;
             try {
@@ -69,7 +69,7 @@ public class MealDataService extends IntentService {
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Can't receive data", e);
                 NotificationUtils.clearAllNotification(this);
-                if (!Util.isConnected(this)) {
+                if (!Utils.isConnected(this)) {
                     NotificationUtils.networkErrorOccurred(this);
                 } else {
                     NotificationUtils.downloadErrorOccurred(this);
@@ -77,7 +77,7 @@ public class MealDataService extends IntentService {
                 return;
             }
 
-            List<Meal> mealList = MealDataUtil.parseResponse(realm, result, mealKindCode);
+            List<Meal> mealList = MealDataUtils.parseResponse(realm, result, mealKindCode);
             realm.copyFromRealm(mealList);
         }
         realm.commitTransaction();

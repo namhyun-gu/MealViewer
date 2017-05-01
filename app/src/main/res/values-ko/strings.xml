@@ -13,7 +13,7 @@
 
     <!-- Dialog -->
     <string name="dialog_search">검색 중&#8230; (%1$d/%2$d)</string>
-    <string name="dialog_school_set">이 결과를 선택하시겠습니까?</string>
+    <string name="dialog_school_result_content">"%1$s"를 사용할까요?</string>
     <string name="dialog_not_initalized_content">학교가 설정되지 않아 앱을 이용할 수 없습니다. 설정을 위해 설정 화면으로 이동합니다</string>
     <string name="dialog_change_date">표시할 날짜 변경</string>
     <string name="dialog_reset_content">설정을 초기화합니다. 진행하려면 \'확인\' 버튼을 눌러주세요</string>

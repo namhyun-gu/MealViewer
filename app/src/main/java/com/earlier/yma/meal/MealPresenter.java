@@ -1,7 +1,7 @@
 package com.earlier.yma.meal;
 
 import com.earlier.yma.data.Meal;
-import com.earlier.yma.utilities.Util;
+import com.earlier.yma.utilities.Utils;
 
 import java.util.Date;
 
@@ -31,10 +31,9 @@ public class MealPresenter implements MealContract.Presenter {
 
     @Override
     public void start() {
-        if (mRealm != null && !mRealm.isClosed()) {
-            mRealm.close();
+        if (mRealm == null) {
+            mRealm = Realm.getDefaultInstance();
         }
-        mRealm = Realm.getDefaultInstance();
         loadData();
     }
 
@@ -45,8 +44,8 @@ public class MealPresenter implements MealContract.Presenter {
 
     @Override
     public void loadData() {
-        Date dateFrom = Util.editDate(mCurrentDate, 0, 0);
-        Date dateTo = Util.editDate(mCurrentDate, 23, 59);
+        Date dateFrom = Utils.editDate(mCurrentDate, 0, 0);
+        Date dateTo = Utils.editDate(mCurrentDate, 23, 59);
 
         Meal meal = mRealm.where(Meal.class)
                 .equalTo("type", mCurrentFiltering.ordinal() + 1)
@@ -74,6 +73,7 @@ public class MealPresenter implements MealContract.Presenter {
     @Override
     public void setDate(Date date) {
         mCurrentDate = date;
+        loadData();
     }
 
     @Override

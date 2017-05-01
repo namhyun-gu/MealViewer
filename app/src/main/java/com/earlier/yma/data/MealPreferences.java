@@ -23,15 +23,16 @@ public class MealPreferences {
                 PreferenceManager.getDefaultSharedPreferences(context);
 
         String path = preferences.getString(PREF_PATH, null);
+        String schoolName = preferences.getString(PREF_SCHOOL_NAME, null);
         String schulCode = preferences.getString(PREF_SCHUL_CODE, null);
         String schulCrseScCode = preferences.getString(PREF_SCHUL_CRSESC, null);
         String schulKndScCode = preferences.getString(PREF_SCHUL_KIND, null);
 
-        return new SchoolInfo(path, schulCode, schulCrseScCode, schulKndScCode);
+        return new SchoolInfo(path, schoolName, schulCode, schulCrseScCode, schulKndScCode);
     }
 
     public static void setSchoolInfo(Context context,
-            String path, String schulCode,
+            String path, String schoolName, String schulCode,
             String schulCrseScCode, String schulKindCode) {
 
         SharedPreferences preferences =
@@ -39,6 +40,7 @@ public class MealPreferences {
 
         preferences.edit()
                 .putString(PREF_PATH, path)
+                .putString(PREF_SCHOOL_NAME, schoolName)
                 .putString(PREF_SCHUL_CODE, schulCode)
                 .putString(PREF_SCHUL_CRSESC, schulCrseScCode)
                 .putString(PREF_SCHUL_KIND, schulKindCode)
@@ -63,20 +65,26 @@ public class MealPreferences {
 
     public static class SchoolInfo {
         private String path;
+        private String schoolName;
         private String schulCode;
         private String schulCrseScCode;
         private String schulKindCode;
 
-        public SchoolInfo(String path, String schulCode, String schulCrseScCode,
-                String schulKndScCode) {
+        public SchoolInfo(String path, String schoolName, String schulCode,
+                String schulCrseScCode, String schulKindCode) {
             this.path = path;
+            this.schoolName = schoolName;
             this.schulCode = schulCode;
             this.schulCrseScCode = schulCrseScCode;
-            this.schulKindCode = schulKndScCode;
+            this.schulKindCode = schulKindCode;
         }
 
         public String getPath() {
             return path;
+        }
+
+        public String getSchoolName() {
+            return schoolName;
         }
 
         public String getSchulCode() {

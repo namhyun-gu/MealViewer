@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.Meal;
-import com.earlier.yma.data.MealDataUtil;
+import com.earlier.yma.utilities.MealDataUtils;
 import com.google.common.base.Strings;
 
 public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -160,10 +160,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             int position = getAdapterPosition() - DEFAULT_ITEM_POSITION;
             String mealString = meal.getMealList().get(position).getValue();
 
-            String filteredString[] = MealDataUtil.getFilteredMealString(mContext, mealString);
+            String filteredString[] = MealDataUtils.getFilteredMealString(mContext, mealString);
             titleView.setText(filteredString[0]);
             if (!Strings.isNullOrEmpty(filteredString[1])) {
                 secondaryView.setText(filteredString[1]);
+                secondaryView.setVisibility(View.VISIBLE);
             }
         }
     }

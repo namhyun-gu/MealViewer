@@ -18,13 +18,13 @@ package com.earlier.yma.data.service;
 
 import android.support.annotation.IntRange;
 
-import com.earlier.yma.data.model.SearchResultObject;
+import com.earlier.yma.data.SearchResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface NeisService {
+public interface  NeisService {
     String BASE_URL = "http://stu.%s";
     
     @GET("/sts_sci_md01_001.do")
@@ -35,5 +35,5 @@ public interface NeisService {
             @Query("schYmd") String requestDate);
 
     @GET("/spr_ccm_cm01_100.do")
-    Call<SearchResultObject> searchSchool(@Query("kraOrgNm") String schoolName);
+    Call<SearchResult> searchSchool(@Query("kraOrgNm") String query);
 }

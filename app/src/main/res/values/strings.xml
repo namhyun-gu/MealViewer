@@ -17,7 +17,7 @@
 
     <!-- Dialog -->
     <string name="dialog_search">Searching&#8230; (%1$d/%2$d)</string>
-    <string name="dialog_school_set">Would you like this result to choose?</string>
+    <string name="dialog_school_result_content">Select "%1$s"?</string>
     <string name="dialog_not_initalized_content">The school does not set, you can not use the app. Go to the settings screen</string>
     <string name="dialog_change_date">Change date</string>
     <string name="dialog_reset_content">Reset settings. right?</string>

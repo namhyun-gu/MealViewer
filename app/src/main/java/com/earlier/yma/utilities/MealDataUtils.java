@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.earlier.yma.data;
+package com.earlier.yma.utilities;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -23,7 +23,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.earlier.yma.R;
-import com.earlier.yma.utilities.RealmString;
+import com.earlier.yma.data.Meal;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,7 +40,7 @@ import java.util.Locale;
 import io.realm.Realm;
 import io.realm.RealmList;
 
-public class MealDataUtil {
+public class MealDataUtils {
     @Nullable
     public static List<Meal> parseResponse(Realm realm, String response, int type) {
         final Document doc = Jsoup.parse(response);

@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_title"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_onelines_height"
-    android:orientation="vertical">
-
-    <View xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/Widget.AppTheme.NavigationDrawerItem.Divider"
-        android:layout_width="match_parent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/keyline_first"
-        android:paddingRight="@dimen/keyline_first">
-
-        <TextView
-            android:id="@+id/default_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Sample"
-            android:textColor="@color/black_alpha_54"
-            android:textSize="14sp"
-            android:textStyle="normal" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/keyline_first"
+    android:paddingRight="@dimen/keyline_first"
+    android:textColor="@color/colorAccent"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    tools:text="Sample (10)" />
