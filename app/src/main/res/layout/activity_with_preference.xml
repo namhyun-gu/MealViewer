@@ -19,13 +19,6 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <View
-            android:id="@+id/shadow_view"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/shadow"
-            android:visibility="gone" />
-
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
