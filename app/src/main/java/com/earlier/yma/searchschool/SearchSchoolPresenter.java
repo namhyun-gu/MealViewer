@@ -129,8 +129,12 @@ public class SearchSchoolPresenter implements SearchSchoolContract.Presenter {
         @Override
         protected void onPostExecute(List<SearchResult> searchResults) {
             super.onPostExecute(searchResults);
+            if (searchResults.size() == 0) {
+                mView.showEmptyError();
+            } else {
+                mView.showResults(searchResults);
+            }
             mView.finishProgress();
-            mView.showResults(searchResults);
         }
 
         private Gson buildGson() {

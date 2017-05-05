@@ -18,7 +18,6 @@ package com.earlier.yma;
 
 import android.app.Application;
 
-import com.earlier.yma.data.MealDataManager;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
@@ -38,7 +37,5 @@ public class BaseApplication extends Application {
                     .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                     .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                     .build());
-
-        MealDataManager.initialize(getApplicationContext());
     }
 }

@@ -17,23 +17,23 @@
     </string-array>
 
     <string-array name="path_name_arrays">
-        <item>서울특별시 교육청</item>
-        <item>부산광역시 교육청</item>
-        <item>대구광역시 교육청</item>
-        <item>인천광역시 교육청</item>
-        <item>광주광역시 교육청</item>
-        <item>대전광역시 교육청</item>
-        <item>울산광역시 교육청</item>
-        <item>세종특별자치시 교육청</item>
-        <item>경기도 교육청</item>
-        <item>강원도 교육청</item>
-        <item>충청북도 교육청</item>
-        <item>충청남도 교육청</item>
-        <item>전라북도 교육청</item>
-        <item>전라남도 교육청</item>
-        <item>경상북도 교육청</item>
-        <item>경상남도 교육청</item>
-        <item>제주도 교육청</item>
+        <item>서울특별시교육청</item>
+        <item>부산광역시교육청</item>
+        <item>대구광역시교육청</item>
+        <item>인천광역시교육청</item>
+        <item>광주광역시교육청</item>
+        <item>대전광역시교육청</item>
+        <item>울산광역시교육청</item>
+        <item>세종특별자치시교육청</item>
+        <item>경기도교육청</item>
+        <item>강원도교육청</item>
+        <item>충청북도교육청</item>
+        <item>충청남도교육청</item>
+        <item>전라북도교육청</item>
+        <item>전라남도교육청</item>
+        <item>경상북도교육청</item>
+        <item>경상남도교육청</item>
+        <item>제주도교육청</item>
     </string-array>
 
     <string-array name="day_name">

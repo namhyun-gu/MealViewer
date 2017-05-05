@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,13 +13,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.earlier.yma.R;
+import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.service.MealDataService;
 import com.earlier.yma.ui.PrefActivity;
 import com.earlier.yma.utilities.ActivityUtils;
+import com.earlier.yma.utilities.Utils;
 
 import java.util.Date;
 
@@ -121,26 +122,32 @@ public class MealActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(mDrawerToggle);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        Intent intent = new Intent(MealActivity.this, PrefActivity.class);
-                        switch (item.getItemId()) {
-                            case R.id.nav_settings:
-                                intent.putExtra(PrefActivity.BUNDLE_TYPE,
-                                        PrefActivity.TYPE_SETTINGS);
-                                startActivity(intent);
-                                break;
-                            case R.id.nav_info:
-                                intent.putExtra(PrefActivity.BUNDLE_TYPE,
-                                        PrefActivity.TYPE_INFORMATION);
-                                startActivity(intent);
-                                break;
-                        }
-                        return true;
+        navigationView.setNavigationItemSelectedListener(item -> {
+                    Intent intent = new Intent(MealActivity.this, PrefActivity.class);
+                    switch (item.getItemId()) {
+                        case R.id.nav_settings:
+                            intent.putExtra(PrefActivity.BUNDLE_TYPE,
+                                    PrefActivity.TYPE_SETTINGS);
+                            startActivity(intent);
+                            break;
+                        case R.id.nav_info:
+                            intent.putExtra(PrefActivity.BUNDLE_TYPE,
+                                    PrefActivity.TYPE_INFORMATION);
+                            startActivity(intent);
+                            break;
                     }
+                    return true;
                 });
+
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView headerNameView = (TextView) headerView.findViewById(R.id.header_schoolname);
+        TextView headerPathView = (TextView) headerView.findViewById(R.id.header_path);
+
+        MealPreferences.SchoolInfo schoolInfo = MealPreferences.getSchoolInfo(this);
+
+        headerNameView.setText(schoolInfo.getSchoolName());
+        headerPathView.setText(Utils.convertPathToName(this, schoolInfo.getPath()));
     }
 
     private void setupTabLayout() {
@@ -150,12 +157,9 @@ public class MealActivity extends AppCompatActivity
 
     private void setupFab() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MealActivity.this, MealDataService.class);
-                startService(intent);
-            }
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(MealActivity.this, MealDataService.class);
+            startService(intent);
         });
     }
 

@@ -21,9 +21,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
+import com.earlier.yma.R;
+
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Utils {
@@ -47,5 +51,13 @@ public class Utils {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
+    }
+
+    public static String convertPathToName(Context context, String path) {
+        String[] pathArrays = context.getResources().getStringArray(R.array.path_arrays);
+        List<String> pathList = Arrays.asList(pathArrays);
+
+        String[] nameArrays = context.getResources().getStringArray(R.array.path_name_arrays);
+        return nameArrays[pathList.indexOf(path)];
     }
 }

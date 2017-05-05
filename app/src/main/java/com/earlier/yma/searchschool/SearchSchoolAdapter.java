@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.SearchResult;
+import com.earlier.yma.utilities.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -83,12 +83,7 @@ public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int itemSize = mSearchResults.get(index).getResults().length;
             String currentPath = mSearchResults.get(index).getPath();
 
-            String[] pathArrays = mContext.getResources().getStringArray(R.array.path_arrays);
-            List<String> pathList = Arrays.asList(pathArrays);
-
-            String[] nameArrays = mContext.getResources().getStringArray(R.array.path_name_arrays);
-
-            ((ViewBinder) holder).bind(nameArrays[pathList.indexOf(currentPath)]
+            ((ViewBinder) holder).bind(Utils.convertPathToName(mContext, currentPath)
                     + " (" + itemSize + ")");
         }
     }
