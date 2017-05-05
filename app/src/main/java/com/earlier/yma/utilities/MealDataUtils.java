@@ -41,34 +41,59 @@ import io.realm.Realm;
 import io.realm.RealmList;
 
 public class MealDataUtils {
+    private static final String TABLE_SELECTOR = "#contents .sub_con table";
+    private static final String TABLE_HEAD_SELECTOR = " thead";
+    private static final String TABLE_BODY_SELECTOR = " tbody";
+
+    private static final String DATE_SELECTOR =
+            TABLE_SELECTOR + TABLE_HEAD_SELECTOR + " tr th[scope='col']";
+
+    private static final String BODY_CONTENT_SELECTOR =
+            TABLE_SELECTOR + TABLE_BODY_SELECTOR + " tr";
+
+    private static final String ROW_NAME_SELECTOR = "th[scope='row']";
+    private static final String DATA_SELECTOR = "td.textC";
+
+    private static final String[] ROW_NAME_MEAL = { "조식", "중식", "석식" };
+    private static final String ROW_NAME_KCAL = "에너지(kcal)";
+    private static final String ROW_NAME_CARBOHYDRATE = "탄수화물(g)";
+    private static final String ROW_NAME_PROTEIN = "단백질(g)";
+    private static final String ROW_NAME_FAT = "지방(g)";
+
     @Nullable
     public static List<Meal> parseResponse(Realm realm, String response, int type) {
         final Document doc = Jsoup.parse(response);
 
-        Elements dates = doc.select(Constants.DATE_SELECTOR);
-        Elements dateElements = dates.select(Constants.DATE_ELEMENT_SELECTOR);
+        Elements dateElements = doc.select(DATE_SELECTOR);
+        Elements mealElements = null;
+        Elements kcalElements = null;
+        Elements carbohydrateElements = null;
+        Elements proteinElements = null;
+        Elements fatElements = null;
 
-        Elements contents = doc.select(Constants.CONTENTS_SELECTOR);
+        Elements bodyContentElements = doc.select(BODY_CONTENT_SELECTOR);
+        for (int index = 0; index < bodyContentElements.size(); index++ ) {
+            Element element = bodyContentElements.get(index);
 
-        // Check meal is exists
-        Element mealContent = contents.get(Constants.INDEX_MEAL);
-        Elements mealElements = mealContent.select(Constants.ELEMENT_SELECTOR);
+            Element rowNameElement = element.select(ROW_NAME_SELECTOR).first();
+            String rowName = rowNameElement.text();
+
+            if (rowName.equals(ROW_NAME_MEAL[type - 1])) {
+                mealElements = element.select(DATA_SELECTOR);
+            } else if (rowName.equals(ROW_NAME_KCAL)) {
+                kcalElements = element.select(DATA_SELECTOR);
+            } else if (rowName.equals(ROW_NAME_CARBOHYDRATE)) {
+                carbohydrateElements = element.select(DATA_SELECTOR);
+            } else if (rowName.equals(ROW_NAME_PROTEIN)) {
+                proteinElements = element.select(DATA_SELECTOR);
+            } else if (rowName.equals(ROW_NAME_FAT)) {
+                fatElements = element.select(DATA_SELECTOR);
+            }
+        }
 
         if (mealElements.isEmpty()) {
             return null;
         }
-
-        Element kcalContent = contents.get(Constants.INDEX_KCAL);
-        Elements kcalElements = kcalContent.select(Constants.ELEMENT_SELECTOR);
-
-        Element carbohydrateContent = contents.get(Constants.INDEX_CARBOHYDRATE);
-        Elements carbohydrateElements = carbohydrateContent.select(Constants.ELEMENT_SELECTOR);
-
-        Element proteinContent = contents.get(Constants.INDEX_PROTEIN);
-        Elements proteinElements = proteinContent.select(Constants.ELEMENT_SELECTOR);
-
-        Element fatContent = contents.get(Constants.INDEX_FAT);
-        Elements fatElements = fatContent.select(Constants.ELEMENT_SELECTOR);
 
         List<Meal> meals = new ArrayList<>();
         for (int index = 0; index < 7; index++) {
@@ -81,10 +106,6 @@ public class MealDataUtils {
 
             Element mealElement = mealElements.get(index);
             RealmList<RealmString> mealStrings = ParseUtil.getStrings(realm, mealElement);
-
-            if (mealStrings == null) {
-                continue;
-            }
 
             Element kcalElement = kcalElements.get(index);
             double kcal = ParseUtil.getDouble(kcalElement);
@@ -159,7 +180,12 @@ public class MealDataUtils {
         static double getDouble(Element element) {
             String elementText = element.text();
             if (!TextUtils.isEmpty(elementText)) {
-                return Double.parseDouble(elementText);
+                try {
+                    return Double.parseDouble(elementText);
+                } catch (NumberFormatException e) {
+                    Log.e("MealDataUtils", "Is not number (text: " + elementText + ")", e);
+                    return 0;
+                }
             }
             return 0;
         }
@@ -177,24 +203,6 @@ public class MealDataUtils {
                 Log.e("ParseUtil", "Can't parse string to date", e);
                 return null;
             }
-        }
-    }
-
-    private class Constants {
-        static final int INDEX_MEAL = 1;
-        static final int INDEX_KCAL = 23;
-        static final int INDEX_CARBOHYDRATE = 24;
-        static final int INDEX_PROTEIN = 25;
-        static final int INDEX_FAT = 26;
-
-        static final String DATE_SELECTOR = "#contents .sub_con table thead tr";
-        static final String DATE_ELEMENT_SELECTOR = "th[scope='col']";
-
-        static final String CONTENTS_SELECTOR = "#contents .sub_con table tbody tr";
-        static final String ELEMENT_SELECTOR = "td.textC";
-
-        private Constants() {
-            // No-op
         }
     }
 }

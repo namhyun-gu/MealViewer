@@ -52,7 +52,7 @@ public class MealPresenter implements MealContract.Presenter {
                 .between("date", dateFrom, dateTo)
                 .findFirst();
 
-        if (meal != null && meal.isValid()) {
+        if (meal != null && meal.isValid() && meal.getMealList().size() != 0) {
             mView.showMeal(meal);
         } else {
             mView.showNoMeal();
