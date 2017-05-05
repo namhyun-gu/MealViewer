@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.earlier.yma.R;
 import com.earlier.yma.data.MealPreferences;
@@ -84,18 +82,16 @@ public class SearchSchoolFragment extends Fragment
                 .content(getString(R.string.dialog_school_result_content, result.getSchoolName()))
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.no)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                            @NonNull DialogAction which) {
-                        MealPreferences.setSchoolInfo(getContext(),
-                                path,
-                                result.getSchoolName(),
-                                result.getSchulCode(),
-                                result.getSchulCrseScCode(),
-                                result.getSchulKndScCode());
-                        dialog.dismiss();
-                    }
+                .onPositive((dialog, which) -> {
+                    MealPreferences.setSchoolInfo(getContext(),
+                            path,
+                            result.getSchoolName(),
+                            result.getSchulCode(),
+                            result.getSchulCrseScCode(),
+                            result.getSchulKndScCode());
+                    dialog.dismiss();
+
+                    getActivity().finish();
                 })
                 .show();
     }
@@ -143,5 +139,10 @@ public class SearchSchoolFragment extends Fragment
     @Override
     public void finishProgress() {
         mDialog.dismiss();
+    }
+
+    @Override
+    public void updateTitle(String query) {
+        getActivity().setTitle(getString(R.string.activity_search_result_title, query));
     }
 }

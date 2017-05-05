@@ -60,6 +60,8 @@ public class SearchSchoolPresenter implements SearchSchoolContract.Presenter {
 
     @Override
     public void searchSchool(String query) {
+        mView.updateTitle(query);
+
         if (TextUtils.isEmpty(query)) {
             mView.showEmptyError();
             return;

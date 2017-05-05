@@ -22,6 +22,7 @@ public interface SearchSchoolContract {
 
         void finishProgress();
 
+        void updateTitle(String query);
     }
 
     interface Presenter extends BasePresenter {
