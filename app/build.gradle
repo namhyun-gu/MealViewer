@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 apply from: 'script.gradle'
 
@@ -14,7 +15,6 @@ android {
         versionName "2.1"
 
         multiDexEnabled true
-        jackOptions.enabled true
         testInstrumentationRunner "android.support.test.runner.AndroidUnitRunner"
     }
     compileOptions {

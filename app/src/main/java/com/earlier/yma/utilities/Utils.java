@@ -22,6 +22,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import com.earlier.yma.R;
+import com.google.common.base.Strings;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -54,6 +55,8 @@ public class Utils {
     }
 
     public static String convertPathToName(Context context, String path) {
+        if (Strings.isNullOrEmpty(path)) return null;
+
         String[] pathArrays = context.getResources().getStringArray(R.array.path_arrays);
         List<String> pathList = Arrays.asList(pathArrays);
 

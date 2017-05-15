@@ -26,10 +26,6 @@ public class Meal extends RealmObject {
         this.date = date;
     }
 
-    public int getType() {
-        return type;
-    }
-
     public void setType(int type) {
         this.type = type;
     }

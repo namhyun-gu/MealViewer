@@ -40,7 +40,7 @@ import com.google.gson.Gson;
 import java.util.Calendar;
 
 public class TimePickerPreference extends Preference implements MaterialDialog.SingleButtonCallback {
-    private String TAG = getClass().getSimpleName();
+
     private Dialog mDialog;
     private int mDefaultHour;
     private int mDefaultMinute;

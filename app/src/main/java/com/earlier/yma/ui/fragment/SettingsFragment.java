@@ -60,7 +60,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             return true;
         }
     };
-    private final String TAG = getClass().getSimpleName();
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
