@@ -24,9 +24,11 @@ def setVersionCode(code) {
     versionProps.store(versionPropsFile.newWriter(), null)
 }
 
-task increaseVersionCode << {
-    // How-to : gradlew -q -b app\build.gradle increaseVersionCode
-    def code = getVersionCode()
-    setVersionCode(code + 1)
-    println(String.format("increased version code (before : %d, after : %d)", code, code + 1))
+task increaseVersionCode {
+    doLast {
+        // How-to : gradlew -q -b app\build.gradle increaseVersionCode
+        def code = getVersionCode()
+        setVersionCode(code + 1)
+        println(String.format("increased version code (before : %d, after : %d)", code, code + 1))
+    }
 }
