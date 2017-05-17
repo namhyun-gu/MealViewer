@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.earlier.yma.ApplicationModule;
 import com.earlier.yma.R;
 import com.earlier.yma.data.MealPreferences;
-import com.earlier.yma.service.MealDataService;
+import com.earlier.yma.data.MealRepository;
+import com.earlier.yma.data.MealRepositoryModule;
 import com.earlier.yma.ui.PrefActivity;
 import com.earlier.yma.utilities.ActivityUtils;
 import com.earlier.yma.utilities.Utils;
@@ -40,6 +43,8 @@ public class MealActivity extends AppCompatActivity
     private ActionBarDrawerToggle mDrawerToggle;
 
     private Toolbar mToolbar;
+
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +69,8 @@ public class MealActivity extends AppCompatActivity
                 .registerOnSharedPreferenceChangeListener(this);
 
         DaggerMealComponent.builder()
+                .applicationModule(new ApplicationModule(getApplicationContext()))
+                .mealRepositoryModule(new MealRepositoryModule(new MealRepository()))
                 .mealPresenterModule(new MealPresenterModule(mealFragment))
                 .build()
                 .inject(this);
@@ -105,24 +112,34 @@ public class MealActivity extends AppCompatActivity
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+        super.onBackPressed();
+    }
+
     private void setupToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
     }
 
     private void setupDrawerContent() {
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerToggle = new ActionBarDrawerToggle(this,
-                drawerLayout,
+                mDrawerLayout,
                 mToolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
 
-        drawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
+        navigationView.setNavigationItemSelectedListener(
+                item -> {
                     Intent intent = new Intent(MealActivity.this, PrefActivity.class);
                     switch (item.getItemId()) {
                         case R.id.nav_settings:
@@ -157,9 +174,10 @@ public class MealActivity extends AppCompatActivity
 
     private void setupFab() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(MealActivity.this, MealDataService.class);
-            startService(intent);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
         });
     }
 

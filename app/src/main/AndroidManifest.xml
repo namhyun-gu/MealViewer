@@ -40,9 +40,6 @@
                 android:value=".meal.MealActivity" />
         </activity>
 
-        <service
-            android:name=".service.MealDataService"
-            android:exported="false" />
     </application>
 
 </manifest>

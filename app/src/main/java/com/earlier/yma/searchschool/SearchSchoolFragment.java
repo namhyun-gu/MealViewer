@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.earlier.yma.R;
-import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.SearchResult;
 
 import java.util.List;
@@ -77,23 +76,17 @@ public class SearchSchoolFragment extends Fragment
     }
 
     @Override
-    public void onListItemClicked(final String path, final SearchResult.Result result) {
-        new MaterialDialog.Builder(getContext())
-                .content(getString(R.string.dialog_school_result_content, result.getSchoolName()))
+    public void onListItemClicked(SearchResult.Detail detail) {
+        MaterialDialog dialog = new MaterialDialog.Builder(getContext())
+                .content(getString(R.string.dialog_school_result_content, detail.getSchoolName()))
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.no)
-                .onPositive((dialog, which) -> {
-                    MealPreferences.setSchoolInfo(getContext(),
-                            path,
-                            result.getSchoolName(),
-                            result.getSchulCode(),
-                            result.getSchulCrseScCode(),
-                            result.getSchulKndScCode());
-                    dialog.dismiss();
-
+                .onPositive((dialog1, which) -> {
+                    mPresenter.saveSchool(detail);
+                    mPresenter.clearDatabase();
                     getActivity().finish();
-                })
-                .show();
+                }).build();
+        dialog.show();
     }
 
     @Override
@@ -101,11 +94,6 @@ public class SearchSchoolFragment extends Fragment
         mStubNoData.setVisibility(View.VISIBLE);
         mResultView.setVisibility(View.GONE);
         mAdapter.setResults(null);
-    }
-
-    @Override
-    public void showNetworkError() {
-
     }
 
     @Override
@@ -123,17 +111,12 @@ public class SearchSchoolFragment extends Fragment
         maxProgressValue = paths.length;
 
         mDialog = new MaterialDialog.Builder(getContext())
-                .content(String.format(getString(R.string.dialog_search), 0, maxProgressValue))
+                .content(getString(R.string.dialog_search))
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .autoDismiss(false)
                 .progress(true, 0)
                 .show();
-    }
-
-    @Override
-    public void updateProgress(Integer value) {
-        mDialog.setContent(String.format(getString(R.string.dialog_search), value, maxProgressValue));
     }
 
     @Override

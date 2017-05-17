@@ -19,7 +19,7 @@ public class SearchResultDeserializer implements JsonDeserializer<SearchResult> 
         JsonObject resultObject = jsonObject.get("resultSVO").getAsJsonObject();
         JsonArray detailArray = resultObject.get("orgDVOList").getAsJsonArray();
 
-        SearchResult.Result[] results = context.deserialize(detailArray, SearchResult.Result[].class);
+        SearchResult.Detail[] results = context.deserialize(detailArray, SearchResult.Detail[].class);
         return new SearchResult(results);
     }
 

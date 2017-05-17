@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 Namhyun, Gu
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.earlier.yma.utilities;
 
 import android.content.Context;
@@ -54,7 +38,7 @@ public class MealDataUtils {
     private static final String ROW_NAME_SELECTOR = "th[scope='row']";
     private static final String DATA_SELECTOR = "td.textC";
 
-    private static final String[] ROW_NAME_MEAL = { "조식", "중식", "석식" };
+    private static final String[] ROW_NAME_MEAL = {"조식", "중식", "석식"};
     private static final String ROW_NAME_KCAL = "에너지(kcal)";
     private static final String ROW_NAME_CARBOHYDRATE = "탄수화물(g)";
     private static final String ROW_NAME_PROTEIN = "단백질(g)";
@@ -72,9 +56,8 @@ public class MealDataUtils {
         Elements fatElements = null;
 
         Elements bodyContentElements = doc.select(BODY_CONTENT_SELECTOR);
-        for (int index = 0; index < bodyContentElements.size(); index++ ) {
-            Element element = bodyContentElements.get(index);
 
+        for (Element element : bodyContentElements) {
             Element rowNameElement = element.select(ROW_NAME_SELECTOR).first();
             String rowName = rowNameElement.text();
 
@@ -91,18 +74,12 @@ public class MealDataUtils {
             }
         }
 
-        if (mealElements.isEmpty()) {
-            return null;
-        }
-
         List<Meal> meals = new ArrayList<>();
         for (int index = 0; index < 7; index++) {
             Element dateElement = dateElements.get(index);
             Date date = ParseUtil.getDate(dateElement);
 
-            if (date == null) {
-                continue;
-            }
+            if (date == null) continue;
 
             Element mealElement = mealElements.get(index);
             RealmList<RealmString> mealStrings = ParseUtil.getStrings(realm, mealElement);
@@ -144,7 +121,7 @@ public class MealDataUtils {
             String key = allergyKey[i];
             String name = allergyName[i];
             if (titleString.contains(key)) {
-                titleString = titleString.replace(key + ".", "");
+                titleString = titleString.replace(key, "");
                 builder.append(name).append(", ");
             }
         }

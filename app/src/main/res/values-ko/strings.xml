@@ -12,7 +12,7 @@
     <string name="item_content_protein">단백질</string>
 
     <!-- Dialog -->
-    <string name="dialog_search">검색 중&#8230; (%1$d/%2$d)</string>
+    <string name="dialog_search">검색 중&#8230;</string>
     <string name="dialog_school_result_content">"%1$s"를 사용할까요?</string>
     <string name="dialog_not_initalized_content">학교가 설정되지 않아 앱을 이용할 수 없습니다. 설정을 위해 설정 화면으로 이동합니다</string>
     <string name="dialog_change_date">표시할 날짜 변경</string>

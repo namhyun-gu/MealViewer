@@ -1,11 +1,12 @@
 package com.earlier.yma.searchschool;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.earlier.yma.R;
+import com.earlier.yma.data.Meal;
+import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.SearchResult;
 import com.earlier.yma.data.service.NeisService;
 import com.earlier.yma.utilities.SearchResultDeserializer;
@@ -14,20 +15,21 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchSchoolPresenter implements SearchSchoolContract.Presenter {
+
+    private static final String TAG = SearchSchoolPresenter.class.getSimpleName();
 
     private Context mContext;
 
@@ -68,94 +70,68 @@ public class SearchSchoolPresenter implements SearchSchoolContract.Presenter {
         }
 
         if (!Utils.isConnected(mContext)) {
-            mView.showNetworkError();
+            mView.showEmptyError();
         }
 
-        new SearchSchoolTask().execute(query);
+        final String[] pathArray =
+                mContext.getResources().getStringArray(R.array.path_arrays);
+
+        Observable.fromArray(pathArray)
+                .map(path -> String.format(NeisService.SEARCH_BASE_URL, path))
+                .subscribeOn(Schedulers.io())
+                .flatMap(path -> {
+                    NeisService service = buildRetrofit(path).create(NeisService.class);
+                    return service.searchSchool(query);
+                })
+                .onErrorReturn(throwable -> SearchResult.empty())
+                .retry(1)
+                .buffer(pathArray.length)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> mView.setupProgress())
+                .doFinally(() -> mView.finishProgress())
+                .subscribe(results -> mView.showResults(results),
+                        throwable -> {
+                            mView.showEmptyError();
+                            Log.e(TAG, "searchSchool: Error occurred", throwable);
+                        });
     }
 
-    private class SearchSchoolTask extends AsyncTask<String, Integer, List<SearchResult>> {
+    @Override
+    public void saveSchool(SearchResult.Detail schoolDetail) {
+        String path = Utils.convertNameToPath(mContext, schoolDetail.getPathName());
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mView.setupProgress();
-        }
+        MealPreferences.setSchoolInfo(mContext,
+                path,
+                schoolDetail.getSchoolName(),
+                schoolDetail.getSchulCode(),
+                schoolDetail.getSchulCrseScCode(),
+                schoolDetail.getSchulKndScCode());
+    }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            mView.updateProgress(values[0] + 1); // Starts '1'
-        }
+    @Override
+    public void clearDatabase() {
+        final RealmResults<Meal> results = mRealm.where(Meal.class).findAll();
+        mRealm.executeTransaction(realm1 -> results.deleteAllFromRealm());
+    }
 
-        @Override
-        protected List<SearchResult> doInBackground(String... params) {
-            String query = params[0];
-            final String[] pathArray =
-                    mContext.getResources().getStringArray(R.array.path_arrays);
+    private Gson buildGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(SearchResult.class, new SearchResultDeserializer())
+                .create();
+    }
 
-            List<SearchResult> results = new ArrayList<>();
-            for (int index = 0; index < pathArray.length; index++) {
-                String path = pathArray[index];
-                publishProgress(index);
+    private Retrofit buildRetrofit(String baseUrl) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new StethoInterceptor())
+                .build();
 
-                if (!Utils.isConnected(mContext)) {
-                    continue;
-                }
+        Gson gson = buildGson();
 
-                String baseUrl = String.format(NeisService.BASE_URL, path);
-
-                Retrofit retrofit = buildRetrofit(baseUrl);
-
-                NeisService service = retrofit.create(NeisService.class);
-
-                Call<SearchResult> call = service.searchSchool(query);
-                try {
-                    Response<SearchResult> response = call.execute();
-                    SearchResult searchResult = response.body();
-                    searchResult.setPath(path);
-
-                    if (searchResult.getResults().length == 0) continue;
-
-                    results.add(searchResult);
-                } catch (IOException e) {
-                    Log.e("SearchSchoolTask", "Can't receive result (" + path + ")", e);
-                    continue;
-                }
-            }
-            return results;
-        }
-
-        @Override
-        protected void onPostExecute(List<SearchResult> searchResults) {
-            super.onPostExecute(searchResults);
-            if (searchResults.size() == 0) {
-                mView.showEmptyError();
-            } else {
-                mView.showResults(searchResults);
-            }
-            mView.finishProgress();
-        }
-
-        private Gson buildGson() {
-            return new GsonBuilder()
-                    .registerTypeAdapter(SearchResult.class, new SearchResultDeserializer())
-                    .create();
-        }
-
-        private Retrofit buildRetrofit(String baseUrl) {
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .addNetworkInterceptor(new StethoInterceptor())
-                    .build();
-
-            Gson gson = buildGson();
-
-            return new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
-                    .build();
-        }
-
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
     }
 }

@@ -9,10 +9,12 @@ import android.widget.TextView;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.SearchResult;
-import com.earlier.yma.utilities.Utils;
+import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -32,18 +34,22 @@ public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void setResults(List<SearchResult> searchResults) {
         if (searchResults != null) {
-            mSubHeaderPosition = getSubHeaderPosition(searchResults);
+            mSearchResults = Observable.fromIterable(searchResults)
+                    .filter(searchResult ->
+                            searchResult.details() != null && searchResult.details().length != 0)
+                    .toList()
+                    .blockingGet();
+            mSubHeaderPosition = getSubHeaderPosition();
         }
-        mSearchResults = searchResults;
         notifyDataSetChanged();
     }
 
-    private List<Integer> getSubHeaderPosition(List<SearchResult> searchResults) {
+    private List<Integer> getSubHeaderPosition() {
         List<Integer> positionList = new ArrayList<>();
         int subHeaderPosition = 0;
-        for (SearchResult result : searchResults) {
+        for (SearchResult result : mSearchResults) {
             positionList.add(subHeaderPosition);
-            subHeaderPosition += result.getResults().length + 1;
+            subHeaderPosition += result.details().length + 1;
         }
         return positionList;
     }
@@ -72,19 +78,16 @@ public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if (position < mSubHeaderPosition.get(index)) break;
                 approximateIndex = index;
             }
-            String path = mSearchResults.get(approximateIndex).getPath();
-            SearchResult.Result[] results = mSearchResults.get(approximateIndex).getResults();
-            SearchResult.Result result = results[position - mSubHeaderPosition.get(approximateIndex) - 1];
-
-            ((ViewBinder) holder).bind(result.getSchoolName(), path, result);
+            int itemPosition = position - mSubHeaderPosition.get(approximateIndex) - 1;
+            SearchResult.Detail detail = mSearchResults.get(approximateIndex).details()[itemPosition];
+            ((DefaultHolder) holder).bind(detail);
         } else if (holder instanceof SubHeaderHolder) {
             int index = mSubHeaderPosition.indexOf(position);
 
-            int itemSize = mSearchResults.get(index).getResults().length;
-            String currentPath = mSearchResults.get(index).getPath();
+            int itemSize = mSearchResults.get(index).details().length;
+            String pathName = mSearchResults.get(index).details()[0].getPathName();
 
-            ((ViewBinder) holder).bind(Utils.convertPathToName(mContext, currentPath)
-                    + " (" + itemSize + ")");
+            ((SubHeaderHolder) holder).bind(pathName + " (" + itemSize + ")");
         }
     }
 
@@ -95,7 +98,7 @@ public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int subHeaderItemCount = mSearchResults.size();
         int itemCount = 0;
         for (SearchResult result : mSearchResults) {
-            itemCount += result.getResults().length;
+            itemCount += result.details().length;
         }
         return subHeaderItemCount + itemCount;
     }
@@ -105,30 +108,42 @@ public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mSubHeaderPosition.contains(position) ? TYPE_SUB_HEADER : TYPE_DEFAULT;
     }
 
-    private class DefaultHolder extends RecyclerView.ViewHolder implements ViewBinder {
+    private interface ViewBinder<T> {
+
+        void bind(T t);
+
+    }
+
+    public interface OnListItemClickListener {
+
+        void onListItemClicked(SearchResult.Detail detail);
+
+    }
+
+    private class DefaultHolder extends RecyclerView.ViewHolder implements
+            ViewBinder<SearchResult.Detail> {
         TextView titleView;
+        TextView secondaryView;
 
         DefaultHolder(View itemView) {
             super(itemView);
             titleView = (TextView) itemView.findViewById(R.id.tv_title);
+            secondaryView = (TextView) itemView.findViewById(R.id.tv_secondary);
+
         }
 
         @Override
-        public void bind(String text, Object... param) {
-            titleView.setText(text);
-
-            final String path = (String) param[0];
-            final SearchResult.Result result = (SearchResult.Result) param[1];
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mItemClickListener.onListItemClicked(path, result);
-                }
-            });
+        public void bind(SearchResult.Detail detail) {
+            titleView.setText(detail.getSchoolName());
+            if (!Strings.isNullOrEmpty(detail.getZipAddress().trim())) {
+                secondaryView.setVisibility(View.VISIBLE);
+                secondaryView.setText(detail.getZipAddress());
+            }
+            itemView.setOnClickListener(v -> mItemClickListener.onListItemClicked(detail));
         }
     }
 
-    private class SubHeaderHolder extends RecyclerView.ViewHolder implements ViewBinder {
+    private class SubHeaderHolder extends RecyclerView.ViewHolder implements ViewBinder<String> {
         TextView titleView;
 
         SubHeaderHolder(View itemView) {
@@ -137,20 +152,8 @@ public class SearchSchoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         @Override
-        public void bind(String text, Object... param) {
-            titleView.setText(text);
+        public void bind(String s) {
+            titleView.setText(s);
         }
-    }
-
-    private interface ViewBinder {
-
-        void bind(String text, Object... param);
-
-    }
-
-    public interface OnListItemClickListener {
-
-        void onListItemClicked(String path, SearchResult.Result result);
-
     }
 }

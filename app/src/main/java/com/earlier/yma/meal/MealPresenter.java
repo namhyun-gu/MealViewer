@@ -1,15 +1,25 @@
 package com.earlier.yma.meal;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.earlier.yma.data.Meal;
-import com.earlier.yma.utilities.Utils;
+import com.earlier.yma.data.MealPreferences;
+import com.earlier.yma.data.MealRepository;
 
 import java.util.Date;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
+import io.reactivex.Observable;
 
 public class MealPresenter implements MealContract.Presenter {
+
+    private static final String TAG = MealPresenter.class.getSimpleName();
+
+    private Context mContext;
+
+    private MealRepository mRepository;
 
     private MealContract.View mView;
 
@@ -17,10 +27,10 @@ public class MealPresenter implements MealContract.Presenter {
 
     private Date mCurrentDate = new Date();
 
-    private Realm mRealm;
-
     @Inject
-    MealPresenter(MealContract.View view) {
+    MealPresenter(Context context, MealRepository repository, MealContract.View view) {
+        mContext = context;
+        mRepository = repository;
         mView = view;
     }
 
@@ -31,32 +41,35 @@ public class MealPresenter implements MealContract.Presenter {
 
     @Override
     public void start() {
-        if (mRealm == null) {
-            mRealm = Realm.getDefaultInstance();
-        }
         loadData();
     }
 
     @Override
     public void destroy() {
-        mRealm.close();
+        mRepository.closeRealm();
     }
 
     @Override
     public void loadData() {
-        Date dateFrom = Utils.editDate(mCurrentDate, 0, 0);
-        Date dateTo = Utils.editDate(mCurrentDate, 23, 59);
+        MealPreferences.SchoolInfo info = MealPreferences.getSchoolInfo(mContext);
+        int type = mCurrentFiltering.ordinal() + 1;
 
-        Meal meal = mRealm.where(Meal.class)
-                .equalTo("type", mCurrentFiltering.ordinal() + 1)
-                .between("date", dateFrom, dateTo)
-                .findFirst();
+        Observable<Meal> local = mRepository.getLocalData(mCurrentDate, type);
+        Observable<Meal> server = mRepository.getServerData(info, mCurrentDate, type);
 
-        if (meal != null && meal.isValid() && meal.getMealList().size() != 0) {
-            mView.showMeal(meal);
-        } else {
-            mView.showNoMeal();
-        }
+        Observable.concat(local, server)
+                .firstElement()
+                .doOnSubscribe(disposable -> mView.showProgress())
+                .subscribe(meal1 -> mView.showMeal(meal1),
+                        throwable -> {
+                            mView.showNoMeal();
+                            Log.e(TAG, "loadData: Error occurred", throwable);
+                        });
+    }
+
+    @Override
+    public MealFilterType getFiltering() {
+        return mCurrentFiltering;
     }
 
     @Override
@@ -66,19 +79,14 @@ public class MealPresenter implements MealContract.Presenter {
     }
 
     @Override
-    public MealFilterType getFiltering() {
-        return mCurrentFiltering;
+    public Date getDate() {
+        return mCurrentDate;
     }
 
     @Override
     public void setDate(Date date) {
         mCurrentDate = date;
         loadData();
-    }
-
-    @Override
-    public Date getDate() {
-        return mCurrentDate;
     }
 
 }

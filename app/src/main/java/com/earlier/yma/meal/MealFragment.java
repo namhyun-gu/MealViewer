@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.earlier.yma.R;
 import com.earlier.yma.data.Meal;
@@ -21,6 +22,7 @@ public class MealFragment extends Fragment implements MealContract.View {
     private MealAdapter mAdapter;
     private RecyclerView mMealView;
     private View mStubNoMeal;
+    private ProgressBar mLoadingProgress;
 
     public MealFragment() {
 
@@ -51,9 +53,10 @@ public class MealFragment extends Fragment implements MealContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container);
+        View rootView = inflater.inflate(R.layout.fragment_meal, container);
 
         mStubNoMeal = rootView.findViewById(R.id.stub_no_results);
+        mLoadingProgress = (ProgressBar) rootView.findViewById(R.id.pb_loading);
         mMealView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mMealView.setLayoutManager(new LinearLayoutManager(getContext()));
         mMealView.setHasFixedSize(true);
@@ -71,6 +74,7 @@ public class MealFragment extends Fragment implements MealContract.View {
     public void showMeal(Meal meal) {
         mStubNoMeal.setVisibility(View.GONE);
         mMealView.setVisibility(View.VISIBLE);
+        mLoadingProgress.setVisibility(View.GONE);
         mAdapter.setMeal(meal);
     }
 
@@ -78,6 +82,14 @@ public class MealFragment extends Fragment implements MealContract.View {
     public void showNoMeal() {
         mStubNoMeal.setVisibility(View.VISIBLE);
         mMealView.setVisibility(View.GONE);
+        mLoadingProgress.setVisibility(View.GONE);
         mAdapter.setMeal(null);
+    }
+
+    @Override
+    public void showProgress() {
+        mStubNoMeal.setVisibility(View.GONE);
+        mMealView.setVisibility(View.GONE);
+        mLoadingProgress.setVisibility(View.VISIBLE);
     }
 }

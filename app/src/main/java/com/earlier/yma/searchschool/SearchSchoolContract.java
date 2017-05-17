@@ -12,13 +12,9 @@ public interface SearchSchoolContract {
 
         void showEmptyError();
 
-        void showNetworkError();
-
         void showResults(List<SearchResult> searchResults);
 
         void setupProgress();
-
-        void updateProgress(Integer value);
 
         void finishProgress();
 
@@ -30,6 +26,10 @@ public interface SearchSchoolContract {
         void destroy();
 
         void searchSchool(String query);
+
+        void saveSchool(SearchResult.Detail schoolDetail);
+
+        void clearDatabase();
 
     }
 

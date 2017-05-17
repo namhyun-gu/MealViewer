@@ -14,6 +14,7 @@ public interface MealContract {
 
         void showNoMeal();
 
+        void showProgress();
     }
 
     interface Presenter extends BasePresenter {
