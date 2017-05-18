@@ -3,7 +3,6 @@
     <string name="app_name">급식돌이</string>
 
     <!-- Snackbar -->
-    <string name="snackbar_backbutton_pressed_content">한 번 더 \'뒤로가기\' 버튼을 누르시면 앱을 종료합니다.</string>
 
     <!-- List item -->
     <string name="item_content_kcal">칼로리</string>
@@ -14,8 +13,7 @@
     <!-- Dialog -->
     <string name="dialog_search">검색 중&#8230;</string>
     <string name="dialog_school_result_content">"%1$s"를 사용할까요?</string>
-    <string name="dialog_not_initalized_content">학교가 설정되지 않아 앱을 이용할 수 없습니다. 설정을 위해 설정 화면으로 이동합니다</string>
-    <string name="dialog_change_date">표시할 날짜 변경</string>
+    <string name="dialog_not_initalized_content">학교가 설정되지 않아 앱을 이용할 수 없습니다. 학교 설정 화면으로 이동합니다</string>
     <string name="dialog_reset_content">설정을 초기화합니다. 진행하려면 \'확인\' 버튼을 눌러주세요</string>
 
     <!-- Activity title -->
@@ -26,10 +24,6 @@
     <!-- Button -->
 
     <!-- Notification -->
-    <string name="notification_meal_fetch_title">급식정보 다운로드</string>
-    <string name="notification_meal_fetch_content">다운로드 중&#8230; (%1$d/%2$d)</string>
-    <string name="notification_meal_fetch_warning_title">급식정보를 다운로드 할 수 없음</string>
-    <string name="notification_meal_fetch_warning_content">인터넷에 연결되어 있지 않습니다</string>
 
     <!-- Action -->
     <string name="action_settings">설정</string>
@@ -38,42 +32,19 @@
     <string name="action_breakfast">아침</string>
     <string name="action_information">정보</string>
     <string name="action_search">검색</string>
-    <string name="action_share">공유</string>
 
     <!-- Preference -->
     <string name="pref_application_info">앱 정보</string>
     <string name="pref_application_version_label">버전</string>
-    <string name="pref_time_based_menu_change">시간을 기반으로 메뉴 변경</string>
-    <string name="pref_time_based_menu_change_enabled_summary">사용</string>
-    <string name="pref_time_based_menu_change_disable_summary">사용 안함</string>
-    <string name="pref_lab_category">실험적인 기능</string>
-    <string name="pref_time_based_show_info">설정하는 모든 시간은 표시가 변경되는 시작 시간입니다</string>
-    <string name="pref_time_summary">{date} 부터</string>
-    <string name="pref_time_format">a hh:mm</string>
-    <string name="pref_breakfast_started_time">아침을 표시할 시간</string>
-    <string name="pref_lunch_started_time">점심을 표시할 시간</string>
-    <string name="pref_dinner_started_time">저녁을 표시할 시간</string>
-    <string name="pref_breakfast_enable">아침을 변경에 포함</string>
-    <string name="pref_default_menu">기본으로 표시할 메뉴</string>
     <string name="pref_reset">설정 초기화</string>
 
     <!-- Toast -->
-    <string name="toast_cannot_save_time">선택한 시간은 저장할 수 없습니다</string>
-    <string name="toast_update_prev_version">잘못 저장된 데이터를 수정하기 위해 설정을 초기화하고, 처음부터 다시 진행합니다</string>
 
     <!-- Etc -->
-    <string name="shared_raw_not_content">급식이 없습니다\n\n#급식돌이에서 공유함</string>
-    <string name="shared_raw_content">\n#급식돌이에서 공유함</string>
     <string name="search_hint">학교 검색</string>
-    <string name="not_connected">인터넷에 연결되지 않았습니다</string>
     <string name="no_results">가져올 데이터가 없습니다</string>
 
-    <string name="network_error_notification_title">데이터를 다운로드할 수 없습니다</string>
-    <string name="network_error_notification_body">인터넷에 연결되어 있지 않습니다</string>
-    <string name="action_retry">재시도</string>
     <string name="action_go_settings">설정으로 이동</string>
-    <string name="download_progress_notification_title">급식 데이터 다운로드</string>
-    <string name="download_progress_notification_text">다운로드 진행중</string>
-    <string name="download_complete_notification_text">다운로드 완료</string>
-    <string name="download_error_notification_body">서버로부터 응답이 없습니다</string>
+    <string name="close">닫기</string>
+    <string name="toast_reset">설정이 초기화되었습니다</string>
 </resources>

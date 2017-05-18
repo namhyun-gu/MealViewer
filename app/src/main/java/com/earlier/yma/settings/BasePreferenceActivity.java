@@ -1,17 +1,16 @@
-package com.earlier.yma.ui;
+package com.earlier.yma.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
 
 import com.earlier.yma.R;
-import com.earlier.yma.ui.fragment.InfoFragment;
-import com.earlier.yma.ui.fragment.SettingsFragment;
 
-public class PrefActivity extends AppCompatActivity {
+public class BasePreferenceActivity extends AppCompatActivity {
+
     public static String BUNDLE_TYPE = "preference_type";
 
     public static int PREFERENCE_TYPE_NONE = 0x0000;
@@ -28,16 +27,18 @@ public class PrefActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
-            PreferenceFragment fragment = null;
+            PreferenceFragmentCompat fragment = null;
             int preferenceType = getIntent().getIntExtra(BUNDLE_TYPE, PREFERENCE_TYPE_NONE);
             if (preferenceType == TYPE_INFORMATION) {
+                setTitle(getString(R.string.action_information));
                 fragment = new InfoFragment();
             } else if (preferenceType == TYPE_SETTINGS) {
+                setTitle(getString(R.string.action_settings));
                 fragment = new SettingsFragment();
             } else {
                 throw new UnsupportedOperationException("Not receive type bundle");
             }
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }

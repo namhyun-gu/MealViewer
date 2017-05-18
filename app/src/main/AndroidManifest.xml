@@ -32,8 +32,9 @@
             android:exported="true" />
 
         <activity
-            android:name=".ui.PrefActivity"
+            android:name=".settings.BasePreferenceActivity"
             android:label="PrefActivity"
+            android:theme="@style/AppTheme.Preference"
             android:parentActivityName=".meal.MealActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

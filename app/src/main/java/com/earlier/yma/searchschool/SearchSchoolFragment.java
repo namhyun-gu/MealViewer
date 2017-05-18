@@ -2,7 +2,7 @@ package com.earlier.yma.searchschool;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.content.res.Resources;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.earlier.yma.R;
 import com.earlier.yma.data.SearchResult;
+import com.earlier.yma.meal.MealActivity;
 
 import java.util.List;
 
@@ -27,8 +28,6 @@ public class SearchSchoolFragment extends Fragment
     private View mStubNoData;
     private RecyclerView mResultView;
     private MaterialDialog mDialog;
-
-    private int maxProgressValue;
 
     public SearchSchoolFragment() {
 
@@ -84,6 +83,8 @@ public class SearchSchoolFragment extends Fragment
                 .onPositive((dialog1, which) -> {
                     mPresenter.saveSchool(detail);
                     mPresenter.clearDatabase();
+                    Intent intent = new Intent(getContext(), MealActivity.class);
+                    getActivity().startActivity(intent);
                     getActivity().finish();
                 }).build();
         dialog.show();
@@ -105,11 +106,6 @@ public class SearchSchoolFragment extends Fragment
 
     @Override
     public void setupProgress() {
-        Resources resources = getContext().getResources();
-        String[] paths = resources.getStringArray(R.array.path_arrays);
-
-        maxProgressValue = paths.length;
-
         mDialog = new MaterialDialog.Builder(getContext())
                 .content(getString(R.string.dialog_search))
                 .cancelable(false)

@@ -38,6 +38,26 @@ public class Utils {
         return calendar.getTime();
     }
 
+    public static String getDateToString(Context context, Date date) {
+        final String[] monthStringArray = context.getResources().getStringArray(R.array.month_name);
+        final String[] dayStringArray = context.getResources().getStringArray(R.array.day_name);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        if (Locale.getDefault().getLanguage()
+                .equals(Locale.KOREAN.getLanguage())) {
+            return context.getString(R.string.activity_main_title,
+                    String.valueOf(month + 1), dayOfMonth, dayStringArray[dayOfWeek]);
+        }
+        return context.getString(R.string.activity_main_title,
+                monthStringArray[month], dayOfMonth, dayStringArray[dayOfWeek]);
+    }
+
     public static String convertPathToName(Context context, String path) {
         if (Strings.isNullOrEmpty(path)) return null;
 

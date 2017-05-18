@@ -96,17 +96,4 @@
         <item>Fri</item>
         <item>Sat</item>
     </string-array>
-
-
-    <string-array name="default_menu_array">
-        <item>@string/action_breakfast</item>
-        <item>@string/action_lunch</item>
-        <item>@string/action_dinner</item>
-    </string-array>
-
-    <string-array name="default_menu_array_values" translatable="false">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
 </resources>

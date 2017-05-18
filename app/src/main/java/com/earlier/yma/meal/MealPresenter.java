@@ -23,7 +23,7 @@ public class MealPresenter implements MealContract.Presenter {
 
     private MealContract.View mView;
 
-    private MealFilterType mCurrentFiltering = MealFilterType.BREAKFAST;
+    private MealFilterType mCurrentFiltering = MealFilterType.LUNCH;
 
     private Date mCurrentDate = new Date();
 
@@ -53,6 +53,13 @@ public class MealPresenter implements MealContract.Presenter {
     public void loadData() {
         MealPreferences.SchoolInfo info = MealPreferences.getSchoolInfo(mContext);
         int type = mCurrentFiltering.ordinal() + 1;
+
+        if (info == null) {
+            mView.showSetupDialog();
+            return;
+        }
+
+        mView.updateTitle(mCurrentDate);
 
         Observable<Meal> local = mRepository.getLocalData(mCurrentDate, type);
         Observable<Meal> server = mRepository.getServerData(info, mCurrentDate, type);

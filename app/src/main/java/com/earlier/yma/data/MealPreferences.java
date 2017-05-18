@@ -16,8 +16,6 @@ public class MealPreferences {
 
     public static final String PREF_SCHUL_KIND = "schul_knd_sc_code";
 
-    public static final String PREF_UPDATE_WEEK = "update_week";
-
     public static SchoolInfo getSchoolInfo(Context context) {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(context);
@@ -28,6 +26,7 @@ public class MealPreferences {
         String schulCrseScCode = preferences.getString(PREF_SCHUL_CRSESC, null);
         String schulKndScCode = preferences.getString(PREF_SCHUL_KIND, null);
 
+        if (path == null) return null;
         return new SchoolInfo(path, schoolName, schulCode, schulCrseScCode, schulKndScCode);
     }
 
@@ -44,22 +43,6 @@ public class MealPreferences {
                 .putString(PREF_SCHUL_CODE, schulCode)
                 .putString(PREF_SCHUL_CRSESC, schulCrseScCode)
                 .putString(PREF_SCHUL_KIND, schulKindCode)
-                .apply();
-    }
-
-    public static int getUpdateWeek(Context context) {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-
-        return preferences.getInt(PREF_UPDATE_WEEK, 0);
-    }
-
-    public static void setUpdateWeek(Context context, int week) {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-
-        preferences.edit()
-                .putInt(PREF_UPDATE_WEEK, week)
                 .apply();
     }
 

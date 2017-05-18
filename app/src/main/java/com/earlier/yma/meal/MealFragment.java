@@ -2,6 +2,7 @@ package com.earlier.yma.meal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.earlier.yma.R;
 import com.earlier.yma.data.Meal;
+import com.earlier.yma.searchschool.SearchSchoolActivity;
+import com.earlier.yma.utilities.Utils;
+
+import java.util.Date;
 
 public class MealFragment extends Fragment implements MealContract.View {
 
@@ -91,5 +97,31 @@ public class MealFragment extends Fragment implements MealContract.View {
         mStubNoMeal.setVisibility(View.GONE);
         mMealView.setVisibility(View.GONE);
         mLoadingProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSetupDialog() {
+        MaterialDialog dialog = new MaterialDialog.Builder(getContext())
+                .content(getString(R.string.dialog_not_initalized_content))
+                .positiveText(R.string.action_go_settings)
+                .negativeText(R.string.close)
+                .onPositive((dialog1, which) -> {
+                    Intent intent = new Intent(getContext(), SearchSchoolActivity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                })
+                .onNegative((dialog1, which) -> {
+                    getActivity().finish();
+                })
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
+                .autoDismiss(false)
+                .build();
+        dialog.show();
+    }
+
+    @Override
+    public void updateTitle(Date date) {
+        getActivity().setTitle(Utils.getDateToString(getContext(), date));
     }
 }

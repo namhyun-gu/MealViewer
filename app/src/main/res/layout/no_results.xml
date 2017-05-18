@@ -11,4 +11,5 @@
         android:fontFamily="sans-serif"
         android:text="@string/no_results"
         android:textColor="@color/black_alpha_87" />
+
 </LinearLayout>

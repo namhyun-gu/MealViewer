@@ -22,10 +22,12 @@ import com.earlier.yma.R;
 import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.MealRepository;
 import com.earlier.yma.data.MealRepositoryModule;
-import com.earlier.yma.ui.PrefActivity;
+import com.earlier.yma.settings.BasePreferenceActivity;
 import com.earlier.yma.utilities.ActivityUtils;
 import com.earlier.yma.utilities.Utils;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -140,16 +142,16 @@ public class MealActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 item -> {
-                    Intent intent = new Intent(MealActivity.this, PrefActivity.class);
+                    Intent intent = new Intent(MealActivity.this, BasePreferenceActivity.class);
                     switch (item.getItemId()) {
                         case R.id.nav_settings:
-                            intent.putExtra(PrefActivity.BUNDLE_TYPE,
-                                    PrefActivity.TYPE_SETTINGS);
+                            intent.putExtra(BasePreferenceActivity.BUNDLE_TYPE,
+                                    BasePreferenceActivity.TYPE_SETTINGS);
                             startActivity(intent);
                             break;
                         case R.id.nav_info:
-                            intent.putExtra(PrefActivity.BUNDLE_TYPE,
-                                    PrefActivity.TYPE_INFORMATION);
+                            intent.putExtra(BasePreferenceActivity.BUNDLE_TYPE,
+                                    BasePreferenceActivity.TYPE_INFORMATION);
                             startActivity(intent);
                             break;
                     }
@@ -162,28 +164,42 @@ public class MealActivity extends AppCompatActivity
         TextView headerPathView = (TextView) headerView.findViewById(R.id.header_path);
 
         MealPreferences.SchoolInfo schoolInfo = MealPreferences.getSchoolInfo(this);
-
-        headerNameView.setText(schoolInfo.getSchoolName());
-        headerPathView.setText(Utils.convertPathToName(this, schoolInfo.getPath()));
+        if (schoolInfo != null) {
+            headerNameView.setText(schoolInfo.getSchoolName());
+            headerPathView.setText(Utils.convertPathToName(this, schoolInfo.getPath()));
+        }
     }
 
     private void setupTabLayout() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.getTabAt(1).select();
         tabLayout.addOnTabSelectedListener(this);
     }
 
     private void setupFab() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        fab.setOnClickListener(v -> {
+            Date currentDate = mPresenter.getDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+
+            DatePickerDialog dialog = DatePickerDialog.newInstance(
+                    (view, year, monthOfYear, dayOfMonth) -> {
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        mPresenter.setDate(calendar.getTime());
+                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH));
+            dialog.show(getFragmentManager(), "DatePickerDialog");
         });
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-
+        if (key.equals(MealPreferences.PREF_SCHOOL_NAME)) {
+            mPresenter.loadData();
+        }
     }
 
     @Override
