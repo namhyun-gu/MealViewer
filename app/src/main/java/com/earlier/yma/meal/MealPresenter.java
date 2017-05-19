@@ -7,6 +7,7 @@ import com.earlier.yma.data.Meal;
 import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.MealRepository;
 
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -67,10 +68,21 @@ public class MealPresenter implements MealContract.Presenter {
         Observable.concat(local, server)
                 .firstElement()
                 .doOnSubscribe(disposable -> mView.showProgress())
-                .subscribe(meal1 -> mView.showMeal(meal1),
+                .subscribe(meal1 -> {
+                            if (!meal1.getMealList().isEmpty()) {
+                                mView.showMeal(meal1);
+                            } else {
+                                mView.showNoMeal(meal1.getTimestamp());
+                            }
+                        },
                         throwable -> {
-                            mView.showNoMeal();
-                            Log.e(TAG, "loadData: Error occurred", throwable);
+                            if (throwable instanceof UnknownHostException) {
+                                Log.e(TAG, "loadData: Network Error", throwable);
+                                mView.showNetworkError();
+                            } else {
+                                Log.e(TAG, "loadData: Error occurred", throwable);
+                                mView.showUnknownError();
+                            }
                         });
     }
 

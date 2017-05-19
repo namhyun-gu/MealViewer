@@ -9,6 +9,7 @@ import io.realm.RealmObject;
 
 public class Meal extends RealmObject {
 
+    private Date timestamp;
     private Date date;
     private int type;
 
@@ -18,12 +19,24 @@ public class Meal extends RealmObject {
     private double protein;
     private double fat;
 
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public int getType() {
+        return type;
     }
 
     public void setType(int type) {
@@ -69,5 +82,4 @@ public class Meal extends RealmObject {
     public void setFat(double fat) {
         this.fat = fat;
     }
-
 }

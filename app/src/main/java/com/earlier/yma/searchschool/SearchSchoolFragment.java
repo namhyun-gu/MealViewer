@@ -60,7 +60,7 @@ public class SearchSchoolFragment extends Fragment
             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search_school, container);
 
-        mStubNoData = rootView.findViewById(R.id.stub_no_results);
+        mStubNoData = rootView.findViewById(R.id.stub_error);
         mResultView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mResultView.setLayoutManager(new LinearLayoutManager(getContext()));
         mResultView.setHasFixedSize(true);

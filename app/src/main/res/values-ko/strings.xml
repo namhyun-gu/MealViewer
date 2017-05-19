@@ -14,7 +14,7 @@
     <string name="dialog_search">검색 중&#8230;</string>
     <string name="dialog_school_result_content">"%1$s"를 사용할까요?</string>
     <string name="dialog_not_initalized_content">학교가 설정되지 않아 앱을 이용할 수 없습니다. 학교 설정 화면으로 이동합니다</string>
-    <string name="dialog_reset_content">설정을 초기화합니다. 진행하려면 \'확인\' 버튼을 눌러주세요</string>
+    <string name="dialog_reset_content">데이터베이스를 초기화합니다. 진행하려면 \'확인\' 버튼을 눌러주세요</string>
 
     <!-- Activity title -->
     <string name="activity_main_title">%1$s월 %2$d일 (%3$s)</string>
@@ -36,7 +36,8 @@
     <!-- Preference -->
     <string name="pref_application_info">앱 정보</string>
     <string name="pref_application_version_label">버전</string>
-    <string name="pref_reset">설정 초기화</string>
+    <string name="pref_reset">데이터베이스 초기화</string>
+    <string name="pref_school_setting">학교 설정</string>
 
     <!-- Toast -->
 
@@ -46,5 +47,8 @@
 
     <string name="action_go_settings">설정으로 이동</string>
     <string name="close">닫기</string>
-    <string name="toast_reset">설정이 초기화되었습니다</string>
+    <string name="toast_reset">데이터베이스가 초기화되었습니다</string>
+    <string name="action_retry">재시도</string>\ㅜ
+    <string name="no_results_timestamp">가져올 데이터가 없습니다.\n%1s 에 업데이트됨</string>
+    <string name="network_error">네트워크 오류 발생</string>
 </resources>

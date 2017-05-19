@@ -11,10 +11,11 @@
         android:layout_height="wrap_content" />
 
     <ViewStub
-        android:id="@+id/stub_no_results"
+        android:id="@+id/stub_error"
+        android:inflatedId="@+id/stub_error_tree"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout="@layout/no_results" />
+        android:layout="@layout/stub_error" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

@@ -1,17 +1,22 @@
 package com.earlier.yma.settings;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.earlier.yma.R;
+import com.earlier.yma.data.Meal;
+import com.earlier.yma.searchschool.SearchSchoolActivity;
+import com.earlier.yma.utilities.RealmString;
+
+import io.realm.Realm;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements Preference.OnPreferenceClickListener,
@@ -58,10 +63,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     .content(R.string.dialog_reset_content)
                     .positiveText(android.R.string.ok)
                     .onPositive((dialog, which) -> {
-                        PreferenceManager.getDefaultSharedPreferences(getActivity())
-                                .edit()
-                                .clear()
-                                .apply();
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.executeTransaction(realm1 -> {
+                            realm1.where(Meal.class).findAll().deleteAllFromRealm();
+                            realm1.where(RealmString.class).findAll().deleteAllFromRealm();
+                        });
+                        realm.close();
 
                         dialog.dismiss();
 
@@ -69,6 +76,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     })
                     .negativeText(android.R.string.cancel)
                     .show();
+        } else if (preference.getKey().equals(getString(R.string.pref_school_setting_key))) {
+            Intent intent = new Intent(getContext(), SearchSchoolActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         }
         return true;
     }

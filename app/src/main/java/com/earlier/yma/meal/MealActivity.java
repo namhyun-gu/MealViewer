@@ -48,6 +48,8 @@ public class MealActivity extends AppCompatActivity
 
     private DrawerLayout mDrawerLayout;
 
+    private TabLayout mTabLayout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,8 @@ public class MealActivity extends AppCompatActivity
             mPresenter.setFiltering(currentFiltering);
             mPresenter.setDate(currentDate);
         }
+
+        mTabLayout.getTabAt(mPresenter.getFiltering().ordinal()).select();
     }
 
     @Override
@@ -171,9 +175,8 @@ public class MealActivity extends AppCompatActivity
     }
 
     private void setupTabLayout() {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.getTabAt(1).select();
-        tabLayout.addOnTabSelectedListener(this);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.addOnTabSelectedListener(this);
     }
 
     private void setupFab() {

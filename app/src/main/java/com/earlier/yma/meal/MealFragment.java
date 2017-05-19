@@ -11,7 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.earlier.yma.R;
@@ -27,11 +30,14 @@ public class MealFragment extends Fragment implements MealContract.View {
 
     private MealAdapter mAdapter;
     private RecyclerView mMealView;
-    private View mStubNoMeal;
+    private ViewStub mStubError;
+    private View mStubErrorView;
     private ProgressBar mLoadingProgress;
+    private TextView mErrorMessage;
+    private Button mRetryButton;
 
     public MealFragment() {
-
+    
     }
 
     public static MealFragment newInstance() {
@@ -61,7 +67,7 @@ public class MealFragment extends Fragment implements MealContract.View {
             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_meal, container);
 
-        mStubNoMeal = rootView.findViewById(R.id.stub_no_results);
+        mStubError = (ViewStub) rootView.findViewById(R.id.stub_error);
         mLoadingProgress = (ProgressBar) rootView.findViewById(R.id.pb_loading);
         mMealView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mMealView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -78,15 +84,45 @@ public class MealFragment extends Fragment implements MealContract.View {
 
     @Override
     public void showMeal(Meal meal) {
-        mStubNoMeal.setVisibility(View.GONE);
+        mStubError.setVisibility(View.GONE);
         mMealView.setVisibility(View.VISIBLE);
         mLoadingProgress.setVisibility(View.GONE);
         mAdapter.setMeal(meal);
     }
 
     @Override
-    public void showNoMeal() {
-        mStubNoMeal.setVisibility(View.VISIBLE);
+    public void showNoMeal(Date timestamp) {
+        inflateViewStub();
+
+        mErrorMessage.setText(getString(R.string.no_results_timestamp, Utils.getFormatDateString(timestamp)));
+        mRetryButton.setOnClickListener(v -> mPresenter.loadData());
+        mRetryButton.setVisibility(View.VISIBLE);
+
+        mStubError.setVisibility(View.VISIBLE);
+        mMealView.setVisibility(View.GONE);
+        mLoadingProgress.setVisibility(View.GONE);
+        mAdapter.setMeal(null);
+    }
+
+    @Override
+    public void showNetworkError() {
+        inflateViewStub();
+
+        mErrorMessage.setText(R.string.network_error);
+        mRetryButton.setOnClickListener(v -> mPresenter.loadData());
+        mRetryButton.setVisibility(View.VISIBLE);
+
+        mStubError.setVisibility(View.VISIBLE);
+        mMealView.setVisibility(View.GONE);
+        mLoadingProgress.setVisibility(View.GONE);
+        mAdapter.setMeal(null);
+    }
+
+    @Override
+    public void showUnknownError() {
+        inflateViewStub();
+
+        mStubError.setVisibility(View.VISIBLE);
         mMealView.setVisibility(View.GONE);
         mLoadingProgress.setVisibility(View.GONE);
         mAdapter.setMeal(null);
@@ -94,7 +130,7 @@ public class MealFragment extends Fragment implements MealContract.View {
 
     @Override
     public void showProgress() {
-        mStubNoMeal.setVisibility(View.GONE);
+        mStubError.setVisibility(View.GONE);
         mMealView.setVisibility(View.GONE);
         mLoadingProgress.setVisibility(View.VISIBLE);
     }
@@ -123,5 +159,13 @@ public class MealFragment extends Fragment implements MealContract.View {
     @Override
     public void updateTitle(Date date) {
         getActivity().setTitle(Utils.getDateToString(getContext(), date));
+    }
+
+    private void inflateViewStub() {
+        if (mStubErrorView == null) {
+            mStubErrorView = mStubError.inflate();
+            mErrorMessage = (TextView) mStubErrorView.findViewById(R.id.tv_error_message);
+            mRetryButton = (Button) mStubErrorView.findViewById(R.id.btn_retry);
+        }
     }
 }

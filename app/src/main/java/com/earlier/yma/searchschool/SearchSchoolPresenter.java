@@ -9,6 +9,7 @@ import com.earlier.yma.data.Meal;
 import com.earlier.yma.data.MealPreferences;
 import com.earlier.yma.data.SearchResult;
 import com.earlier.yma.data.service.NeisService;
+import com.earlier.yma.utilities.RealmString;
 import com.earlier.yma.utilities.SearchResultDeserializer;
 import com.earlier.yma.utilities.Utils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -21,7 +22,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -110,8 +110,10 @@ public class SearchSchoolPresenter implements SearchSchoolContract.Presenter {
 
     @Override
     public void clearDatabase() {
-        final RealmResults<Meal> results = mRealm.where(Meal.class).findAll();
-        mRealm.executeTransaction(realm1 -> results.deleteAllFromRealm());
+        mRealm.executeTransaction(realm -> {
+            mRealm.where(Meal.class).findAll().deleteAllFromRealm();
+            mRealm.where(RealmString.class).findAll().deleteAllFromRealm();
+        });
     }
 
     private Gson buildGson() {

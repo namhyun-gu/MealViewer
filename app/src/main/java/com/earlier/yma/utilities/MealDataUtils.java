@@ -96,7 +96,10 @@ public class MealDataUtils {
             Element fatElement = fatElements.get(index);
             double fat = ParseUtil.getDouble(fatElement);
 
+            Date timestamp = new Date();
+
             Meal meal = realm.createObject(Meal.class);
+            meal.setTimestamp(timestamp);
             meal.setType(type);
             meal.setDate(date);
             meal.setMealList(mealStrings);

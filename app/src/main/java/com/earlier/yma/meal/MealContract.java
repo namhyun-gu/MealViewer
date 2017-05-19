@@ -12,14 +12,17 @@ public interface MealContract {
 
         void showMeal(Meal meal);
 
-        void showNoMeal();
+        void showNoMeal(Date timestamp);
+
+        void showNetworkError();
+
+        void showUnknownError();
 
         void showProgress();
 
         void showSetupDialog();
 
         void updateTitle(Date date);
-
     }
 
     interface Presenter extends BasePresenter {
