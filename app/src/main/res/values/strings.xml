@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Meal Shuttle</string>
+    <string name="app_name">MealViewer</string>
 
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
