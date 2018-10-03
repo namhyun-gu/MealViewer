@@ -1,21 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
 
 apply from: 'script.gradle'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.earlier.yma"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode getVersionCode()
-        versionName "2.2"
-
-        multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidUnitRunner"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 45
+        versionName "2.21"
+        testInstrumentationRunner "androidx.test.runner.AndroidUnitRunner"
         resConfigs "en", "ko"
     }
     compileOptions {
@@ -24,16 +20,17 @@ android {
     }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "lifecycle"
     productFlavors {
         stable {
+            dimension "lifecycle"
             versionNameSuffix ".${commitCount} (build. ${showDate()})"
         }
         beta {
+            dimension "lifecycle"
             versionNameSuffix ".${commitCount}-beta (build. ${showDate()})"
         }
     }
@@ -44,53 +41,47 @@ android {
 }
 
 ext {
-    supportLibVersion = '25.3.1'
+    supportLibVersion = '1.0.0'
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Support Library
-    compile "com.android.support:support-v4:${supportLibVersion}"
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
-    compile "com.android.support:design:${supportLibVersion}"
-    compile "com.android.support:preference-v7:${supportLibVersion}"
+    implementation "androidx.appcompat:appcompat:${supportLibVersion}"
+    implementation "androidx.recyclerview:recyclerview:${supportLibVersion}"
+    implementation "androidx.preference:preference:${supportLibVersion}"
+    implementation "androidx.drawerlayout:drawerlayout:${supportLibVersion}"
+    implementation "com.google.android.material:material:1.0.0"
 
     // Firebase
-    compile 'com.google.firebase:firebase-crash:10.2.4'
-    compile 'com.google.firebase:firebase-core:10.2.4'
+    implementation 'com.google.firebase:firebase-crash:16.2.0'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
 
     // Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.11-rc1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11-rc1'
-
-    // Stetho
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    compile 'com.uphyca:stetho_realm:2.0.0'
+    implementation 'com.google.dagger:dagger:2.17'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.17'
 
     // Reactive X
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
 
     // Etc
-    compile 'com.google.guava:guava:20.0'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'org.jsoup:jsoup:1.9.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.jsoup:jsoup:1.11.3'
 
     // Material Design
-    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
-    compile 'com.wdullaer:materialdatetimepicker:3.2.1'
+    implementation 'com.afollestad.material-dialogs:core:0.9.4.2'
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    implementation 'com.wdullaer:materialdatetimepicker:3.6.4'
 
     // Junit
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.19.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

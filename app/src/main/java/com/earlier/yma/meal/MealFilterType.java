@@ -2,10 +2,10 @@ package com.earlier.yma.meal;
 
 public enum MealFilterType {
 
-    BREAKFAST,
+  BREAKFAST,
 
-    LUNCH,
+  LUNCH,
 
-    DINNER
+  DINNER
 
 }

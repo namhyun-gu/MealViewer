@@ -1,32 +1,22 @@
 package com.earlier.yma;
 
 import android.app.Application;
-
-import com.facebook.stetho.Stetho;
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 public class BaseApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
 
-        // Initialize Realm
-        Realm.init(this);
+  @Override
+  public void onCreate() {
+    super.onCreate();
 
-        RealmConfiguration configuration = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .build();
+    // Initialize Realm
+    Realm.init(this);
 
-        Realm.setDefaultConfiguration(configuration);
+    RealmConfiguration configuration = new RealmConfiguration.Builder()
+        .deleteRealmIfMigrationNeeded()
+        .build();
 
-        // Initialize Stetho
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                    .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                    .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-                    .build());
-    }
+    Realm.setDefaultConfiguration(configuration);
+  }
 }

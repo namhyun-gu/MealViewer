@@ -6,15 +6,15 @@ import dagger.Provides;
 @Module
 public class MealPresenterModule {
 
-    private final MealContract.View mView;
+  private final MealContract.View mView;
 
-    public MealPresenterModule(MealContract.View view) {
-        mView = view;
-    }
+  public MealPresenterModule(MealContract.View view) {
+    mView = view;
+  }
 
-    @Provides
-    MealContract.View provideMealContractView() {
-        return mView;
-    }
+  @Provides
+  MealContract.View provideMealContractView() {
+    return mView;
+  }
 
 }

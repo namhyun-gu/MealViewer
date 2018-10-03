@@ -6,15 +6,15 @@ import dagger.Provides;
 @Module
 public class MealRepositoryModule {
 
-    private final MealRepository mRepository;
+  private final MealRepository mRepository;
 
-    public MealRepositoryModule(MealRepository repository) {
-        mRepository = repository;
-    }
+  public MealRepositoryModule(MealRepository repository) {
+    mRepository = repository;
+  }
 
-    @Provides
-    MealRepository provideRepository() {
-        return mRepository;
-    }
+  @Provides
+  MealRepository provideRepository() {
+    return mRepository;
+  }
 
 }

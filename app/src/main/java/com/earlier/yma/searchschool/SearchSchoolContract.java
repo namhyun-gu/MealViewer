@@ -3,34 +3,33 @@ package com.earlier.yma.searchschool;
 import com.earlier.yma.BasePresenter;
 import com.earlier.yma.BaseView;
 import com.earlier.yma.data.SearchResult;
-
 import java.util.List;
 
 public interface SearchSchoolContract {
 
-    interface View extends BaseView<SearchSchoolContract.Presenter> {
+  interface View extends BaseView<SearchSchoolContract.Presenter> {
 
-        void showEmptyError();
+    void showEmptyError();
 
-        void showResults(List<SearchResult> searchResults);
+    void showResults(List<SearchResult> searchResults);
 
-        void setupProgress();
+    void setupProgress();
 
-        void finishProgress();
+    void finishProgress();
 
-        void updateTitle(String query);
-    }
+    void updateTitle(String query);
+  }
 
-    interface Presenter extends BasePresenter {
+  interface Presenter extends BasePresenter {
 
-        void destroy();
+    void destroy();
 
-        void searchSchool(String query);
+    void searchSchool(String query);
 
-        void saveSchool(SearchResult.Detail schoolDetail);
+    void saveSchool(SearchResult.Detail schoolDetail);
 
-        void clearDatabase();
+    void clearDatabase();
 
-    }
+  }
 
 }
