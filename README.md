@@ -1,3 +1,51 @@
-# MealViewer
+<h1 align="center">MealViewer</h1>
 
-<a href='https://play.google.com/store/apps/details?id=com.earlier.yma&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height="125" width="323" alt='다운로드하기 Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/ko_badge_web_generic.png'/></a>
+<p align="center">
+    <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/>
+</p>
+
+<p align="center">
+🚧 Under construction 🚧
+</p>
+
+<!-- ## Preview
+
+<p align="center">
+    <img src="images/preview_1.png" width="32%"/>
+    <img src="images/preview_2.png" width="32%"/>
+    <img src="images/preview_3.png" width="32%"/>
+</p> -->
+
+## Architecture
+
+MVVM (View - ViewModel - Model)
+
+## Built with
+
+- [Kotlin](https://kotlinlang.org/) based, [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/) for asynchronous.
+- [Material-Components](https://github.com/material-components/material-components-android) - Material design components like ripple animation, cardView.
+- Data Binding
+- JetPack
+  - ViewModel & LiveData
+  - Data Store
+- [Dagger Hilt](https://dagger.dev/hilt/) for dependency injection.
+- [Retrofit](https://github.com/square/retrofit) for networking
+- [Moshi](https://github.com/square/moshi) for parse JSON
+
+## License
+
+```
+Copyright 2021 Namhyun, Gu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
