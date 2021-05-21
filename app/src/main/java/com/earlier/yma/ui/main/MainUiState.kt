@@ -1,3 +1,9 @@
 package com.earlier.yma.ui.main
 
-data class MainUiState(val data: String = "")
+import com.earlier.yma.util.Constants
+import com.earlier.yma.util.DateUtils
+
+data class MainUiState(
+    val date: String = DateUtils.getToday(),
+    val selectedType: String = Constants.TYPE_LUNCH,
+)
