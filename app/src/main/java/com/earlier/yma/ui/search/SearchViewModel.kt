@@ -24,6 +24,7 @@ class SearchViewModel @Inject constructor(
         try {
             val response = neisService.searchSchool(keyword.toString())
             if (response.content == null || response.content.size < 2) {
+                invalidResponse()
                 return@launch
             }
 
@@ -43,6 +44,12 @@ class SearchViewModel @Inject constructor(
                 orgCode = school.orgCode,
                 orgName = school.orgName,
             )
+        )
+    }
+
+    private fun invalidResponse() {
+        _uiState.value = SearchUiState.Error(
+            IllegalArgumentException("Invalid argument \"type\"")
         )
     }
 }

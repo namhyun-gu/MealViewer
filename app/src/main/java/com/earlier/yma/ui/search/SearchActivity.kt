@@ -14,17 +14,19 @@ import retrofit2.HttpException
 class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModels()
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
-    private val adapter by lazy { SearchAdapter(this::navigateMain) }
+    private val adapter by lazy { SearchAdapter(::navigateMain) }
 
     val errorMessage = ObservableField("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        binding.adapter = adapter
-
-        setContentView(binding.root)
+        setContentView(
+            binding.apply {
+                lifecycleOwner = this@SearchActivity
+                viewModel = viewModel
+                adapter = adapter
+            }.root
+        )
 
         viewModel.uiState.observe(this) { state ->
             if (state is SearchUiState.Success) {
