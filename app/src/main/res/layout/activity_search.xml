@@ -39,8 +39,7 @@
                 android:layout_height="wrap_content"
                 android:hint=""
                 android:imeOptions="actionSearch"
-                android:inputType="text"
-                app:setOnActionSearch="@{() -> viewModel.search(edtKeyword.getText())}" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,6 +68,17 @@
             android:layout_height="wrap_content"
             android:text="@{activity.errorMessage}"
             android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_empty_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empty result"
+            android:visibility="@{viewModel.uiState.isEmpty() ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

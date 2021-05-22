@@ -13,17 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.util
-
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
-object DateUtils {
-    fun getToday(): String = formatDate(Date())
-
-    fun formatDate(date: Date): String {
-        val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-        return format.format(date)
-    }
-}

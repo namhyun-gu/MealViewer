@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
             name="school"
             type="com.earlier.yma.data.model.School" />
     </data>
@@ -14,7 +18,8 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?attr/selectableItemBackground">
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="@{clickListener}">
 
         <TextView
             android:id="@+id/tv_school_name"

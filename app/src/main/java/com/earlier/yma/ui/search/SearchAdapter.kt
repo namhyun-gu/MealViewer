@@ -1,6 +1,22 @@
+/*
+ * Copyright 2021 Namhyun, Gu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.earlier.yma.ui.search
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,10 +29,11 @@ class SearchAdapter(
 ) : ListAdapter<School, SearchAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemSearchBinding.inflate(
-            LayoutInflater.from(parent.context)
+        return ViewHolder(
+            ItemSearchBinding.inflate(
+                LayoutInflater.from(parent.context)
+            )
         )
-        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
@@ -24,11 +41,12 @@ class SearchAdapter(
 
     inner class ViewHolder(private val binding: ItemSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         init {
-            binding.root.setOnClickListener {
+            binding.clickListener = View.OnClickListener {
                 val position = adapterPosition
                 if (position == RecyclerView.NO_POSITION) {
-                    return@setOnClickListener
+                    return@OnClickListener
                 }
                 onItemClickListener(getItem(position))
             }

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 Namhyun, Gu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.earlier.yma.ui.search
 
 import androidx.lifecycle.LiveData
@@ -22,13 +37,13 @@ class SearchViewModel @Inject constructor(
 
     fun search(keyword: CharSequence) = viewModelScope.launch {
         try {
+            _uiState.value = SearchUiState.Loading
             val response = neisService.searchSchool(keyword.toString())
-            if (response.content == null || response.content.size < 2) {
-                invalidResponse()
-                return@launch
+            if (!response.isValid) {
+                throwInvalidResponse()
             }
 
-            val schoolList = response.content[1].schoolList!!
+            val schoolList = response.content!![1].schoolList!!
             _uiState.value = SearchUiState.Success(schoolList)
         } catch (e: Exception) {
             _uiState.value = SearchUiState.Error(e)
@@ -47,9 +62,7 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    private fun invalidResponse() {
-        _uiState.value = SearchUiState.Error(
-            IllegalArgumentException("Invalid argument \"type\"")
-        )
+    private fun throwInvalidResponse() {
+        throw IllegalArgumentException("Invalid response")
     }
 }

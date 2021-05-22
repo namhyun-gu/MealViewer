@@ -3,6 +3,7 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "dagger.hilt.android.plugin"
+    id "com.diffplug.spotless"
 }
 
 android {
@@ -42,6 +43,19 @@ kapt {
     correctErrorTypes true
 }
 
+spotless {
+    kotlin {
+        target "**/*.kt"
+        ktlint("0.37.2").userData([
+                "indent_size"             : "4",
+                "continuation_indent_size": "4",
+        ])
+        licenseHeaderFile("${rootDir}/spotless.license.kt")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -54,10 +68,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha01"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha01"
     implementation "androidx.datastore:datastore-preferences:1.0.0-beta01"
-
-    // Firebase
-    implementation "com.google.firebase:firebase-crash:16.2.1"
-    implementation "com.google.firebase:firebase-core:19.0.0"
 
     // Networking
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
