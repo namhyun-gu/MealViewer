@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">급식돌이</string>
 
+    <!--  Search  -->
+    <string name="activity_title_search">학교 검색</string>
+    <string name="filter_all">전체</string>
+    <string name="hint_search_school">학교명</string>
+    <string name="msg_search_empty">검색 결과가 없습니다</string>
+    <string name="msg_search_error">검색 결과를 가져올 수 없습니다</string>
+    <string name="msg_search_error_code">검색 결과를 가져올 수 없습니다 (코드: %1$d)</string>
+    <string name="msg_search_no_more">더 이상 가져올 학교가 없습니다</string>
+
     <!-- Snackbar -->
 
     <!-- List item -->

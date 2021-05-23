@@ -15,16 +15,8 @@
  */
 package com.earlier.yma.util
 
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
+import androidx.lifecycle.MutableLiveData
 
-fun EditText.setOnActionSearch(listener: (CharSequence) -> Unit) {
-    setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            listener.invoke(text)
-            true
-        } else {
-            false
-        }
-    }
+fun <T> Sequence<T>.flowLiveData(liveData: MutableLiveData<T>) {
+    forEach { liveData.value = it }
 }

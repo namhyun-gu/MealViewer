@@ -23,14 +23,22 @@ sealed class SearchUiState {
     object Loading : SearchUiState()
 
     data class Success(
+        val keyword: String,
         val schoolList: List<School>,
+        val orgList: List<String>,
+        val filterOrg: Set<String> = emptySet(),
+        val page: Int = 1
     ) : SearchUiState()
 
     data class Error(
         val exception: Exception,
     ) : SearchUiState()
 
+    fun isIdle() = this is Idle
+
     fun isLoading() = this is Loading
+
+    fun isSuccess() = this is Success
 
     fun isError() = this is Error
 

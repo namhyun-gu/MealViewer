@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">MealViewer</string>
 
+    <!--  Search  -->
+    <string name="activity_title_search">Search School</string>
+    <string name="filter_all">All</string>
+    <string name="hint_search_school">School Name</string>
+    <string name="msg_search_empty">Empty search result</string>
+    <string name="msg_search_error">Can\'t receive search result</string>
+    <string name="msg_search_error_code">Can\'t receive search result (code: %1$d)</string>
+    <string name="msg_search_no_more">No more school information to receive</string>
+
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
