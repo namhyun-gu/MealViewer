@@ -17,10 +17,10 @@ package com.earlier.yma.di
 
 import android.content.Context
 import com.earlier.yma.appPrefDataStore
-import com.earlier.yma.data.AppPreferenceStorage
 import com.earlier.yma.data.AuthInterceptor
 import com.earlier.yma.data.NeisService
-import com.earlier.yma.data.PreferenceStorage
+import com.earlier.yma.data.preferences.AppPreferenceStorage
+import com.earlier.yma.data.preferences.PreferenceStorage
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

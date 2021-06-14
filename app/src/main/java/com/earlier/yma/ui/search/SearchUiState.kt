@@ -15,7 +15,7 @@
  */
 package com.earlier.yma.ui.search
 
-import com.earlier.yma.data.model.School
+import com.earlier.yma.data.SearchResponse
 
 sealed class SearchUiState {
     object Idle : SearchUiState()
@@ -24,14 +24,14 @@ sealed class SearchUiState {
 
     data class Success(
         val keyword: String,
-        val schoolList: List<School>,
+        val schoolList: List<SearchResponse.School>,
         val orgList: List<String>,
         val filterOrg: Set<String> = emptySet(),
         val page: Int = 1
     ) : SearchUiState()
 
     data class Error(
-        val exception: Exception,
+        val exception: Throwable,
     ) : SearchUiState()
 
     fun isIdle() = this is Idle

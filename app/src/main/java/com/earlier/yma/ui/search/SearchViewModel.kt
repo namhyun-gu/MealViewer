@@ -20,12 +20,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.earlier.yma.data.NeisService
-import com.earlier.yma.data.PreferenceModel
-import com.earlier.yma.data.PreferenceStorage
-import com.earlier.yma.data.model.School
+import com.earlier.yma.data.SearchResponse
+import com.earlier.yma.data.preferences.PreferenceStorage
+import com.earlier.yma.data.preferences.UserPreferences
 import com.earlier.yma.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,49 +35,57 @@ class SearchViewModel @Inject constructor(
     private val neisService: NeisService,
     private val preferenceStorage: PreferenceStorage,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.Idle)
+    private val _uiState = MutableLiveData<SearchUiState>()
     val uiState: LiveData<SearchUiState> = _uiState
 
     private val _loadMoreError = MutableLiveData<Event<Unit>>()
     val loadMoreError: LiveData<Event<Unit>> = _loadMoreError
 
-    fun search(keyword: CharSequence) = viewModelScope.launch {
-        _uiState.value = SearchUiState.Loading
-
-        val (list, exception) = requestSearch(keyword.toString())
-        if (exception != null) {
+    fun search(keyword: CharSequence) {
+        val exceptionHandler = CoroutineExceptionHandler { _, exception ->
             _uiState.value = SearchUiState.Error(exception)
-        } else {
+        }
+
+        _uiState.value = SearchUiState.Loading
+        tryToSearch(exceptionHandler, keyword)
+    }
+
+    private fun tryToSearch(exceptionHandler: CoroutineExceptionHandler, keyword: CharSequence) =
+        viewModelScope.launch(exceptionHandler) {
+            val schoolList = requestSearch(keyword.toString())
             _uiState.value = SearchUiState.Success(
                 keyword = keyword.toString(),
-                schoolList = list,
-                orgList = getOrgList(list)
+                schoolList = schoolList,
+                orgList = getOrgList(schoolList)
             )
         }
+
+    fun loadMore() {
+        val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+            _loadMoreError.value = Event(Unit)
+        }
+
+        tryToLoadMore(exceptionHandler)
     }
 
-    fun loadMore() = viewModelScope.launch {
-        val state = _uiState.value!!
-        if (state is SearchUiState.Success) {
-            val nextPage = state.page + 1
-            val (nextList, exception) = requestSearch(state.keyword, nextPage)
+    private fun tryToLoadMore(exceptionHandler: CoroutineExceptionHandler) =
+        viewModelScope.launch(exceptionHandler) {
+            val state = _uiState.value!!
+            if (state is SearchUiState.Success) {
+                val nextPage = state.page + 1
+                val nextList = requestSearch(state.keyword, nextPage)
 
-            if (exception != null) {
-                _loadMoreError.value = Event(Unit)
-                return@launch
+                val newList = mutableListOf<SearchResponse.School>()
+                newList.addAll(state.schoolList)
+                newList.addAll(nextList)
+
+                _uiState.value = state.copy(
+                    schoolList = newList,
+                    orgList = getOrgList(newList),
+                    page = nextPage,
+                )
             }
-
-            val newList = mutableListOf<School>()
-            newList.addAll(state.schoolList)
-            newList.addAll(nextList)
-
-            _uiState.value = state.copy(
-                schoolList = newList,
-                orgList = getOrgList(newList),
-                page = nextPage,
-            )
         }
-    }
 
     fun updateFilter(filter: Set<String>) {
         val state = _uiState.value!!
@@ -86,19 +96,21 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun saveSchool(school: School) = viewModelScope.launch {
+    fun saveSchool(school: SearchResponse.School) = viewModelScope.launch {
         preferenceStorage.writePreference(
-            PreferenceModel(
-                schoolCode = school.code,
-                schoolName = school.name,
-                schoolKind = school.kind,
-                orgCode = school.orgCode,
-                orgName = school.orgName,
+            UserPreferences(
+                school = UserPreferences.School(
+                    schoolCode = school.code,
+                    schoolName = school.name,
+                    schoolKind = school.kind,
+                    orgCode = school.orgCode,
+                    orgName = school.orgName,
+                )
             )
         )
     }
 
-    private fun getOrgList(list: List<School>): List<String> {
+    private fun getOrgList(list: List<SearchResponse.School>): List<String> {
         val orgSet = mutableSetOf<String>()
         list.forEach {
             orgSet.add(it.orgName)
@@ -106,20 +118,15 @@ class SearchViewModel @Inject constructor(
         return orgSet.toList()
     }
 
+    @Throws(HttpException::class, IllegalArgumentException::class)
     private suspend fun requestSearch(
         keyword: String,
         page: Int = 1
-    ): Pair<List<School>, Exception?> {
-        try {
-            val response = neisService.searchSchool(keyword, page)
-            if (!response.isValid) {
-                return emptyList<School>() to IllegalArgumentException("Invalid response")
-            }
-
-            val schoolList = response.content!![1].schoolList!!
-            return schoolList to null
-        } catch (e: Exception) {
-            return emptyList<School>() to e
+    ): List<SearchResponse.School> {
+        val response = neisService.searchSchool(keyword, page)
+        if (!response.isValid) {
+            throw IllegalArgumentException("Invalid response")
         }
+        return response.content!![1].schoolList!!
     }
 }
