@@ -15,8 +15,6 @@
  */
 package com.earlier.yma.data
 
-import com.earlier.yma.data.model.MealResponse
-import com.earlier.yma.data.model.SearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
