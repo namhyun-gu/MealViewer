@@ -144,7 +144,7 @@ fun SearchContent(
                 )
                 SchoolList(
                     modifier = Modifier.fillMaxSize(),
-                    items = uiState.schoolList,
+                    items = filterSchoolList(uiState.schoolList, uiState.filterOrg),
                     onItemSelect = onSchoolSelect,
                     onLoadMore = onLoadMore
                 )
@@ -158,6 +158,15 @@ fun SearchContent(
             }
             Text(errorMessage, style = MaterialTheme.typography.body1)
         }
+    }
+}
+
+private fun filterSchoolList(
+    schoolList: List<SearchResponse.School>,
+    filterOrg: Set<String>
+): List<SearchResponse.School> {
+    return schoolList.filter {
+        filterOrg.isEmpty() || filterOrg.contains(it.orgName)
     }
 }
 
