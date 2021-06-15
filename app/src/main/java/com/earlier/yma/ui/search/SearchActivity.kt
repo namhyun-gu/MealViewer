@@ -30,7 +30,13 @@ class SearchActivity : AppCompatActivity() {
         setContent {
             MealViewerTheme {
                 SearchActivityContent(
-                    modifier = Modifier.navigationBarsPadding(bottom = false)
+                    modifier = Modifier.navigationBarsPadding(bottom = false),
+                    onNavIconPress = {
+                        finish()
+                    },
+                    onNavigateToMain = {
+                        finish()
+                    }
                 )
             }
         }

@@ -15,80 +15,82 @@
  */
 package com.earlier.yma.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.earlier.yma.data.NeisService
 import com.earlier.yma.data.SearchResponse
 import com.earlier.yma.data.preferences.PreferenceStorage
 import com.earlier.yma.data.preferences.UserPreferences
-import com.earlier.yma.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val neisService: NeisService,
     private val preferenceStorage: PreferenceStorage,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<SearchUiState>()
-    val uiState: LiveData<SearchUiState> = _uiState
+    private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
+    val uiState: Flow<SearchUiState> = _uiState
 
-    private val _loadMoreError = MutableLiveData<Event<Unit>>()
-    val loadMoreError: LiveData<Event<Unit>> = _loadMoreError
+    private val _uiEvent = MutableSharedFlow<SearchUiEvent>(replay = 0)
+    val uiEvent: SharedFlow<SearchUiEvent> = _uiEvent
 
-    fun search(keyword: CharSequence) {
-        val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-            _uiState.value = SearchUiState.Error(exception)
+    fun search(keyword: CharSequence) = viewModelScope.launch {
+        try {
+            _uiState.value = SearchUiState.Loading
+            tryToSearch(keyword)
+        } catch (e: Exception) {
+            _uiState.value = SearchUiState.Error(e)
         }
-
-        _uiState.value = SearchUiState.Loading
-        tryToSearch(exceptionHandler, keyword)
     }
 
-    private fun tryToSearch(exceptionHandler: CoroutineExceptionHandler, keyword: CharSequence) =
-        viewModelScope.launch(exceptionHandler) {
-            val schoolList = requestSearch(keyword.toString())
-            _uiState.value = SearchUiState.Success(
-                keyword = keyword.toString(),
-                schoolList = schoolList,
-                orgList = getOrgList(schoolList)
+    private suspend fun tryToSearch(keyword: CharSequence) {
+        val schoolList = requestSearch(keyword.toString())
+        _uiState.value = SearchUiState.Success(
+            keyword = keyword.toString(),
+            schoolList = schoolList,
+            orgList = getOrgList(schoolList)
+        )
+    }
+
+    fun loadMore() = viewModelScope.launch {
+        try {
+            _uiEvent.emit(SearchUiEvent.None)
+            tryToLoadMore()
+        } catch (e: Exception) {
+            _uiEvent.emit(SearchUiEvent.LoadMoreError)
+        }
+    }
+
+    private suspend fun tryToLoadMore() {
+        val state = _uiState.value
+        if (state is SearchUiState.Success) {
+            val nextPage = state.page + 1
+            val nextList = requestSearch(state.keyword, nextPage)
+
+            val newList = mutableListOf<SearchResponse.School>()
+            newList.addAll(state.schoolList)
+            newList.addAll(nextList)
+
+            _uiState.value = state.copy(
+                schoolList = newList,
+                orgList = getOrgList(newList),
+                page = nextPage,
             )
         }
-
-    fun loadMore() {
-        val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-            _loadMoreError.value = Event(Unit)
-        }
-
-        tryToLoadMore(exceptionHandler)
     }
 
-    private fun tryToLoadMore(exceptionHandler: CoroutineExceptionHandler) =
-        viewModelScope.launch(exceptionHandler) {
-            val state = _uiState.value!!
-            if (state is SearchUiState.Success) {
-                val nextPage = state.page + 1
-                val nextList = requestSearch(state.keyword, nextPage)
-
-                val newList = mutableListOf<SearchResponse.School>()
-                newList.addAll(state.schoolList)
-                newList.addAll(nextList)
-
-                _uiState.value = state.copy(
-                    schoolList = newList,
-                    orgList = getOrgList(newList),
-                    page = nextPage,
-                )
-            }
-        }
-
     fun updateFilter(filter: Set<String>) {
-        val state = _uiState.value!!
+        val state = _uiState.value
         if (state is SearchUiState.Success) {
             _uiState.value = state.copy(
                 filterOrg = filter
@@ -108,6 +110,8 @@ class SearchViewModel @Inject constructor(
                 )
             )
         )
+
+        _uiEvent.emit(SearchUiEvent.SchoolSaved)
     }
 
     private fun getOrgList(list: List<SearchResponse.School>): List<String> {

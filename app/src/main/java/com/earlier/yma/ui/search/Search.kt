@@ -16,6 +16,7 @@
 package com.earlier.yma.ui.search
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,12 +48,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -72,18 +75,42 @@ import com.earlier.yma.ui.base.Center
 import com.earlier.yma.ui.base.EditableUserInput
 import com.earlier.yma.ui.base.PagingColumn
 import com.earlier.yma.ui.theme.MealViewerTheme
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 @Composable
 fun SearchActivityContent(
     modifier: Modifier = Modifier,
-    onNavIconPress: () -> Unit = {}
+    onNavIconPress: () -> Unit = {},
+    onNavigateToMain: () -> Unit = {},
 ) {
     val viewModel: SearchViewModel = viewModel()
-    val uiState by viewModel.uiState.observeAsState(SearchUiState.Idle)
+    val uiState: SearchUiState by viewModel.uiState.collectAsState(SearchUiState.Idle)
+    val uiEvent: SearchUiEvent by viewModel.uiEvent.collectAsState(SearchUiEvent.None)
+
+    val coroutineScope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+    val snackBarMessage = stringResource(R.string.msg_search_no_more)
+
+    val showLoadMoreErrorSnackBar = {
+        coroutineScope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(snackBarMessage)
+        }
+    }
+
+    when (uiEvent) {
+        SearchUiEvent.LoadMoreError -> {
+            showLoadMoreErrorSnackBar()
+        }
+        SearchUiEvent.SchoolSaved -> {
+            onNavigateToMain()
+        }
+        else -> { /* No-op */ }
+    }
 
     Scaffold(
         modifier = modifier,
+        scaffoldState = scaffoldState,
         topBar = {
             SearchTopBar(
                 onNavIconPress = onNavIconPress
@@ -134,6 +161,7 @@ fun SearchContent(
             Column {
                 FilterGroup(
                     modifier = Modifier.padding(
+                        top = 8.dp,
                         start = 16.dp,
                         end = 16.dp,
                         bottom = 16.dp
@@ -234,7 +262,7 @@ fun SearchInputBar(
 @Composable
 fun SearchInputBar_Preview() {
     MealViewerTheme {
-        SearchInputBar() {}
+        SearchInputBar {}
     }
 }
 
@@ -318,7 +346,7 @@ fun FilterGroup(
                 filterState = emptySet()
                 onFilterUpdate(filterState)
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
         }
         items(orgList) { orgName ->
             val isSelected = filterState.contains(orgName)
@@ -334,7 +362,7 @@ fun FilterGroup(
                 }
                 onFilterUpdate(filterState)
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
         }
     }
 }
@@ -360,7 +388,11 @@ fun FilterChip(
         modifier = Modifier
             .height(32.dp),
         shape = RoundedCornerShape(16.dp),
-        elevation = 2.dp
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+        ),
+        elevation = 0.dp
     ) {
         val padding = if (isSelected) {
             Modifier.padding(start = 4.dp, end = 12.dp)

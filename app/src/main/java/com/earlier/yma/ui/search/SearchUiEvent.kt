@@ -15,22 +15,11 @@
  */
 package com.earlier.yma.ui.search
 
-import com.earlier.yma.data.SearchResponse
+sealed class SearchUiEvent {
 
-sealed class SearchUiState {
-    object Idle : SearchUiState()
+    object SchoolSaved : SearchUiEvent()
 
-    object Loading : SearchUiState()
+    object LoadMoreError : SearchUiEvent()
 
-    data class Success(
-        val keyword: String,
-        val schoolList: List<SearchResponse.School>,
-        val orgList: List<String>,
-        val filterOrg: Set<String> = emptySet(),
-        val page: Int = 1
-    ) : SearchUiState()
-
-    data class Error(
-        val exception: Throwable,
-    ) : SearchUiState()
+    object None : SearchUiEvent()
 }
