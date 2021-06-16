@@ -17,7 +17,8 @@ package com.earlier.yma.util
 
 fun parseAllergyInfo(food: String): Pair<String, List<Int>> {
     val allergyInfo = mutableListOf<Int>()
-    val allergyParseRegex = """(.*?)(\d{1,2}).$""".toRegex()
+    val allergyParseRegex =
+        """(.*?)(\d{1,2}).$""".toRegex()
 
     var temp = food
     var matchResult: MatchResult? = allergyParseRegex.find(temp)

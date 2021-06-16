@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">MealViewer</string>
 
+    <!--  Common  -->
+    <string name="action_ok">Ok</string>
+    <string name="action_cancel">Cancel</string>
+
     <!--  Search  -->
     <string name="activity_title_search">Search School</string>
     <string name="filter_all">All</string>
@@ -14,6 +18,9 @@
     <!--  Main  -->
     <string name="type_lunch">Lunch</string>
     <string name="type_dinner">Dinner</string>
+
+    <string name="dialog_select_date">Select date</string>
+    <string name="subtitle_calorie">Calorie</string>
 
     <string name="msg_meal_empty">Empty meal data</string>
     <string name="msg_meal_error">Can\'t receive meal</string>

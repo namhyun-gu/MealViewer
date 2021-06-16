@@ -42,40 +42,20 @@ data class MealResponse(
     )
 
     data class Meal(
-        /** 시도교육청코드 */
-        @Json(name = "ATPT_OFCDC_SC_CODE") val atptOfcdcScCode: String,
-        /** 시도교육청명 */
-        @Json(name = "ATPT_OFCDC_SC_NM") val atptOfcdcScNm: String,
-        /** 표준학교코드 */
-        @Json(name = "SD_SCHUL_CODE") val sdSchulCode: String,
-        /** 학교명 */
-        @Json(name = "SCHUL_NM") val schulNm: String,
-        /** 식사코드 */
-        @Json(name = "MMEAL_SC_CODE") val mmealScCode: String,
-        /** 식사명 */
-        @Json(name = "MMEAL_SC_NM") val mmealScNm: String,
-        /** 급식일자 */
-        @Json(name = "MLSV_YMD") val mlsvYmd: String,
-        /** 급식인원수 */
-        @Json(name = "MLSV_FGR") val mlsvFgr: String,
         /** 요리명 */
-        @Json(name = "DDISH_NM") val ddishNm: String,
+        @Json(name = "DDISH_NM") private val dishInfo: String,
         /** 원산지정보 */
-        @Json(name = "ORPLC_INFO") val orplcInfo: String,
+        @Json(name = "ORPLC_INFO") private val originInfo: String,
         /** 칼로리정보 */
-        @Json(name = "CAL_INFO") val calInfo: String,
+        @Json(name = "CAL_INFO") val calorie: String,
         /** 영양정보 */
-        @Json(name = "NTR_INFO") val ntrInfo: String,
-        /** 급식시작일자 */
-        @Json(name = "MLSV_FROM_YMD") val mlsvFromYmd: String,
-        /** 급식종료일자 */
-        @Json(name = "MLSV_TO_YMD") val mlsvToYmd: String,
+        @Json(name = "NTR_INFO") private val nutritionInfo: String,
     ) {
-        val foodList: List<String>
-            get() = ddishNm.split("<br/>")
+        val dishList: List<String> = dishInfo.split("<br/>")
 
-        val nutrition: List<String>
-            get() = ntrInfo.split("<br/>")
+        val originList: List<String> = originInfo.split("<br/>")
+
+        val nutritionList: List<String> = nutritionInfo.split("<br/>")
     }
 }
 

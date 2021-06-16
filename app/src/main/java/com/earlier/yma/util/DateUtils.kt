@@ -16,14 +16,26 @@
 package com.earlier.yma.util
 
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 
 object DateUtils {
-    fun getToday(): String = formatDate(Date())
-
-    fun formatDate(date: Date): String {
-        val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    fun formatDate(date: Date, pattern: String = "yyyyMMdd"): String {
+        val format = SimpleDateFormat(pattern, Locale.getDefault())
         return format.format(date)
+    }
+
+    fun convertDate(localDate: LocalDate): Date {
+        val defaultZoneId = ZoneId.systemDefault()
+        return Date.from(
+            localDate.atStartOfDay(defaultZoneId).toInstant()
+        )
+    }
+
+    fun convertLocalDate(date: Date): LocalDate {
+        val defaultZoneId = ZoneId.systemDefault()
+        return date.toInstant().atZone(defaultZoneId).toLocalDate()
     }
 }

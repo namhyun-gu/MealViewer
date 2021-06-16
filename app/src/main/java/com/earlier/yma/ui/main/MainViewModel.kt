@@ -70,11 +70,7 @@ class MainViewModel @Inject constructor(
             )
         }
 
-        _uiState.value = MainUiState.Success(
-            type = type,
-            date = date,
-            content = meal
-        )
+        _uiState.value = MainUiState.Success(content = meal)
     }
 
     @Throws(HttpException::class, IllegalArgumentException::class)
@@ -95,19 +91,5 @@ class MainViewModel @Inject constructor(
         }
 
         return response.content!![1].mealList!!.first()
-    }
-
-    fun updateDate(date: Date) {
-        val state = _uiState.value
-        if (state is MainUiState.Success) {
-            loadContent(state.type, date)
-        }
-    }
-
-    fun updateType(type: MealType) {
-        val state = _uiState.value
-        if (state is MainUiState.Success) {
-            loadContent(type, state.date)
-        }
     }
 }

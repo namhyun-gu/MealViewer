@@ -1,14 +1,42 @@
+/*
+ * Copyright 2021 Namhyun, Gu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.earlier.yma.ui.main
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -19,25 +47,36 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material.icons.rounded.LightMode
+import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.earlier.yma.R
 import com.earlier.yma.data.MealResponse
 import com.earlier.yma.ui.base.Center
+import com.earlier.yma.ui.theme.MealViewerTheme
+import com.earlier.yma.util.DateUtils
 import com.earlier.yma.util.parseAllergyInfo
-import com.google.accompanist.pager.ExperimentalPagerApi
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.buttons
+import com.vanpra.composematerialdialogs.datetime.datepicker.datepicker
+import java.util.Date
 
-// TODO: 날짜 변경 기능 추가
-// TODO: BottomNavigation 추가 / Rotation 애니메이션이 끊기는 문제 고치기
+// TODO: Rotation 애니메이션이 끊기는 문제 고치기
 // TODO: 영양소 정보 표시
 @Composable
 fun MainActivityContent(
@@ -47,52 +86,112 @@ fun MainActivityContent(
     val uiState: MainUiState by viewModel.uiState.collectAsState(MainUiState.Loading)
     val uiEvent: MainUiEvent by viewModel.uiEvent.collectAsState(MainUiEvent.None)
 
+    var currentType by rememberSaveable { mutableStateOf(MealType.Lunch) }
+    var currentDate by rememberSaveable { mutableStateOf(Date()) }
+
+    val dateDialog = remember { MaterialDialog() }
+
+    dateDialog.build {
+        datepicker(
+            title = stringResource(R.string.dialog_select_date),
+            initialDate = DateUtils.convertLocalDate(currentDate),
+        ) { newDate ->
+            currentDate = DateUtils.convertDate(newDate)
+            viewModel.loadContent(currentType, currentDate)
+        }
+        buttons {
+            positiveButton(res = R.string.action_ok)
+            negativeButton(res = R.string.action_cancel)
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
-            MainTopBar()
-        }
-    ) {
-        Center(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            MainContent(
-                uiState = uiState
+            MainTopBar(
+                type = currentType,
+                date = currentDate,
+                onDateSelect = {
+                    dateDialog.show()
+                },
+                onSettingSelect = {
+                }
+            )
+        },
+        bottomBar = {
+            MainBottomBar(
+                selectType = currentType,
+                onTypeSelect = { newType ->
+                    currentType = newType
+                    viewModel.loadContent(currentType, currentDate)
+                }
             )
         }
+    ) { innerPadding ->
+        MainContent(
+            modifier = Modifier.padding(innerPadding),
+            uiState = uiState
+        )
     }
 }
 
 @Composable
 fun MainTopBar(
-    modifier: Modifier = Modifier,
+    type: MealType,
+    date: Date,
+    onDateSelect: () -> Unit = {},
+    onSettingSelect: () -> Unit = {}
 ) {
-    val isNight = false
+    val isDinner = (type == MealType.Dinner)
+    val title = if (isDinner) {
+        stringResource(R.string.type_dinner)
+    } else {
+        stringResource(R.string.type_lunch)
+    }
 
     Column {
         Box(
             modifier = Modifier.padding(
                 start = 16.dp,
-                top = 16.dp,
+                top = 64.dp,
                 bottom = 8.dp,
             )
         ) {
-            StateIcon()
+            StateIcon(isDinner)
         }
         TopAppBar(
             title = {
-                Text(
-                    stringResource(R.string.type_lunch),
-                    style = MaterialTheme.typography.h5.copy(
-                        fontWeight = FontWeight.Black
+                Column {
+                    Text(
+                        title,
+                        style = MaterialTheme.typography.h5.copy(
+                            fontWeight = FontWeight.Black
+                        )
                     )
-                )
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Text(
+                            DateUtils.formatDate(date, "MM.dd"),
+                            style = MaterialTheme.typography.body2
+                        )
+                    }
+                }
             },
             backgroundColor = Color.Transparent,
             elevation = 0.dp,
             actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Rounded.Event, null)
+                IconButton(onClick = onDateSelect) {
+                    Icon(
+                        Icons.Rounded.Event,
+                        null,
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                }
+                IconButton(onClick = onSettingSelect) {
+                    Icon(
+                        Icons.Rounded.Settings,
+                        null,
+                        tint = MaterialTheme.colors.onSurface
+                    )
                 }
             }
         )
@@ -101,26 +200,131 @@ fun MainTopBar(
 
 @Composable
 fun StateIcon(
-    isNight: Boolean = false
+    isDinner: Boolean = false
 ) {
-    if (isNight) {
-        Icon(
-            Icons.Rounded.DarkMode,
-            contentDescription = null,
-            tint = Color(0xFFFFD600),
-            modifier = Modifier.size(48.dp)
-        )
+    val iconColor = Color(0xFFFFD600)
+    val icon = if (isDinner) {
+        Icons.Rounded.DarkMode
     } else {
-        Icon(
-            Icons.Rounded.LightMode,
-            contentDescription = null,
-            tint = Color(0xFFFFD600),
-            modifier = Modifier.size(48.dp)
-        )
+        Icons.Rounded.LightMode
+    }
+
+    Icon(
+        icon,
+        contentDescription = null,
+        tint = iconColor,
+        modifier = Modifier.size(56.dp)
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainTopBar_Preview() {
+    MealViewerTheme {
+        Column {
+            MainTopBar(
+                type = MealType.Lunch,
+                date = Date(),
+            )
+            Divider()
+            Spacer(Modifier.height(8.dp))
+            Divider()
+            MainTopBar(
+                type = MealType.Dinner,
+                date = Date(),
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun MainBottomBar(
+    selectType: MealType,
+    onTypeSelect: (MealType) -> Unit
+) {
+    val types = MealType.values()
+
+    Row(
+        modifier = Modifier.height(56.dp)
+    ) {
+        types.forEach { type ->
+            val isSelected = (type == selectType)
+
+            Center(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 16.dp
+                    )
+                    .weight(1f)
+                    .fillMaxHeight(),
+            ) {
+                MainBottomBarItem(
+                    text = stringResource(type.stringResId),
+                    selected = isSelected
+                ) {
+                    onTypeSelect(type)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun MainBottomBarItem(
+    modifier: Modifier = Modifier,
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val backgroundColor by animateColorAsState(
+        if (selected) {
+            MaterialTheme.colors.primary
+        } else {
+            MaterialTheme.colors.surface
+        }
+    )
+
+    val border = if (!selected) {
+        BorderStroke(
+            1.dp,
+            MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+        )
+    } else {
+        null
+    }
+
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(32.dp),
+        color = backgroundColor,
+        elevation = 0.dp,
+        modifier = modifier
+            .height(40.dp)
+            .fillMaxSize(),
+        border = border
+    ) {
+        Center {
+            Text(
+                text,
+                style = MaterialTheme.typography.body1
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MealBottomBar_Preview() {
+    Column {
+        MainBottomBar(selectType = MealType.Lunch) {
+        }
+        Spacer(Modifier.height(8.dp))
+        MainBottomBar(selectType = MealType.Dinner) {
+        }
+    }
+}
+
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
@@ -128,15 +332,15 @@ fun MainContent(
 ) {
     when (uiState) {
         MainUiState.Loading -> {
-            CircularProgressIndicator()
+            Center(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator()
+            }
         }
         is MainUiState.Success -> {
-            Column {
-                MealContent(
-                    modifier = Modifier.fillMaxSize(),
-                    meal = uiState.content
-                )
-            }
+            MealContent(
+                modifier = modifier,
+                meal = uiState.content
+            )
         }
         is MainUiState.Error -> {
             val errorMessage = if (uiState.exception is IllegalArgumentException) {
@@ -144,47 +348,119 @@ fun MainContent(
             } else {
                 stringResource(R.string.msg_meal_error)
             }
-            Text(errorMessage, style = MaterialTheme.typography.body1)
+
+            Center(modifier = Modifier.fillMaxSize()) {
+                Text(errorMessage, style = MaterialTheme.typography.body1)
+            }
         }
     }
 }
 
 @Composable
 fun MealContent(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     meal: MealResponse.Meal
 ) {
+    Box(modifier = modifier) {
+        LazyColumn(
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            item {
+                ContentPanel {
+                    CalorieItem(calorie = meal.calorie)
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                ContentPanel {
+                    DishList(
+                        modifier = Modifier.fillMaxWidth(),
+                        dishList = meal.dishList
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContentPanel(
+    content: @Composable () -> Unit
+) {
+    Card(
+        elevation = 2.dp,
+        shape = MaterialTheme.shapes.large
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun DishList(
+    modifier: Modifier = Modifier,
+    dishList: List<String>
+) {
     Column(modifier = modifier) {
-        meal.foodList.forEach { food ->
-            FoodItem(
+        dishList.forEach { food ->
+            DishItem(
                 food = food
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FoodItem(
+fun DishItem(
     modifier: Modifier = Modifier,
     food: String
 ) {
     val allergyNames = stringArrayResource(R.array.allergy_info)
     val (foodName, allergyInfo) = parseAllergyInfo(food)
-    val allergyMessage = allergyInfo.map { allergyNames[it] }.joinToString()
+    val allergyMessage = allergyInfo.joinToString { allergyNames[it] }
 
-    Surface(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(foodName, fontWeight = FontWeight.Bold)
-            if (allergyInfo.isNotEmpty()) {
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(allergyMessage, style = MaterialTheme.typography.body2)
-                }
-            }
+    var secondaryText: @Composable (() -> Unit)? = null
+    if (allergyInfo.isNotEmpty()) {
+        secondaryText = {
+            Text(allergyMessage)
         }
+    }
+
+    ListItem(
+        modifier = modifier,
+        secondaryText = secondaryText
+    ) {
+        Text(foodName)
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun CalorieItem(
+    modifier: Modifier = Modifier,
+    calorie: String
+) {
+    ListItem(
+        modifier = modifier,
+        icon = {
+            Icon(
+                Icons.Rounded.LocalFireDepartment,
+                contentDescription = null,
+                tint = Color(0xFFD50000),
+            )
+        },
+        secondaryText = {
+            Text(calorie)
+        }
+    ) {
+        Text(stringResource(R.string.subtitle_calorie))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CalorieItem_Preview() {
+    MealViewerTheme {
+        CalorieItem(calorie = "0 Kcal")
     }
 }

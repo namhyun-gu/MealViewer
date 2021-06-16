@@ -10,7 +10,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.earlier.yma"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 45
         versionName "2.21"
@@ -81,6 +81,7 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-insets:0.11.1"
     implementation "com.google.accompanist:accompanist-pager:0.11.1"
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.4.2"
 
     // Logging
     implementation "com.jakewharton.timber:timber:4.7.1"

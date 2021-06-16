@@ -15,19 +15,19 @@
  */
 package com.earlier.yma.ui.main
 
+import androidx.annotation.StringRes
+import com.earlier.yma.R
 import com.earlier.yma.data.MealResponse
-import java.util.Date
 
-enum class MealType(val value: String) {
-    Lunch("2"), Dinner("3")
+enum class MealType(val value: String, @StringRes val stringResId: Int) {
+    Lunch("2", R.string.type_lunch),
+    Dinner("3", R.string.type_dinner)
 }
 
 sealed class MainUiState {
     object Loading : MainUiState()
 
     data class Success(
-        val type: MealType,
-        val date: Date,
         val content: MealResponse.Meal
     ) : MainUiState()
 
