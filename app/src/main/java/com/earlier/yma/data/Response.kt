@@ -70,7 +70,13 @@ data class MealResponse(
         @Json(name = "MLSV_FROM_YMD") val mlsvFromYmd: String,
         /** 급식종료일자 */
         @Json(name = "MLSV_TO_YMD") val mlsvToYmd: String,
-    )
+    ) {
+        val foodList: List<String>
+            get() = ddishNm.split("<br/>")
+
+        val nutrition: List<String>
+            get() = ntrInfo.split("<br/>")
+    }
 }
 
 data class SearchResponse(

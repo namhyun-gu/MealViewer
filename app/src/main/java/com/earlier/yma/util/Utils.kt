@@ -15,8 +15,24 @@
  */
 package com.earlier.yma.util
 
-import androidx.lifecycle.MutableLiveData
+fun parseAllergyInfo(food: String): Pair<String, List<Int>> {
+    val allergyInfo = mutableListOf<Int>()
+    val allergyParseRegex = """(.*?)(\d{1,2}).$""".toRegex()
 
-fun <T> Sequence<T>.flowLiveData(liveData: MutableLiveData<T>) {
-    forEach { liveData.value = it }
+    var temp = food
+    var matchResult: MatchResult? = allergyParseRegex.find(temp)
+
+    while (matchResult != null) {
+        val prefix = matchResult.groupValues[1]
+        val allergyIndex = matchResult.groupValues[2].toInt()
+
+        allergyInfo.add(allergyIndex)
+        temp = prefix
+        matchResult = allergyParseRegex.find(temp)
+    }
+
+    if (allergyInfo.isNotEmpty()) {
+        allergyInfo.sort()
+    }
+    return temp to allergyInfo
 }

@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="allergy_info_key" translatable="false">
-        <item>1.</item>
-        <item>2.</item>
-        <item>3.</item>
-        <item>4.</item>
-        <item>5.</item>
-        <item>6.</item>
-        <item>7.</item>
-        <item>8.</item>
-        <item>9.</item>
-        <item>10.</item>
-        <item>11.</item>
-        <item>12.</item>
-        <item>13.</item>
-    </string-array>
-
-    <string-array name="allergy_info_value">
+    <string-array name="allergy_info">
+        <item />
         <item>Egg</item>
         <item>Milk</item>
         <item>Buckwheat</item>
@@ -30,46 +15,11 @@
         <item>Peaches</item>
         <item>Tomatoes</item>
         <item>Sulfates</item>
-    </string-array>
-
-    <string-array name="path_name_arrays">
-        <item>Seoul</item>
-        <item>Busan</item>
-        <item>Daegu</item>
-        <item>Incheon</item>
-        <item>Gwangju</item>
-        <item>Daejeon</item>
-        <item>Ulsan</item>
-        <item>Sejong</item>
-        <item>Gyeonggi-do</item>
-        <item>Gangwon-do</item>
-        <item>Chuncheongbuk-do</item>
-        <item>Chungcheongnam-do</item>
-        <item>Jeollakbuk-do</item>
-        <item>Jeollanam-do</item>
-        <item>Gyeongsangbuk-do</item>
-        <item>Gyeongsangnam-do</item>
-        <item>Jeju</item>
-    </string-array>
-
-    <string-array name="path_arrays" translatable="false">
-        <item>sen.go.kr</item>
-        <item>pen.go.kr</item>
-        <item>dge.go.kr</item>
-        <item>ice.go.kr</item>
-        <item>gen.go.kr</item>
-        <item>dje.go.kr</item>
-        <item>use.go.kr</item>
-        <item>sje.go.kr</item>
-        <item>goe.go.kr</item>
-        <item>kwe.go.kr</item>
-        <item>cbe.go.kr</item>
-        <item>cne.go.kr</item>
-        <item>jbe.go.kr</item>
-        <item>jne.go.kr</item>
-        <item>gbe.kr</item>
-        <item>gne.go.kr</item>
-        <item>jje.go.kr</item>
+        <item>Walnut</item>
+        <item>Chicken</item>
+        <item>Beef</item>
+        <item>Squid</item>
+        <item>Shellfish</item>
     </string-array>
 
     <string-array name="month_name" translatable="false">

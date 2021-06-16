@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="allergy_info_value">
+    <string-array name="allergy_info">
+        <item />
         <item>난류</item>
         <item>우유</item>
         <item>메밀</item>
@@ -14,26 +15,11 @@
         <item>복숭아</item>
         <item>토마토</item>
         <item>아황산염</item>
-    </string-array>
-
-    <string-array name="path_name_arrays">
-        <item>서울특별시교육청</item>
-        <item>부산광역시교육청</item>
-        <item>대구광역시교육청</item>
-        <item>인천광역시교육청</item>
-        <item>광주광역시교육청</item>
-        <item>대전광역시교육청</item>
-        <item>울산광역시교육청</item>
-        <item>세종특별자치시교육청</item>
-        <item>경기도교육청</item>
-        <item>강원도교육청</item>
-        <item>충청북도교육청</item>
-        <item>충청남도교육청</item>
-        <item>전라북도교육청</item>
-        <item>전라남도교육청</item>
-        <item>경상북도교육청</item>
-        <item>경상남도교육청</item>
-        <item>제주도교육청</item>
+        <item>호두</item>
+        <item>닭고기</item>
+        <item>소고기</item>
+        <item>오징어</item>
+        <item>조개류</item>
     </string-array>
 
     <string-array name="day_name">

@@ -15,6 +15,8 @@
     <string name="type_lunch">Lunch</string>
     <string name="type_dinner">Dinner</string>
 
+    <string name="msg_meal_empty">Empty meal data</string>
+    <string name="msg_meal_error">Can\'t receive meal</string>
 
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>

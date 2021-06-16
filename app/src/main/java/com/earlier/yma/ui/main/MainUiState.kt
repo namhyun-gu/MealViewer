@@ -15,10 +15,23 @@
  */
 package com.earlier.yma.ui.main
 
-import com.earlier.yma.util.Constants
-import com.earlier.yma.util.DateUtils
+import com.earlier.yma.data.MealResponse
+import java.util.Date
 
-data class MainUiState(
-    val date: String = DateUtils.getToday(),
-    val selectedType: String = Constants.TYPE_LUNCH,
-)
+enum class MealType(val value: String) {
+    Lunch("2"), Dinner("3")
+}
+
+sealed class MainUiState {
+    object Loading : MainUiState()
+
+    data class Success(
+        val type: MealType,
+        val date: Date,
+        val content: MealResponse.Meal
+    ) : MainUiState()
+
+    data class Error(
+        val exception: Throwable
+    ) : MainUiState()
+}
