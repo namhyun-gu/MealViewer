@@ -16,6 +16,7 @@
     <string name="msg_search_no_more">No more school information to receive</string>
 
     <!--  Main  -->
+    <string name="type_breakfast">Breakfast</string>
     <string name="type_lunch">Lunch</string>
     <string name="type_dinner">Dinner</string>
 

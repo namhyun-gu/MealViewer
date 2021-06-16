@@ -16,17 +16,18 @@
 package com.earlier.yma.ui.main
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -44,9 +45,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Event
-import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
@@ -57,8 +56,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -142,13 +143,6 @@ fun MainTopBar(
     onDateSelect: () -> Unit = {},
     onSettingSelect: () -> Unit = {}
 ) {
-    val isDinner = (type == MealType.Dinner)
-    val title = if (isDinner) {
-        stringResource(R.string.type_dinner)
-    } else {
-        stringResource(R.string.type_lunch)
-    }
-
     Column {
         Box(
             modifier = Modifier.padding(
@@ -157,21 +151,27 @@ fun MainTopBar(
                 bottom = 8.dp,
             )
         ) {
-            StateIcon(isDinner)
+            Icon(
+                type.icon,
+                contentDescription = null,
+                modifier = Modifier.size(56.dp),
+                tint = Color(0xFFFFD600),
+            )
         }
         TopAppBar(
+            modifier = Modifier.height(72.dp),
             title = {
                 Column {
                     Text(
-                        title,
-                        style = MaterialTheme.typography.h5.copy(
+                        stringResource(type.stringResId),
+                        style = MaterialTheme.typography.h4.copy(
                             fontWeight = FontWeight.Black
                         )
                     )
                     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                         Text(
                             DateUtils.formatDate(date, "MM.dd"),
-                            style = MaterialTheme.typography.body2
+                            style = MaterialTheme.typography.h6
                         )
                     }
                 }
@@ -198,25 +198,6 @@ fun MainTopBar(
     }
 }
 
-@Composable
-fun StateIcon(
-    isDinner: Boolean = false
-) {
-    val iconColor = Color(0xFFFFD600)
-    val icon = if (isDinner) {
-        Icons.Rounded.DarkMode
-    } else {
-        Icons.Rounded.LightMode
-    }
-
-    Icon(
-        icon,
-        contentDescription = null,
-        tint = iconColor,
-        modifier = Modifier.size(56.dp)
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun MainTopBar_Preview() {
@@ -240,26 +221,29 @@ fun MainTopBar_Preview() {
 @Composable
 fun MainBottomBar(
     selectType: MealType,
-    onTypeSelect: (MealType) -> Unit
+    onTypeSelect: (MealType) -> Unit = {}
 ) {
     val types = MealType.values()
 
     Row(
-        modifier = Modifier.height(56.dp)
+        modifier = Modifier
+            .padding(
+                horizontal = 16.dp,
+                vertical = 16.dp
+            )
+            .fillMaxWidth(),
     ) {
         types.forEach { type ->
             val isSelected = (type == selectType)
 
-            Center(
+            Box(
                 modifier = Modifier
-                    .padding(
-                        horizontal = 16.dp
-                    )
-                    .weight(1f)
-                    .fillMaxHeight(),
+                    .weight(1f),
+                contentAlignment = Alignment.Center
             ) {
                 MainBottomBarItem(
                     text = stringResource(type.stringResId),
+                    icon = type.icon,
                     selected = isSelected
                 ) {
                     onTypeSelect(type)
@@ -273,42 +257,56 @@ fun MainBottomBar(
 @Composable
 fun MainBottomBarItem(
     modifier: Modifier = Modifier,
+    icon: ImageVector,
     text: String,
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val backgroundColor by animateColorAsState(
+    val selectedColor by animateColorAsState(
         if (selected) {
             MaterialTheme.colors.primary
         } else {
-            MaterialTheme.colors.surface
+            MaterialTheme.colors.onSurface
         }
     )
 
-    val border = if (!selected) {
-        BorderStroke(
-            1.dp,
-            MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
-        )
-    } else {
-        null
-    }
+    val backgroundColor by animateColorAsState(
+        if (selected) {
+            MaterialTheme.colors.primary.copy(
+                alpha = 0.24f
+            )
+        } else {
+            Color.Transparent
+        }
+    )
 
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(32.dp),
         color = backgroundColor,
-        elevation = 0.dp,
         modifier = modifier
-            .height(40.dp)
-            .fillMaxSize(),
-        border = border
+            .height(48.dp)
+            .animateContentSize()
     ) {
-        Center {
-            Text(
-                text,
-                style = MaterialTheme.typography.body1
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        ) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = selectedColor,
             )
+            if (selected) {
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text,
+                    style = MaterialTheme.typography.body2.copy(
+                        color = selectedColor
+                    )
+                )
+            }
         }
     }
 }
@@ -317,11 +315,11 @@ fun MainBottomBarItem(
 @Composable
 fun MealBottomBar_Preview() {
     Column {
-        MainBottomBar(selectType = MealType.Lunch) {
-        }
+        MainBottomBar(selectType = MealType.Breakfast)
         Spacer(Modifier.height(8.dp))
-        MainBottomBar(selectType = MealType.Dinner) {
-        }
+        MainBottomBar(selectType = MealType.Lunch)
+        Spacer(Modifier.height(8.dp))
+        MainBottomBar(selectType = MealType.Dinner)
     }
 }
 

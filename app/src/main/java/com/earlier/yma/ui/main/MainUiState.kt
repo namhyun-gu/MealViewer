@@ -15,14 +15,7 @@
  */
 package com.earlier.yma.ui.main
 
-import androidx.annotation.StringRes
-import com.earlier.yma.R
 import com.earlier.yma.data.MealResponse
-
-enum class MealType(val value: String, @StringRes val stringResId: Int) {
-    Lunch("2", R.string.type_lunch),
-    Dinner("3", R.string.type_dinner)
-}
 
 sealed class MainUiState {
     object Loading : MainUiState()

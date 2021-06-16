@@ -16,6 +16,7 @@
     <string name="msg_search_no_more">더 이상 가져올 학교가 없습니다</string>
 
     <!--  Main  -->
+    <string name="type_breakfast">아침</string>
     <string name="type_lunch">점심</string>
     <string name="type_dinner">저녁</string>
 
