@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data
+package com.earlier.yma.data.remote
 
+import com.earlier.yma.data.MealResponse
+import com.earlier.yma.data.SearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

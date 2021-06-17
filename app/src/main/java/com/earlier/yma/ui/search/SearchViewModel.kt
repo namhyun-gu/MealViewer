@@ -57,51 +57,6 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-//    fun search(keyword: CharSequence) = viewModelScope.launch {
-//        try {
-//            _uiState.value = SearchUiState.Loading
-//            tryToSearch(keyword)
-//        } catch (e: Exception) {
-//            _uiState.value = SearchUiState.Error(e)
-//        }
-//    }
-
-//    private suspend fun tryToSearch(keyword: CharSequence) {
-//        val schoolList = requestSearch(keyword.toString())
-//        _uiState.value = SearchUiState.Success(
-//            keyword = keyword.toString(),
-//            schoolList = schoolList,
-//            orgList = getOrgList(schoolList)
-//        )
-//    }
-//
-//    fun loadMore() = viewModelScope.launch {
-//        try {
-//            _uiEvent.emit(SearchUiEvent.None)
-//            tryToLoadMore()
-//        } catch (e: Exception) {
-//            _uiEvent.emit(SearchUiEvent.LoadMoreError)
-//        }
-//    }
-//
-//    private suspend fun tryToLoadMore() {
-//        val state = _uiState.value
-//        if (state is SearchUiState.Success) {
-//            val nextPage = state.page + 1
-//            val nextList = requestSearch(state.keyword, nextPage)
-//
-//            val newList = mutableListOf<SearchResponse.School>()
-//            newList.addAll(state.schoolList)
-//            newList.addAll(nextList)
-//
-//            _uiState.value = state.copy(
-//                schoolList = newList,
-//                orgList = getOrgList(newList),
-//                page = nextPage,
-//            )
-//        }
-//    }
-
     fun updateFilter(filter: Set<String>) {
         val state = _uiState.value
         if (state is SearchUiState.Requested) {
@@ -126,24 +81,4 @@ class SearchViewModel @Inject constructor(
 
         _uiEvent.emit(SearchUiEvent.SchoolSaved)
     }
-
-//    private fun getOrgList(list: List<SearchResponse.School>): List<String> {
-//        val orgSet = mutableSetOf<String>()
-//        list.forEach {
-//            orgSet.add(it.orgName)
-//        }
-//        return orgSet.toList()
-//    }
-//
-//    @Throws(HttpException::class, IllegalArgumentException::class)
-//    private suspend fun requestSearch(
-//        keyword: String,
-//        page: Int = 1
-//    ): List<SearchResponse.School> {
-//        val response = neisService.searchSchool(keyword, page)
-//        if (!response.isValid) {
-//            throw IllegalArgumentException("Invalid response")
-//        }
-//        return response.content!![1].schoolList!!
-//    }
 }
