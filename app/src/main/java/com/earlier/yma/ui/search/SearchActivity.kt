@@ -19,6 +19,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Modifier
+import com.earlier.yma.ui.main.navigateMain
 import com.earlier.yma.ui.theme.MealViewerTheme
 import com.google.accompanist.insets.navigationBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +36,7 @@ class SearchActivity : AppCompatActivity() {
                         finish()
                     },
                     onNavigateToMain = {
+                        navigateMain(this)
                         finish()
                     }
                 )

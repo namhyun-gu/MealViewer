@@ -18,8 +18,8 @@ package com.earlier.yma.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.earlier.yma.data.MealResponse
-import com.earlier.yma.data.NeisService
 import com.earlier.yma.data.preferences.PreferenceStorage
+import com.earlier.yma.data.remote.NeisService
 import com.earlier.yma.util.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

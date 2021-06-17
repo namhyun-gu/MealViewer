@@ -27,11 +27,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
@@ -69,12 +71,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.earlier.yma.R
 import com.earlier.yma.data.SearchResponse
 import com.earlier.yma.ui.base.Center
 import com.earlier.yma.ui.base.ContentPanel
 import com.earlier.yma.ui.base.EditableUserInput
-import com.earlier.yma.ui.base.PagingColumn
 import com.earlier.yma.ui.theme.MealViewerTheme
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -107,7 +112,8 @@ fun SearchActivityContent(
         SearchUiEvent.SchoolSaved -> {
             onNavigateToMain()
         }
-        else -> { /* No-op */ }
+        else -> { /* No-op */
+        }
     }
 
     Scaffold(
@@ -121,26 +127,19 @@ fun SearchActivityContent(
     ) {
         Column {
             SearchInputBar(
-                onSearch = {
-                    viewModel.search(it)
+                onSearch = { keyword ->
+                    viewModel.search(keyword)
                 },
             )
-            Center(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                SearchContent(
-                    uiState = uiState,
-                    onFilterUpdate = { filterSet ->
-                        viewModel.updateFilter(filterSet)
-                    },
-                    onSchoolSelect = {
-                        viewModel.saveSchool(it)
-                    },
-                    onLoadMore = {
-                        viewModel.loadMore()
-                    }
-                )
-            }
+            SearchContent(
+                uiState = uiState,
+                onFilterUpdate = { filterSet ->
+                    viewModel.updateFilter(filterSet)
+                },
+                onSchoolSelect = {
+                    viewModel.saveSchool(it)
+                },
+            )
         }
     }
 }
@@ -150,54 +149,148 @@ fun SearchContent(
     uiState: SearchUiState,
     onFilterUpdate: (Set<String>) -> Unit,
     onSchoolSelect: (SearchResponse.School) -> Unit,
-    onLoadMore: () -> Unit,
 ) {
     when (uiState) {
         SearchUiState.Idle -> {
             Box { }
         }
-        SearchUiState.Loading -> {
-            CircularProgressIndicator()
-        }
-        is SearchUiState.Success -> {
-            Column {
-                FilterGroup(
-                    modifier = Modifier.padding(
-                        top = 8.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    ),
-                    orgList = uiState.orgList,
-                    filterOrg = uiState.filterOrg,
-                    onFilterUpdate = onFilterUpdate
-                )
-                SchoolList(
-                    modifier = Modifier.fillMaxSize(),
-                    items = filterSchoolList(uiState.schoolList, uiState.filterOrg),
-                    onItemSelect = onSchoolSelect,
-                    onLoadMore = onLoadMore
-                )
-            }
-        }
-        is SearchUiState.Error -> {
-            val errorMessage = if (uiState.exception is HttpException) {
-                stringResource(R.string.msg_search_error_code, uiState.exception.code())
-            } else {
-                stringResource(R.string.msg_search_error)
-            }
-            Text(errorMessage, style = MaterialTheme.typography.body1)
+        is SearchUiState.Requested -> {
+            SearchResultContent(
+                uiState = uiState,
+                onFilterUpdate = onFilterUpdate,
+                onSchoolSelect = onSchoolSelect
+            )
         }
     }
 }
 
-private fun filterSchoolList(
-    schoolList: List<SearchResponse.School>,
-    filterOrg: Set<String>
-): List<SearchResponse.School> {
-    return schoolList.filter {
-        filterOrg.isEmpty() || filterOrg.contains(it.orgName)
+@Composable
+fun SearchResultContent(
+    modifier: Modifier = Modifier,
+    uiState: SearchUiState.Requested,
+    onFilterUpdate: (Set<String>) -> Unit,
+    onSchoolSelect: (SearchResponse.School) -> Unit,
+) {
+    val lazyItems = uiState.schoolPagingData.collectAsLazyPagingItems()
+
+    Column(
+        modifier = modifier.padding(horizontal = 16.dp),
+    ) {
+        FilterGroup(
+            modifier = Modifier.padding(
+                bottom = 16.dp
+            ),
+            orgList = getOrgList(lazyItems.snapshot().items),
+            filterOrg = uiState.filterOrg,
+            onFilterUpdate = onFilterUpdate
+        )
+        lazyItems.apply {
+            when (loadState.refresh) {
+                is LoadState.Loading -> {
+                    Center(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is LoadState.Error -> {
+                    val e = lazyItems.loadState.refresh as LoadState.Error
+
+                    Center(modifier = Modifier.fillMaxSize()) {
+                        ErrorMessage(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            exception = e.error
+                        ) {
+                            retry()
+                        }
+                    }
+                }
+                else -> {
+                    ContentPanel {
+                        SchoolList(
+                            lazyItems = this,
+                            filterOrg = uiState.filterOrg,
+                            onSchoolSelect = onSchoolSelect
+                        )
+                    }
+                }
+            }
+        }
     }
+}
+
+@Composable
+fun SchoolList(
+    modifier: Modifier = Modifier,
+    lazyItems: LazyPagingItems<SearchResponse.School>,
+    filterOrg: Set<String>,
+    onSchoolSelect: (SearchResponse.School) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier,
+    ) {
+        items(lazyItems) { school ->
+            if (school != null && isContainFilter(school.orgName, filterOrg)) {
+                SchoolItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    school = school
+                ) {
+                    onSchoolSelect(school)
+                }
+            }
+        }
+        lazyItems.apply {
+            if (loadState.append is LoadState.Loading) {
+                item {
+                    Center(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ErrorMessage(
+    modifier: Modifier = Modifier,
+    exception: Throwable,
+    onClickRetry: () -> Unit
+) {
+    val errorMessage = if (exception is HttpException) {
+        stringResource(R.string.msg_search_error_code, exception.code())
+    } else {
+        stringResource(R.string.msg_search_error)
+    }
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(errorMessage, style = MaterialTheme.typography.body1)
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onClickRetry) {
+            Text(stringResource(R.string.action_retry))
+        }
+    }
+}
+
+private fun getOrgList(list: List<SearchResponse.School>): List<String> {
+    val orgSet = mutableSetOf<String>()
+    list.forEach {
+        orgSet.add(it.orgName)
+    }
+    return orgSet.toList()
+}
+
+
+private fun isContainFilter(
+    orgName: String,
+    filterOrg: Set<String>
+): Boolean {
+    return filterOrg.isEmpty() || filterOrg.contains(orgName)
 }
 
 @Composable
@@ -265,29 +358,6 @@ fun SearchInputBar(
 fun SearchInputBar_Preview() {
     MealViewerTheme {
         SearchInputBar {}
-    }
-}
-
-@Composable
-fun SchoolList(
-    modifier: Modifier = Modifier,
-    items: List<SearchResponse.School> = listOf(),
-    onLoadMore: () -> Unit,
-    onItemSelect: (SearchResponse.School) -> Unit,
-) {
-    ContentPanel {
-        PagingColumn(
-            modifier = modifier,
-            content = items,
-            onLoadMore = onLoadMore
-        ) {
-            SchoolItem(
-                modifier = Modifier.fillMaxWidth(),
-                school = it
-            ) {
-                onItemSelect(it)
-            }
-        }
     }
 }
 
