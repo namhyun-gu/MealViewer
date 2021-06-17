@@ -16,6 +16,8 @@
 package com.earlier.yma.ui.base
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +30,16 @@ fun Center(
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
+    ) {
+        content()
+    }
+}
+@Composable
+fun ContentPanel(
+    content: @Composable () -> Unit
+) {
+    Surface(
+        shape = MaterialTheme.shapes.large,
     ) {
         content()
     }

@@ -22,11 +22,16 @@ import androidx.compose.material.Shapes
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-private val LightColorPalette = lightColors()
+private val LightColorPalette = lightColors(
+    background = Color(0xFFF0EFF4)
+)
 
-private val DarkColorPalette = darkColors()
+private val DarkColorPalette = darkColors(
+    surface = Color(0xFF1C1C1E)
+)
 
 private val MealViewerShapes = Shapes(
     small = RoundedCornerShape(4.dp),

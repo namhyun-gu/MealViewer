@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
@@ -69,6 +68,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.earlier.yma.R
 import com.earlier.yma.data.MealResponse
 import com.earlier.yma.ui.base.Center
+import com.earlier.yma.ui.base.ContentPanel
 import com.earlier.yma.ui.theme.MealViewerTheme
 import com.earlier.yma.util.DateUtils
 import com.earlier.yma.util.parseAllergyInfo
@@ -378,18 +378,6 @@ fun MealContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun ContentPanel(
-    content: @Composable () -> Unit
-) {
-    Card(
-        elevation = 2.dp,
-        shape = MaterialTheme.shapes.large
-    ) {
-        content()
     }
 }
 

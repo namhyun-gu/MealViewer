@@ -72,12 +72,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.earlier.yma.R
 import com.earlier.yma.data.SearchResponse
 import com.earlier.yma.ui.base.Center
+import com.earlier.yma.ui.base.ContentPanel
 import com.earlier.yma.ui.base.EditableUserInput
 import com.earlier.yma.ui.base.PagingColumn
 import com.earlier.yma.ui.theme.MealViewerTheme
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
+// TODO: Paging 라이브러리를 적용하여 Paging 구현하기
 @Composable
 fun SearchActivityContent(
     modifier: Modifier = Modifier,
@@ -273,16 +275,18 @@ fun SchoolList(
     onLoadMore: () -> Unit,
     onItemSelect: (SearchResponse.School) -> Unit,
 ) {
-    PagingColumn(
-        modifier = modifier,
-        content = items,
-        onLoadMore = onLoadMore
-    ) {
-        SchoolItem(
-            modifier = Modifier.fillMaxWidth(),
-            school = it
+    ContentPanel {
+        PagingColumn(
+            modifier = modifier,
+            content = items,
+            onLoadMore = onLoadMore
         ) {
-            onItemSelect(it)
+            SchoolItem(
+                modifier = Modifier.fillMaxWidth(),
+                school = it
+            ) {
+                onItemSelect(it)
+            }
         }
     }
 }
@@ -297,7 +301,7 @@ fun SchoolItem(
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = MaterialTheme.shapes.medium
+        color = Color.Transparent
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
