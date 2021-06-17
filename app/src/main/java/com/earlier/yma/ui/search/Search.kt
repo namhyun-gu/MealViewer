@@ -45,7 +45,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -77,6 +76,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.earlier.yma.R
 import com.earlier.yma.data.SearchResponse
+import com.earlier.yma.ui.base.AppBar
 import com.earlier.yma.ui.base.Center
 import com.earlier.yma.ui.base.ContentPanel
 import com.earlier.yma.ui.base.EditableUserInput
@@ -285,7 +285,6 @@ private fun getOrgList(list: List<SearchResponse.School>): List<String> {
     return orgSet.toList()
 }
 
-
 private fun isContainFilter(
     orgName: String,
     filterOrg: Set<String>
@@ -297,7 +296,7 @@ private fun isContainFilter(
 fun SearchTopBar(
     onNavIconPress: () -> Unit = {}
 ) {
-    TopAppBar(
+    AppBar(
         title = {
             Text(stringResource(R.string.activity_title_search))
         },
@@ -309,8 +308,6 @@ fun SearchTopBar(
                 )
             }
         },
-        backgroundColor = Color.Transparent,
-        elevation = 0.dp
     )
 }
 

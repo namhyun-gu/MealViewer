@@ -31,24 +31,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.ListItem
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,12 +57,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.earlier.yma.R
 import com.earlier.yma.data.MealResponse
+import com.earlier.yma.ui.base.AppBar
 import com.earlier.yma.ui.base.Center
 import com.earlier.yma.ui.base.ContentPanel
 import com.earlier.yma.ui.theme.MealViewerTheme
@@ -143,59 +139,43 @@ fun MainTopBar(
     onDateSelect: () -> Unit = {},
     onSettingSelect: () -> Unit = {}
 ) {
-    Column {
-        Box(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                top = 64.dp,
-                bottom = 8.dp,
+    AppBar(
+        title = {
+            Text(
+                stringResource(type.stringResId),
             )
-        ) {
+        },
+        subtitle = {
+            Text(
+                DateUtils.formatDate(date, "MM.dd"),
+            )
+        },
+        expandSpace = {
             Icon(
                 type.icon,
                 contentDescription = null,
-                modifier = Modifier.size(56.dp),
+                modifier = Modifier
+                    .size(56.dp),
                 tint = Color(0xFFFFD600),
             )
-        }
-        TopAppBar(
-            modifier = Modifier.height(72.dp),
-            title = {
-                Column {
-                    Text(
-                        stringResource(type.stringResId),
-                        style = MaterialTheme.typography.h4.copy(
-                            fontWeight = FontWeight.Black
-                        )
-                    )
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(
-                            DateUtils.formatDate(date, "MM.dd"),
-                            style = MaterialTheme.typography.h6
-                        )
-                    }
-                }
-            },
-            backgroundColor = Color.Transparent,
-            elevation = 0.dp,
-            actions = {
-                IconButton(onClick = onDateSelect) {
-                    Icon(
-                        Icons.Rounded.Event,
-                        null,
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                }
-                IconButton(onClick = onSettingSelect) {
-                    Icon(
-                        Icons.Rounded.Settings,
-                        null,
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                }
+        },
+        actions = {
+            IconButton(onClick = onDateSelect) {
+                Icon(
+                    Icons.Rounded.Event,
+                    null,
+                    tint = MaterialTheme.colors.onSurface
+                )
             }
-        )
-    }
+            IconButton(onClick = onSettingSelect) {
+                Icon(
+                    Icons.Rounded.Settings,
+                    null,
+                    tint = MaterialTheme.colors.onSurface
+                )
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)
@@ -359,7 +339,7 @@ fun MealContent(
     modifier: Modifier,
     meal: MealResponse.Meal
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.padding(horizontal = 16.dp)) {
         LazyColumn(
             modifier = Modifier.padding(top = 16.dp)
         ) {
