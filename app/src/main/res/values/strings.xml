@@ -26,6 +26,13 @@
     <string name="msg_meal_empty">Empty meal data</string>
     <string name="msg_meal_error">Can\'t receive meal</string>
 
+    <!--  Setting  -->
+    <string name="activity_title_setting">Setting</string>
+    <string name="subtitle_reset_school">Reset school</string>
+    <string name="subtitle_version">Version</string>
+    <string name="subtitle_open_source_license">Open source license</string>
+    <string name="subtitle_feedback">Feedback</string>
+
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>

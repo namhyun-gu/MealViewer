@@ -13,36 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.ui.main
+package com.earlier.yma.ui.setting
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Modifier
-import com.earlier.yma.ui.setting.navigateSetting
+import com.earlier.yma.R
 import com.earlier.yma.ui.theme.MealViewerTheme
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MealViewerTheme {
-                MainActivityContent(
+                SettingActivityContent(
                     modifier = Modifier.navigationBarsPadding(bottom = false),
-                    onNavigateSetting = {
-                        navigateSetting(this)
-                    }
+                    onNavIconPress = {
+                        finish()
+                    },
+                    onShowOpenSourceLicense = {
+                        openOpenSourceLicense(this)
+                    },
+                    onSendFeedback = {
+                        sendMail(this)
+                    },
                 )
             }
         }
     }
+
+    fun sendMail() {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:mnhan0403@gmail.com")
+        }
+        startActivity(intent)
+    }
+
+    fun openOpenSourceLicense() {
+        OssLicensesMenuActivity.setActivityTitle(getString(R.string.subtitle_open_source_license))
+        startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+    }
 }
 
-fun navigateMain(context: Context) {
-    context.startActivity(Intent(context, MainActivity::class.java))
+fun navigateSetting(context: Context) {
+    context.startActivity(Intent(context, SettingActivity::class.java))
 }

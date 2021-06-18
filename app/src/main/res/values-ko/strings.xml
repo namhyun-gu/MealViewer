@@ -26,6 +26,13 @@
     <string name="msg_meal_empty">급식 정보가 없습니다</string>
     <string name="msg_meal_error">급식 정보를 가져올 수 없습니다</string>
 
+    <!--  Setting  -->
+    <string name="activity_title_setting">설정</string>
+    <string name="subtitle_reset_school">학교 재설정</string>
+    <string name="subtitle_version">버전</string>
+    <string name="subtitle_open_source_license">오픈소스 라이선스</string>
+    <string name="subtitle_feedback">피드백</string>
+
     <!-- Snackbar -->
 
     <!-- List item -->

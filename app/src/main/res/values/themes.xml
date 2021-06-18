@@ -11,4 +11,14 @@
         </item>
         <item name="android:navigationBarColor">@color/status_bar</item>
     </style>
+
+    <style name="Theme.MyApp.OpenSourceLicense" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/status_bar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">@bool/use_light_status</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">
+            @bool/use_light_navigation
+        </item>
+        <item name="android:navigationBarColor">@color/status_bar</item>
+    </style>
 </resources>

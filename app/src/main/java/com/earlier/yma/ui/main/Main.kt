@@ -73,11 +73,10 @@ import com.vanpra.composematerialdialogs.buttons
 import com.vanpra.composematerialdialogs.datetime.datepicker.datepicker
 import java.util.Date
 
-// TODO: Rotation 애니메이션이 끊기는 문제 고치기
-// TODO: 영양소 정보 표시
 @Composable
 fun MainActivityContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateSetting: () -> Unit
 ) {
     val viewModel: MainViewModel = viewModel()
     val uiState: MainUiState by viewModel.uiState.collectAsState(MainUiState.Loading)
@@ -112,6 +111,7 @@ fun MainActivityContent(
                     dateDialog.show()
                 },
                 onSettingSelect = {
+                    onNavigateSetting()
                 }
             )
         },
