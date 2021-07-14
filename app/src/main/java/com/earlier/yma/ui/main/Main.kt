@@ -15,6 +15,7 @@
  */
 package com.earlier.yma.ui.main
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
@@ -59,12 +60,13 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.earlier.yma.R
 import com.earlier.yma.data.MealResponse
-import com.earlier.yma.ui.base.AppBar
-import com.earlier.yma.ui.base.Center
-import com.earlier.yma.ui.base.ContentPanel
+import com.earlier.yma.ui.AppScreens
+import com.earlier.yma.ui.common.AppBar
+import com.earlier.yma.ui.common.Center
+import com.earlier.yma.ui.common.ContentPanel
 import com.earlier.yma.ui.theme.MealViewerTheme
 import com.earlier.yma.util.DateUtils
 import com.earlier.yma.util.parseAllergyInfo
@@ -74,11 +76,10 @@ import com.vanpra.composematerialdialogs.datetime.datepicker.datepicker
 import java.util.Date
 
 @Composable
-fun MainActivityContent(
-    modifier: Modifier = Modifier,
-    onNavigateSetting: () -> Unit
+fun Main(
+    navController: NavController,
+    viewModel: MainViewModel,
 ) {
-    val viewModel: MainViewModel = viewModel()
     val uiState: MainUiState by viewModel.uiState.collectAsState(MainUiState.Loading)
     val uiEvent: MainUiEvent by viewModel.uiEvent.collectAsState(MainUiEvent.None)
 
@@ -102,7 +103,6 @@ fun MainActivityContent(
     }
 
     Scaffold(
-        modifier = modifier,
         topBar = {
             MainTopBar(
                 type = currentType,
@@ -111,7 +111,14 @@ fun MainActivityContent(
                     dateDialog.show()
                 },
                 onSettingSelect = {
-                    onNavigateSetting()
+                    navController.navigate(AppScreens.Settings.name) {
+                        anim {
+                            enter = android.R.anim.slide_in_left
+                            exit = android.R.anim.slide_out_right
+                            popEnter = android.R.anim.slide_in_left
+                            popExit = android.R.anim.slide_out_right
+                        }
+                    }
                 }
             )
         },
@@ -151,13 +158,17 @@ fun MainTopBar(
             )
         },
         expandSpace = {
-            Icon(
-                type.icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(56.dp),
-                tint = Color(0xFFFFD600),
-            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Icon(
+                    type.icon,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(56.dp),
+                    tint = Color(0xFFFFD600),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         },
         actions = {
             IconButton(onClick = onDateSelect) {
@@ -179,19 +190,13 @@ fun MainTopBar(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MainTopBar_Preview() {
     MealViewerTheme {
         Column {
             MainTopBar(
                 type = MealType.Lunch,
-                date = Date(),
-            )
-            Divider()
-            Spacer(Modifier.height(8.dp))
-            Divider()
-            MainTopBar(
-                type = MealType.Dinner,
                 date = Date(),
             )
         }
@@ -292,14 +297,11 @@ fun MainBottomBarItem(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MealBottomBar_Preview() {
     Column {
         MainBottomBar(selectType = MealType.Breakfast)
-        Spacer(Modifier.height(8.dp))
-        MainBottomBar(selectType = MealType.Lunch)
-        Spacer(Modifier.height(8.dp))
-        MainBottomBar(selectType = MealType.Dinner)
     }
 }
 
@@ -346,6 +348,9 @@ fun MealContent(
             item {
                 ContentPanel {
                     CalorieItem(calorie = meal.calorie)
+//                    Divider(startIndent = 16.dp)
+//                    ClickableListItem(title = stringResource(R.string.subtitle_more)) {
+//                    }
                 }
             }
             item {
@@ -367,10 +372,16 @@ fun DishList(
     dishList: List<String>
 ) {
     Column(modifier = modifier) {
-        dishList.forEach { food ->
+        dishList.forEachIndexed { index, food ->
             DishItem(
                 food = food
             )
+
+            if (index < dishList.size - 1) {
+                Divider(
+                    startIndent = 16.dp
+                )
+            }
         }
     }
 }
@@ -383,10 +394,15 @@ fun DishItem(
 ) {
     val allergyNames = stringArrayResource(R.array.allergy_info)
     val (foodName, allergyInfo) = parseAllergyInfo(food)
-    val allergyMessage = allergyInfo.joinToString { allergyNames[it] }
+
+    val allergyMessage = try {
+        allergyInfo.joinToString { allergyNames[it] }
+    } catch (e: ArrayIndexOutOfBoundsException) {
+        ""
+    }
 
     var secondaryText: @Composable (() -> Unit)? = null
-    if (allergyInfo.isNotEmpty()) {
+    if (allergyMessage.isNotEmpty()) {
         secondaryText = {
             Text(allergyMessage)
         }
@@ -397,6 +413,14 @@ fun DishItem(
         secondaryText = secondaryText
     ) {
         Text(foodName)
+    }
+}
+
+@Preview
+@Composable
+fun DishItem_Preview() {
+    MealViewerTheme {
+        DishItem(food = "Test1.2.3.")
     }
 }
 

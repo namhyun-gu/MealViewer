@@ -6,3 +6,4 @@ local.properties
 .gradle
 *.apk
 node_modules
+google-services.json

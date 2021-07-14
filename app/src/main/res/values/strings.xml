@@ -22,6 +22,7 @@
 
     <string name="dialog_select_date">Select date</string>
     <string name="subtitle_calorie">Calorie</string>
+    <string name="subtitle_more">More</string>
 
     <string name="msg_meal_empty">Empty meal data</string>
     <string name="msg_meal_error">Can\'t receive meal</string>

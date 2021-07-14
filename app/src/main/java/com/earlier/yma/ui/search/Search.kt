@@ -39,16 +39,14 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -69,29 +67,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.earlier.yma.R
 import com.earlier.yma.data.SearchResponse
-import com.earlier.yma.ui.base.AppBar
-import com.earlier.yma.ui.base.Center
-import com.earlier.yma.ui.base.ContentPanel
-import com.earlier.yma.ui.base.EditableUserInput
+import com.earlier.yma.ui.AppScreens
+import com.earlier.yma.ui.common.AppBar
+import com.earlier.yma.ui.common.Center
+import com.earlier.yma.ui.common.ContentPanel
+import com.earlier.yma.ui.common.EditableUserInput
 import com.earlier.yma.ui.theme.MealViewerTheme
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-// TODO: Paging 라이브러리를 적용하여 Paging 구현하기
 @Composable
-fun SearchActivityContent(
-    modifier: Modifier = Modifier,
-    onNavIconPress: () -> Unit = {},
-    onNavigateToMain: () -> Unit = {},
+fun Search(
+    navController: NavController,
+    viewModel: SearchViewModel,
 ) {
-    val viewModel: SearchViewModel = viewModel()
     val uiState: SearchUiState by viewModel.uiState.collectAsState(SearchUiState.Idle)
     val uiEvent: SearchUiEvent by viewModel.uiEvent.collectAsState(SearchUiEvent.None)
 
@@ -110,19 +106,26 @@ fun SearchActivityContent(
             showLoadMoreErrorSnackBar()
         }
         SearchUiEvent.SchoolSaved -> {
-            onNavigateToMain()
+            navController.navigate(AppScreens.Main.name) {
+                anim {
+                    enter = android.R.anim.slide_in_left
+                    exit = android.R.anim.slide_out_right
+                    popEnter = android.R.anim.slide_in_left
+                    popExit = android.R.anim.slide_out_right
+                }
+                popUpTo(AppScreens.Search.name) {
+                    inclusive = true
+                }
+            }
         }
         else -> { /* No-op */
         }
     }
 
     Scaffold(
-        modifier = modifier,
         scaffoldState = scaffoldState,
         topBar = {
-            SearchTopBar(
-                onNavIconPress = onNavIconPress
-            )
+            SearchTopBar()
         }
     ) {
         Column {
@@ -184,8 +187,8 @@ fun SearchResultContent(
             filterOrg = uiState.filterOrg,
             onFilterUpdate = onFilterUpdate
         )
-        lazyItems.apply {
-            when (loadState.refresh) {
+        lazyItems.let { items ->
+            when (items.loadState.refresh) {
                 is LoadState.Loading -> {
                     Center(modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator()
@@ -199,14 +202,14 @@ fun SearchResultContent(
                             modifier = Modifier.padding(vertical = 16.dp),
                             exception = e.error
                         ) {
-                            retry()
+                            items.retry()
                         }
                     }
                 }
                 else -> {
                     ContentPanel {
                         SchoolList(
-                            lazyItems = this,
+                            lazyItems = items,
                             filterOrg = uiState.filterOrg,
                             onSchoolSelect = onSchoolSelect
                         )
@@ -293,20 +296,10 @@ private fun isContainFilter(
 }
 
 @Composable
-fun SearchTopBar(
-    onNavIconPress: () -> Unit = {}
-) {
+fun SearchTopBar() {
     AppBar(
         title = {
             Text(stringResource(R.string.activity_title_search))
-        },
-        navigationIcon = {
-            IconButton(onClick = onNavIconPress) {
-                Icon(
-                    Icons.Rounded.ArrowBack,
-                    contentDescription = null
-                )
-            }
         },
     )
 }
@@ -335,6 +328,12 @@ fun SearchInputBar(
         onValueChange = {
             textFieldState = it
         },
+        icon = {
+            Icon(
+                Icons.Rounded.Search,
+                contentDescription = null
+            )
+        },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search
         ),
@@ -344,9 +343,6 @@ fun SearchInputBar(
                 keyboardController?.hide()
             }
         ),
-        icon = {
-            Icon(Icons.Default.Search, null)
-        },
     )
 }
 

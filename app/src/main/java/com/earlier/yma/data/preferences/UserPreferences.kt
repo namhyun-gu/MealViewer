@@ -24,5 +24,13 @@ data class UserPreferences(
         val schoolKind: String = "",
         val orgCode: String = "",
         val orgName: String = "",
-    )
+    ) {
+        fun isEmpty(): Boolean {
+            return schoolCode.isEmpty() &&
+                schoolName.isEmpty() &&
+                schoolKind.isEmpty() &&
+                orgCode.isEmpty() &&
+                orgName.isEmpty()
+        }
+    }
 }

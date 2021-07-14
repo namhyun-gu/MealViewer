@@ -28,11 +28,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -42,6 +43,11 @@ object DataModule {
     fun provideNeisService(): NeisService {
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor())
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .build()
 
         val moshi = Moshi.Builder()

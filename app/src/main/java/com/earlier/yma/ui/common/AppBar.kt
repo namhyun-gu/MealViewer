@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.ui.base
+package com.earlier.yma.ui.common
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,12 +23,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
@@ -48,93 +47,95 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.earlier.yma.ui.theme.MealViewerTheme
 
-private val AppBarHeight = 56.dp
-
-private val AppBarHorizontalPadding = 4.dp
-
-private val TitleInset = Modifier.width(16.dp - AppBarHorizontalPadding)
-
-private val TitleIconModifier = Modifier
-    .padding(
-        start = AppBarHorizontalPadding,
-        end = AppBarHorizontalPadding
-    )
-    .size(AppBarHeight)
-
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Transparent,
+    backgroundColor: Color = MaterialTheme.colors.background,
     navigationIcon: @Composable () -> Unit = {},
     expandSpace: @Composable (() -> Unit)? = null,
     title: @Composable () -> Unit = {},
     subtitle: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
+    val appBarHorizontalPadding = 4.dp
+    val titleInset = Modifier.width(16.dp - appBarHorizontalPadding)
+
     Surface(
         modifier = modifier,
-        color = backgroundColor
+        color = backgroundColor,
     ) {
         Column {
             Box(
-                TitleIconModifier,
+                modifier = Modifier
+                    .size(56.dp)
+                    .padding(horizontal = appBarHorizontalPadding),
                 contentAlignment = Alignment.CenterStart
             ) {
                 navigationIcon()
             }
             if (expandSpace != null) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = AppBarHorizontalPadding,
-                            end = AppBarHorizontalPadding,
-                        ),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Spacer(TitleInset)
+                AppBarPanel {
                     expandSpace()
                 }
             }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = AppBarHorizontalPadding,
-                        end = AppBarHorizontalPadding,
-                        bottom = 8.dp
-                    ),
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Spacer(TitleInset)
-                Column(
-                    Modifier
-                        .weight(1f),
-                    verticalArrangement = Arrangement.Bottom,
-                ) {
-                    ProvideTextStyle(
-                        value = MaterialTheme.typography.h4.copy(
-                            fontWeight = FontWeight.Black
-                        )
-                    ) {
-                        CompositionLocalProvider(
-                            LocalContentAlpha provides ContentAlpha.high,
-                            content = title
-                        )
-                    }
-                    if (subtitle != null) {
-                        ProvideTextStyle(value = MaterialTheme.typography.h6) {
-                            CompositionLocalProvider(
-                                LocalContentAlpha provides ContentAlpha.medium,
-                                content = subtitle
-                            )
-                        }
-                    }
-                }
+            AppBarPanel {
+                Spacer(titleInset)
+                TitlePanel(
+                    modifier = Modifier.weight(1f),
+                    title = title,
+                    subtitle = subtitle
+                )
                 Row(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.Bottom,
                     content = actions
+                )
+            }
+            Spacer(modifier = Modifier.padding(bottom = 8.dp))
+        }
+    }
+}
+
+@Composable
+fun AppBarPanel(
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit
+) {
+    val appBarHorizontalPadding = 4.dp
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                start = appBarHorizontalPadding,
+                end = appBarHorizontalPadding,
+            ),
+        verticalAlignment = Alignment.Bottom,
+        content = content
+    )
+}
+
+@Composable
+private fun TitlePanel(
+    modifier: Modifier = Modifier,
+    title: @Composable () -> Unit,
+    subtitle: @Composable (() -> Unit)?
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Bottom,
+    ) {
+        ProvideTextStyle(
+            value = MaterialTheme.typography.h5.copy(
+                fontWeight = FontWeight.SemiBold
+            ),
+            content = title
+        )
+        if (subtitle != null) {
+            ProvideTextStyle(value = MaterialTheme.typography.subtitle1) {
+                CompositionLocalProvider(
+                    LocalContentAlpha provides ContentAlpha.medium,
+                    content = subtitle
                 )
             }
         }
@@ -142,34 +143,11 @@ fun AppBar(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun AppBar_Preview() {
     MealViewerTheme {
         Column {
-            AppBar(
-                navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            Icons.Rounded.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                },
-                title = {
-                    Text("Title")
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            Icons.Rounded.Settings,
-                            null
-                        )
-                    }
-                }
-            )
-            Divider()
-            Spacer(modifier = Modifier.height(8.dp))
-            Divider()
             AppBar(
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {

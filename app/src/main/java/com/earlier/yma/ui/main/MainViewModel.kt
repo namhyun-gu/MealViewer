@@ -22,14 +22,14 @@ import com.earlier.yma.data.preferences.PreferenceStorage
 import com.earlier.yma.data.remote.NeisService
 import com.earlier.yma.util.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Date
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.util.Date
-import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(

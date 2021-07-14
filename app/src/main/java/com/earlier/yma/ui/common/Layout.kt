@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.ui.base
+package com.earlier.yma.ui.common
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 
 @Composable
-fun InfiniteRotateBox(
+fun Center(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
-    val rotationAngle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 4000,
-                easing = LinearEasing
-            )
-        )
-    )
-
-    Box(modifier = modifier.rotate(rotationAngle)) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
         content()
+    }
+}
+
+@Composable
+fun ContentPanel(
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Surface(
+        shape = MaterialTheme.shapes.large,
+    ) {
+        Column(content = content)
     }
 }

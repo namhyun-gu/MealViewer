@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.remote
+package com.earlier.yma.ui.spash
 
-import okhttp3.Interceptor
-import okhttp3.Response
+import androidx.lifecycle.ViewModel
+import com.earlier.yma.data.preferences.PreferenceStorage
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class AuthInterceptor : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val newUrl = request.url.newBuilder()
-            .addQueryParameter("TYPE", "json")
-            .addQueryParameter("KEY", "39f312e68dea4568a6a1167bb98ec38c")
-            .build()
-        val newRequest = request.newBuilder()
-            .url(newUrl)
-            .build()
-        return chain.proceed(newRequest)
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    val preferenceStorage: PreferenceStorage
+) : ViewModel() {
+    suspend fun isFirstRun(): Boolean {
+        val preference = preferenceStorage.readPreferenceOnce()
+        return preference.school.isEmpty()
     }
 }
