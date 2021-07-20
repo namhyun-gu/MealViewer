@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.preferences
+package com.earlier.yma.data
 
-import com.earlier.yma.data.School
+data class SchoolResponse(val page: Int, val schoolList: List<School>)
 
-data class UserPreferences(
-    val school: School = School(),
-)
+data class School(
+    val orgCode: String = "",
+    val orgName: String = "",
+    val code: String = "",
+    val name: String = "",
+    val kind: String = "",
+    val location: String = "",
+) {
+    fun isEmpty(): Boolean {
+        return code.isEmpty() &&
+            name.isEmpty() &&
+            kind.isEmpty() &&
+            orgCode.isEmpty() &&
+            orgName.isEmpty()
+    }
+}

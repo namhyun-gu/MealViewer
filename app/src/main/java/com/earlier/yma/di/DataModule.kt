@@ -19,8 +19,7 @@ import android.content.Context
 import com.earlier.yma.appPrefDataStore
 import com.earlier.yma.data.preferences.AppPreferenceStorage
 import com.earlier.yma.data.preferences.PreferenceStorage
-import com.earlier.yma.data.remote.AuthInterceptor
-import com.earlier.yma.data.remote.NeisService
+import com.earlier.yma.data.remote.MealViewerService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -40,9 +39,8 @@ import retrofit2.create
 object DataModule {
     @Provides
     @Singleton
-    fun provideNeisService(): NeisService {
+    fun provideMealViewerService(): MealViewerService {
         val client = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
@@ -55,7 +53,7 @@ object DataModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://open.neis.go.kr")
+            .baseUrl("https://meal-viewer.azurewebsites.net")
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()

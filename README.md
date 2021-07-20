@@ -23,14 +23,16 @@ MVVM (View - ViewModel - Model)
 ## Built with
 
 - [Kotlin](https://kotlinlang.org/) based, [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/) for asynchronous.
-- [Material-Components](https://github.com/material-components/material-components-android) - Material design components like ripple animation, cardView.
 - Data Binding
-- JetPack
-  - ViewModel & LiveData
+- Jetpack
+  - [Compose](https://developer.android.com/jetpack/compose) for build UI.
+  - ViewModel
+  - Navigation
   - Data Store
+  - Paging
 - [Dagger Hilt](https://dagger.dev/hilt/) for dependency injection.
-- [Retrofit](https://github.com/square/retrofit) for networking
-- [Moshi](https://github.com/square/moshi) for parse JSON
+- [Retrofit](https://github.com/square/retrofit) for networking.
+- [Moshi](https://github.com/square/moshi) for parse JSON.
 
 ## License
 

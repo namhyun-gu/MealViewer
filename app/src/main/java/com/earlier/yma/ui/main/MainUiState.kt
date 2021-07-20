@@ -21,7 +21,7 @@ sealed class MainUiState {
     object Loading : MainUiState()
 
     data class Success(
-        val content: MealResponse.Meal
+        val content: MealResponse
     ) : MainUiState()
 
     data class Error(

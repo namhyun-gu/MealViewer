@@ -16,7 +16,7 @@
 package com.earlier.yma.ui.search
 
 import androidx.paging.PagingData
-import com.earlier.yma.data.SearchResponse
+import com.earlier.yma.data.School
 import kotlinx.coroutines.flow.Flow
 
 sealed class SearchUiState {
@@ -24,7 +24,7 @@ sealed class SearchUiState {
 
     data class Requested(
         val keyword: String,
-        val schoolPagingData: Flow<PagingData<SearchResponse.School>>,
+        val schoolPagingData: Flow<PagingData<School>>,
         val filterOrg: Set<String> = emptySet(),
         val page: Int = 1
     ) : SearchUiState()

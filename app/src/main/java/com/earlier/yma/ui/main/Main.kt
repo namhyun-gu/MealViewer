@@ -62,6 +62,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.earlier.yma.R
+import com.earlier.yma.data.Dish
 import com.earlier.yma.data.MealResponse
 import com.earlier.yma.ui.AppScreens
 import com.earlier.yma.ui.common.AppBar
@@ -69,7 +70,6 @@ import com.earlier.yma.ui.common.Center
 import com.earlier.yma.ui.common.ContentPanel
 import com.earlier.yma.ui.theme.MealViewerTheme
 import com.earlier.yma.util.DateUtils
-import com.earlier.yma.util.parseAllergyInfo
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.buttons
 import com.vanpra.composematerialdialogs.datetime.datepicker.datepicker
@@ -339,7 +339,7 @@ fun MainContent(
 @Composable
 fun MealContent(
     modifier: Modifier,
-    meal: MealResponse.Meal
+    meal: MealResponse
 ) {
     Box(modifier = modifier.padding(horizontal = 16.dp)) {
         LazyColumn(
@@ -358,7 +358,7 @@ fun MealContent(
                 ContentPanel {
                     DishList(
                         modifier = Modifier.fillMaxWidth(),
-                        dishList = meal.dishList
+                        dishList = meal.dishes
                     )
                 }
             }
@@ -369,12 +369,12 @@ fun MealContent(
 @Composable
 fun DishList(
     modifier: Modifier = Modifier,
-    dishList: List<String>
+    dishList: List<Dish>
 ) {
     Column(modifier = modifier) {
         dishList.forEachIndexed { index, food ->
             DishItem(
-                food = food
+                dish = food
             )
 
             if (index < dishList.size - 1) {
@@ -390,13 +390,11 @@ fun DishList(
 @Composable
 fun DishItem(
     modifier: Modifier = Modifier,
-    food: String
+    dish: Dish
 ) {
     val allergyNames = stringArrayResource(R.array.allergy_info)
-    val (foodName, allergyInfo) = parseAllergyInfo(food)
-
     val allergyMessage = try {
-        allergyInfo.joinToString { allergyNames[it] }
+        dish.allergy.joinToString { allergyNames[it] }
     } catch (e: ArrayIndexOutOfBoundsException) {
         ""
     }
@@ -412,7 +410,7 @@ fun DishItem(
         modifier = modifier,
         secondaryText = secondaryText
     ) {
-        Text(foodName)
+        Text(dish.name)
     }
 }
 
@@ -420,7 +418,7 @@ fun DishItem(
 @Composable
 fun DishItem_Preview() {
     MealViewerTheme {
-        DishItem(food = "Test1.2.3.")
+        DishItem(dish = Dish("Test", listOf(1, 2, 3)))
     }
 }
 

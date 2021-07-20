@@ -19,11 +19,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.earlier.yma.data.SearchResponse
+import com.earlier.yma.data.School
 import com.earlier.yma.data.SearchSource
 import com.earlier.yma.data.preferences.PreferenceStorage
 import com.earlier.yma.data.preferences.UserPreferences
-import com.earlier.yma.data.remote.NeisService
+import com.earlier.yma.data.remote.MealViewerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val neisService: NeisService,
+    private val mealViewerService: MealViewerService,
     private val preferenceStorage: PreferenceStorage,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
@@ -48,7 +48,7 @@ class SearchViewModel @Inject constructor(
 
     fun search(keyword: CharSequence) {
         val pagingFlow = Pager(PagingConfig(100)) {
-            SearchSource(neisService, keyword.toString())
+            SearchSource(mealViewerService, keyword.toString())
         }.flow
 
         _uiState.value = SearchUiState.Requested(
@@ -66,13 +66,13 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun saveSchool(school: SearchResponse.School) = viewModelScope.launch {
+    fun saveSchool(school: School) = viewModelScope.launch {
         preferenceStorage.writePreference(
             UserPreferences(
-                school = UserPreferences.School(
-                    schoolCode = school.code,
-                    schoolName = school.name,
-                    schoolKind = school.kind,
+                school = School(
+                    code = school.code,
+                    name = school.name,
+                    kind = school.kind,
                     orgCode = school.orgCode,
                     orgName = school.orgName,
                 )

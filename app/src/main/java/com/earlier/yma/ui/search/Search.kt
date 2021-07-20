@@ -73,7 +73,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.earlier.yma.R
-import com.earlier.yma.data.SearchResponse
+import com.earlier.yma.data.School
 import com.earlier.yma.ui.AppScreens
 import com.earlier.yma.ui.common.AppBar
 import com.earlier.yma.ui.common.Center
@@ -151,7 +151,7 @@ fun Search(
 fun SearchContent(
     uiState: SearchUiState,
     onFilterUpdate: (Set<String>) -> Unit,
-    onSchoolSelect: (SearchResponse.School) -> Unit,
+    onSchoolSelect: (School) -> Unit,
 ) {
     when (uiState) {
         SearchUiState.Idle -> {
@@ -172,7 +172,7 @@ fun SearchResultContent(
     modifier: Modifier = Modifier,
     uiState: SearchUiState.Requested,
     onFilterUpdate: (Set<String>) -> Unit,
-    onSchoolSelect: (SearchResponse.School) -> Unit,
+    onSchoolSelect: (School) -> Unit,
 ) {
     val lazyItems = uiState.schoolPagingData.collectAsLazyPagingItems()
 
@@ -187,33 +187,32 @@ fun SearchResultContent(
             filterOrg = uiState.filterOrg,
             onFilterUpdate = onFilterUpdate
         )
-        lazyItems.let { items ->
-            when (items.loadState.refresh) {
-                is LoadState.Loading -> {
-                    Center(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator()
-                    }
-                }
-                is LoadState.Error -> {
-                    val e = lazyItems.loadState.refresh as LoadState.Error
 
-                    Center(modifier = Modifier.fillMaxSize()) {
-                        ErrorMessage(
-                            modifier = Modifier.padding(vertical = 16.dp),
-                            exception = e.error
-                        ) {
-                            items.retry()
-                        }
+        when (lazyItems.loadState.refresh) {
+            is LoadState.Loading -> {
+                Center(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator()
+                }
+            }
+            is LoadState.Error -> {
+                val e = lazyItems.loadState.refresh as LoadState.Error
+
+                Center(modifier = Modifier.fillMaxSize()) {
+                    ErrorMessage(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        exception = e.error
+                    ) {
+                        lazyItems.retry()
                     }
                 }
-                else -> {
-                    ContentPanel {
-                        SchoolList(
-                            lazyItems = items,
-                            filterOrg = uiState.filterOrg,
-                            onSchoolSelect = onSchoolSelect
-                        )
-                    }
+            }
+            else -> {
+                ContentPanel {
+                    SchoolList(
+                        lazyItems = lazyItems,
+                        filterOrg = uiState.filterOrg,
+                        onSchoolSelect = onSchoolSelect
+                    )
                 }
             }
         }
@@ -223,9 +222,9 @@ fun SearchResultContent(
 @Composable
 fun SchoolList(
     modifier: Modifier = Modifier,
-    lazyItems: LazyPagingItems<SearchResponse.School>,
+    lazyItems: LazyPagingItems<School>,
     filterOrg: Set<String>,
-    onSchoolSelect: (SearchResponse.School) -> Unit
+    onSchoolSelect: (School) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -280,7 +279,7 @@ fun ErrorMessage(
     }
 }
 
-private fun getOrgList(list: List<SearchResponse.School>): List<String> {
+private fun getOrgList(list: List<School>): List<String> {
     val orgSet = mutableSetOf<String>()
     list.forEach {
         orgSet.add(it.orgName)
@@ -358,7 +357,7 @@ fun SearchInputBar_Preview() {
 @Composable
 fun SchoolItem(
     modifier: Modifier = Modifier,
-    school: SearchResponse.School,
+    school: School,
     onClick: () -> Unit,
 ) {
     Surface(
@@ -382,7 +381,7 @@ fun SchoolItem(
 fun SchoolItem_Preview() {
     MealViewerTheme {
         SchoolItem(
-            school = SearchResponse.School(
+            school = School(
                 orgCode = "",
                 orgName = "Org name",
                 code = "",

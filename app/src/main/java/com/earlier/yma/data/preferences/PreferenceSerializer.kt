@@ -17,6 +17,7 @@ package com.earlier.yma.data.preferences
 
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.earlier.yma.data.School
 
 interface PreferenceSerializer<T> {
     fun write(preferences: MutablePreferences, data: T)
@@ -40,8 +41,8 @@ object UserPreferencesSerializer : PreferenceSerializer<UserPreferences> {
     }
 }
 
-object SchoolSerializer : PreferenceSerializer<UserPreferences.School> {
-    override fun write(preferences: MutablePreferences, data: UserPreferences.School) {
+object SchoolSerializer : PreferenceSerializer<School> {
+    override fun write(preferences: MutablePreferences, data: School) {
         val schoolCodeKey = stringPreferencesKey("schoolCode")
         val schoolNameKey = stringPreferencesKey("schoolName")
         val schoolKindKey = stringPreferencesKey("schoolKind")
@@ -49,15 +50,15 @@ object SchoolSerializer : PreferenceSerializer<UserPreferences.School> {
         val orgNameKey = stringPreferencesKey("orgName")
 
         with(data) {
-            preferences[schoolCodeKey] = schoolCode
-            preferences[schoolNameKey] = schoolName
-            preferences[schoolKindKey] = schoolKind
+            preferences[schoolCodeKey] = code
+            preferences[schoolNameKey] = name
+            preferences[schoolKindKey] = kind
             preferences[orgCodeKey] = orgCode
             preferences[orgNameKey] = orgName
         }
     }
 
-    override fun read(preferences: MutablePreferences): UserPreferences.School {
+    override fun read(preferences: MutablePreferences): School {
         val schoolCodeKey = stringPreferencesKey("schoolCode")
         val schoolNameKey = stringPreferencesKey("schoolName")
         val schoolKindKey = stringPreferencesKey("schoolKind")
@@ -65,10 +66,10 @@ object SchoolSerializer : PreferenceSerializer<UserPreferences.School> {
         val orgNameKey = stringPreferencesKey("orgName")
 
         return preferences.run {
-            UserPreferences.School(
-                schoolCode = get(schoolCodeKey) ?: "",
-                schoolName = get(schoolNameKey) ?: "",
-                schoolKind = get(schoolKindKey) ?: "",
+            School(
+                code = get(schoolCodeKey) ?: "",
+                name = get(schoolNameKey) ?: "",
+                kind = get(schoolKindKey) ?: "",
                 orgCode = get(orgCodeKey) ?: "",
                 orgName = get(orgNameKey) ?: "",
             )

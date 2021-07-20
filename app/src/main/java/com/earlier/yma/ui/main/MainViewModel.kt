@@ -17,9 +17,8 @@ package com.earlier.yma.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.earlier.yma.data.MealResponse
 import com.earlier.yma.data.preferences.PreferenceStorage
-import com.earlier.yma.data.remote.NeisService
+import com.earlier.yma.data.remote.MealViewerService
 import com.earlier.yma.util.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Date
@@ -29,12 +28,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val preferenceStorage: PreferenceStorage,
-    val neisService: NeisService,
+    val mealViewerService: MealViewerService,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MainUiState>(MainUiState.Loading)
     val uiState: StateFlow<MainUiState> = _uiState
@@ -62,34 +60,14 @@ class MainViewModel @Inject constructor(
     private suspend fun tryToLoadContent(type: MealType, date: Date) {
         val preference = preferenceStorage.readPreferenceOnce()
         val meal = preference.run {
-            requestMeal(
+            mealViewerService.getMeal(
                 orgCode = school.orgCode,
-                schoolCode = school.schoolCode,
+                schoolCode = school.code,
                 type = type.value,
                 date = DateUtils.formatDate(date)
             )
         }
 
         _uiState.value = MainUiState.Success(content = meal)
-    }
-
-    @Throws(HttpException::class, IllegalArgumentException::class)
-    private suspend fun requestMeal(
-        orgCode: String,
-        schoolCode: String,
-        type: String,
-        date: String,
-    ): MealResponse.Meal {
-        val response = neisService.getMeal(
-            orgCode = orgCode,
-            schoolCode = schoolCode,
-            type = type,
-            date = date,
-        )
-        if (!response.isValid) {
-            throw IllegalArgumentException("Invalid response")
-        }
-
-        return response.content!![1].mealList!!.first()
     }
 }

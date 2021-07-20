@@ -13,10 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.preferences
+package com.earlier.yma.data
 
-import com.earlier.yma.data.School
-
-data class UserPreferences(
-    val school: School = School(),
+data class MealResponse(
+    val calorie: String,
+    val dishes: List<Dish>,
+    val origins: List<Origin>,
+    val nutrition: List<Nutrition>
 )
+
+data class Dish(val name: String, val allergy: List<Int>)
+
+data class Origin(val food: String, val origin: String)
+
+data class Nutrition(val name: String, val value: Double)

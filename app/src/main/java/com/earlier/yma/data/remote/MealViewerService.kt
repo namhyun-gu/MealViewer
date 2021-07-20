@@ -15,19 +15,25 @@
  */
 package com.earlier.yma.data.remote
 
-import okhttp3.Interceptor
-import okhttp3.Response
+import com.earlier.yma.data.MealResponse
+import com.earlier.yma.data.SchoolResponse
+import retrofit2.http.GET
+import retrofit2.http.Query
 
-class AuthInterceptor : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val newUrl = request.url.newBuilder()
-            .addQueryParameter("TYPE", "json")
-            .addQueryParameter("KEY", "39f312e68dea4568a6a1167bb98ec38c")
-            .build()
-        val newRequest = request.newBuilder()
-            .url(newUrl)
-            .build()
-        return chain.proceed(newRequest)
-    }
+interface MealViewerService {
+    @GET("/search")
+    suspend fun search(
+        @Query("keyword") keyword: String,
+        @Query("page") page: Int = 1,
+    ): SchoolResponse
+
+    @GET("/meal")
+    suspend fun getMeal(
+        @Query("orgCode") orgCode: String,
+        @Query("schoolCode") schoolCode: String,
+        @Query("date") date: String,
+        @Query("type") type: String,
+        @Query("page") page: Int = 1,
+        @Query("force") force: Boolean = false
+    ): MealResponse
 }
