@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.preferences
+package com.earlier.yma.data.model
 
-import com.earlier.yma.data.model.School
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class UserPreferences(
-    val school: School = School(),
+@Entity
+data class Cache(
+    @PrimaryKey val key: String,
+    val content: String
 )

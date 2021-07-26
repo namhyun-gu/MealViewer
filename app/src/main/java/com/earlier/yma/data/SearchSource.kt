@@ -17,9 +17,12 @@ package com.earlier.yma.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.earlier.yma.data.remote.MealViewerService
+import com.earlier.yma.data.model.School
+import com.earlier.yma.data.remote.NeisService
+import com.earlier.yma.data.remote.ResponseParser
+import com.earlier.yma.util.EmptyResponseException
 
-class SearchSource(val mealViewerService: MealViewerService, val keyword: String) :
+class SearchSource(val neisService: NeisService, val keyword: String) :
     PagingSource<Int, School>() {
     override fun getRefreshKey(state: PagingState<Int, School>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -31,12 +34,14 @@ class SearchSource(val mealViewerService: MealViewerService, val keyword: String
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, School> {
         return try {
             val page = params.key ?: 1
-            val response = mealViewerService.search(keyword, page = page)
+            val response = neisService.search(keyword, page = page)
+            val searchResponse = ResponseParser.parseSearchResponse(response)
+                ?: return LoadResult.Error(EmptyResponseException())
 
             LoadResult.Page(
-                data = response.schoolList,
+                data = searchResponse.schoolList,
                 prevKey = if (page > 1) page - 1 else null,
-                nextKey = response.page + 1
+                nextKey = page + 1
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

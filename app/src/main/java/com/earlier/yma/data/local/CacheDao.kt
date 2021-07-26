@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.preferences
+package com.earlier.yma.data.local
 
-import com.earlier.yma.data.model.School
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.earlier.yma.data.model.Cache
 
-data class UserPreferences(
-    val school: School = School(),
-)
+@Dao
+interface CacheDao {
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(cache: Cache)
+
+    @Query("SELECT * FROM Cache WHERE `key` = :key")
+    suspend fun loadByKey(key: String): Cache?
+}

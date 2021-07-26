@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.preferences
+package com.earlier.yma.util
 
-import com.earlier.yma.data.model.School
-
-data class UserPreferences(
-    val school: School = School(),
-)
+class EmptyResponseException : RuntimeException()

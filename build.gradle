@@ -2,17 +2,18 @@
 buildscript {
     ext {
         kotlin_version = "1.5.10"
-        compose_version = "1.0.0-beta09"
+        compose_version = "1.0.0-rc01"
+        room_version = "2.3.0"
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0-alpha03'
+        classpath 'com.android.tools.build:gradle:7.1.0-alpha04'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.37"
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:5.11.1"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:5.14.1"
         classpath "com.google.android.gms:oss-licenses-plugin:0.10.4"
     }
 }

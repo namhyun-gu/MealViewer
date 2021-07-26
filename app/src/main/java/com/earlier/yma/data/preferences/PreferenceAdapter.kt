@@ -17,31 +17,31 @@ package com.earlier.yma.data.preferences
 
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.earlier.yma.data.School
+import com.earlier.yma.data.model.School
 
-interface PreferenceSerializer<T> {
+interface PreferenceAdapter<T> {
     fun write(preferences: MutablePreferences, data: T)
 
     fun read(preferences: MutablePreferences): T
 }
 
-object UserPreferencesSerializer : PreferenceSerializer<UserPreferences> {
+object UserPreferencesAdapter : PreferenceAdapter<UserPreferences> {
     override fun write(preferences: MutablePreferences, data: UserPreferences) {
         with(data) {
-            SchoolSerializer.write(preferences, school)
+            SchoolAdapter.write(preferences, school)
         }
     }
 
     override fun read(preferences: MutablePreferences): UserPreferences {
         return preferences.run {
             UserPreferences(
-                school = SchoolSerializer.read(this)
+                school = SchoolAdapter.read(this)
             )
         }
     }
 }
 
-object SchoolSerializer : PreferenceSerializer<School> {
+object SchoolAdapter : PreferenceAdapter<School> {
     override fun write(preferences: MutablePreferences, data: School) {
         val schoolCodeKey = stringPreferencesKey("schoolCode")
         val schoolNameKey = stringPreferencesKey("schoolName")

@@ -36,18 +36,18 @@ interface PreferenceStorage {
 class AppPreferenceStorage(val dataStore: DataStore<Preferences>) : PreferenceStorage {
     override suspend fun writePreference(model: UserPreferences) {
         dataStore.edit {
-            UserPreferencesSerializer.write(it, model)
+            UserPreferencesAdapter.write(it, model)
         }
     }
 
     override fun readPreference(): Flow<UserPreferences> {
         return dataStore.data.map {
-            UserPreferencesSerializer.read(it as MutablePreferences)
+            UserPreferencesAdapter.read(it as MutablePreferences)
         }
     }
 
     override suspend fun readPreferenceOnce(): UserPreferences {
-        return UserPreferencesSerializer.read(dataStore.data.first() as MutablePreferences)
+        return UserPreferencesAdapter.read(dataStore.data.first() as MutablePreferences)
     }
 
     override suspend fun clearStorage() {

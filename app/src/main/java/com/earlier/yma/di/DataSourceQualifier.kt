@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data
+package com.earlier.yma.di
 
-data class MealResponse(
-    val calorie: String,
-    val dishes: List<Dish>,
-    val origins: List<Origin>,
-    val nutrition: List<Nutrition>
-)
+import javax.inject.Qualifier
 
-data class Dish(val name: String, val allergy: List<Int>)
+@Qualifier
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FIELD)
+annotation class LocalSource
 
-data class Origin(val food: String, val origin: String)
-
-data class Nutrition(val name: String, val value: Double)
+@Qualifier
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FIELD)
+annotation class RemoteSource

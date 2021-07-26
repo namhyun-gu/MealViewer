@@ -15,25 +15,24 @@
  */
 package com.earlier.yma.data.remote
 
-import com.earlier.yma.data.MealResponse
-import com.earlier.yma.data.SchoolResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface MealViewerService {
-    @GET("/search")
+interface NeisService {
+    @GET("/hub/schoolInfo")
     suspend fun search(
-        @Query("keyword") keyword: String,
-        @Query("page") page: Int = 1,
-    ): SchoolResponse
+        @Query("SCHUL_NM") name: String,
+        @Query("pIndex") page: Int = 1,
+        @Query("pSize") size: Int = 100,
+    ): String
 
-    @GET("/meal")
+    @GET("/hub/mealServiceDietInfo")
     suspend fun getMeal(
-        @Query("orgCode") orgCode: String,
-        @Query("schoolCode") schoolCode: String,
-        @Query("date") date: String,
-        @Query("type") type: String,
-        @Query("page") page: Int = 1,
-        @Query("force") force: Boolean = false
-    ): MealResponse
+        @Query("ATPT_OFCDC_SC_CODE") orgCode: String,
+        @Query("SD_SCHUL_CODE") schoolCode: String,
+        @Query("MLSV_YMD") date: String,
+        @Query("MMEAL_SC_CODE") type: String,
+        @Query("pIndex") page: Int = 1,
+        @Query("pSize") size: Int = 100,
+    ): String
 }

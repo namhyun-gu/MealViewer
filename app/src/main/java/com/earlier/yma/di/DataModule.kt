@@ -16,12 +16,17 @@
 package com.earlier.yma.di
 
 import android.content.Context
+import androidx.room.Room
 import com.earlier.yma.appPrefDataStore
+import com.earlier.yma.data.MealDataSource
+import com.earlier.yma.data.MealRepository
+import com.earlier.yma.data.MealRepositoryImpl
+import com.earlier.yma.data.local.AppDatabase
+import com.earlier.yma.data.local.LocalMealDataSource
 import com.earlier.yma.data.preferences.AppPreferenceStorage
 import com.earlier.yma.data.preferences.PreferenceStorage
-import com.earlier.yma.data.remote.MealViewerService
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.earlier.yma.data.remote.NeisService
+import com.earlier.yma.data.remote.RemoteMealDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,7 +36,7 @@ import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 
 @Module
@@ -39,25 +44,73 @@ import retrofit2.create
 object DataModule {
     @Provides
     @Singleton
-    fun provideMealViewerService(): MealViewerService {
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "app-db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNeisService(): NeisService {
         val client = OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 }
             )
-            .build()
-
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
+            .addInterceptor { chain ->
+                val request = chain.request()
+                val newUrl =
+                    request
+                        .url
+                        .newBuilder()
+                        .addQueryParameter("TYPE", "json")
+                        .addQueryParameter("KEY", "39f312e68dea4568a6a1167bb98ec38c")
+                        .build()
+                val newRequest = request.newBuilder().url(newUrl).build()
+                chain.proceed(newRequest)
+            }
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://meal-viewer.azurewebsites.net")
+            .baseUrl("https://open.neis.go.kr/")
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(ScalarsConverterFactory.create())
             .build()
             .create()
+    }
+
+    @Provides
+    @Singleton
+    @LocalSource
+    fun provideLocalMealDataSource(
+        db: AppDatabase,
+    ): MealDataSource {
+        return LocalMealDataSource(db.cacheDao())
+    }
+
+    @Provides
+    @Singleton
+    @RemoteSource
+    fun provideRemoteMealDataSource(
+        service: NeisService,
+    ): MealDataSource {
+        return RemoteMealDataSource(service)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMealRepository(
+        @LocalSource localSource: MealDataSource,
+        @RemoteSource remoteSource: MealDataSource,
+    ): MealRepository {
+        return MealRepositoryImpl(
+            localSource,
+            remoteSource
+        )
     }
 
     @Provides

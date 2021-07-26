@@ -15,21 +15,20 @@
  */
 package com.earlier.yma.data
 
-data class SchoolResponse(val page: Int, val schoolList: List<School>)
+import com.earlier.yma.data.model.MealResponse
+import com.earlier.yma.data.model.School
 
-data class School(
-    val orgCode: String = "",
-    val orgName: String = "",
-    val code: String = "",
-    val name: String = "",
-    val kind: String = "",
-    val location: String = "",
-) {
-    fun isEmpty(): Boolean {
-        return code.isEmpty() &&
-            name.isEmpty() &&
-            kind.isEmpty() &&
-            orgCode.isEmpty() &&
-            orgName.isEmpty()
-    }
+interface MealDataSource {
+    suspend fun read(
+        school: School,
+        date: String,
+        type: String
+    ): MealResponse?
+
+    suspend fun write(
+        school: School,
+        date: String,
+        type: String,
+        meal: MealResponse
+    )
 }
