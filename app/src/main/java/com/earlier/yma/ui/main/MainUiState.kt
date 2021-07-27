@@ -15,7 +15,7 @@
  */
 package com.earlier.yma.ui.main
 
-import com.earlier.yma.data.MealResponse
+import com.earlier.yma.data.model.MealResponse
 
 sealed class MainUiState {
     object Loading : MainUiState()

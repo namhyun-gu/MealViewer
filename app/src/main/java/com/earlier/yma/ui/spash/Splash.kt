@@ -16,32 +16,26 @@
 package com.earlier.yma.ui.spash
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
 import com.earlier.yma.ui.AppScreens
-import kotlinx.coroutines.launch
 
 @Composable
 fun Splash(
     navController: NavController,
     viewModel: SplashViewModel
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val checkFirstRun = {
-        coroutineScope.launch {
-            val dest = if (viewModel.isFirstRun()) {
-                AppScreens.Search.name
-            } else {
-                AppScreens.Main.name
-            }
+    LaunchedEffect(true) {
+        val dest = if (viewModel.isFirstRun()) {
+            AppScreens.Search.route
+        } else {
+            AppScreens.Main.route
+        }
 
-            navController.navigate(dest) {
-                popUpTo(AppScreens.Splash.name) {
-                    inclusive = true
-                }
+        navController.navigate(dest) {
+            popUpTo(AppScreens.Splash.route) {
+                inclusive = true
             }
         }
     }
-
-    checkFirstRun()
 }

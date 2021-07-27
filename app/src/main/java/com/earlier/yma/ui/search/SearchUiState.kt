@@ -16,7 +16,7 @@
 package com.earlier.yma.ui.search
 
 import androidx.paging.PagingData
-import com.earlier.yma.data.School
+import com.earlier.yma.data.model.School
 import kotlinx.coroutines.flow.Flow
 
 sealed class SearchUiState {

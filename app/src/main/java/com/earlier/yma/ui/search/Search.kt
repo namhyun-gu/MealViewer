@@ -33,6 +33,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -44,6 +45,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Search
@@ -73,7 +75,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.earlier.yma.R
-import com.earlier.yma.data.School
+import com.earlier.yma.data.model.School
 import com.earlier.yma.ui.AppScreens
 import com.earlier.yma.ui.common.AppBar
 import com.earlier.yma.ui.common.Center
@@ -106,14 +108,14 @@ fun Search(
             showLoadMoreErrorSnackBar()
         }
         SearchUiEvent.SchoolSaved -> {
-            navController.navigate(AppScreens.Main.name) {
+            navController.navigate(AppScreens.Main.route) {
                 anim {
                     enter = android.R.anim.slide_in_left
                     exit = android.R.anim.slide_out_right
                     popEnter = android.R.anim.slide_in_left
                     popExit = android.R.anim.slide_out_right
                 }
-                popUpTo(AppScreens.Search.name) {
+                popUpTo(AppScreens.Search.route) {
                     inclusive = true
                 }
             }
@@ -175,6 +177,33 @@ fun SearchResultContent(
     onSchoolSelect: (School) -> Unit,
 ) {
     val lazyItems = uiState.schoolPagingData.collectAsLazyPagingItems()
+    var openSelectSchoolDialog by rememberSaveable { mutableStateOf(false) }
+    var selectedSchool by rememberSaveable { mutableStateOf<School?>(null) }
+
+    if (openSelectSchoolDialog) {
+        val school = selectedSchool!!
+        AlertDialog(
+            onDismissRequest = {
+            openSelectSchoolDialog = false
+            },
+            title = {
+                Text(stringResource(id = R.string.dialog_title_select_school))
+            },
+            text = {
+                Text(stringResource(id = R.string.confirm_select_school, school.name))
+            },
+            confirmButton = {
+                TextButton(onClick = { onSchoolSelect(school) }) {
+                    Text(stringResource(id = R.string.action_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { openSelectSchoolDialog = false }) {
+                    Text(stringResource(id = R.string.action_dismiss))
+                }
+            }
+        )
+    }
 
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
@@ -211,7 +240,10 @@ fun SearchResultContent(
                     SchoolList(
                         lazyItems = lazyItems,
                         filterOrg = uiState.filterOrg,
-                        onSchoolSelect = onSchoolSelect
+                        onSchoolSelect = { school ->
+                            selectedSchool = school
+                            openSelectSchoolDialog = true
+                        }
                     )
                 }
             }
@@ -298,8 +330,11 @@ private fun isContainFilter(
 fun SearchTopBar() {
     AppBar(
         title = {
-            Text(stringResource(R.string.activity_title_search))
+            Box(modifier = Modifier.padding(top = 16.dp)) {
+                Text(stringResource(R.string.activity_title_search))
+            }
         },
+        hideNavigationIcon = true
     )
 }
 

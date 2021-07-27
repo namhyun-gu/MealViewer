@@ -14,6 +14,10 @@
     <string name="msg_search_error">검색 결과를 가져올 수 없습니다</string>
     <string name="msg_search_error_code">검색 결과를 가져올 수 없습니다 (코드: %1$d)</string>
     <string name="msg_search_no_more">더 이상 가져올 학교가 없습니다</string>
+    <string name="dialog_title_select_school">학교 선택</string>
+    <string name="confirm_select_school">선택한 학교 \'%1$s\'가 맞나요?</string>
+    <string name="action_confirm">확인</string>
+    <string name="action_dismiss">취소</string>
 
     <!--  Main  -->
     <string name="type_breakfast">아침</string>
@@ -21,7 +25,8 @@
     <string name="type_dinner">저녁</string>
 
     <string name="subtitle_calorie">칼로리</string>
-    <string name="subtitle_more">더 보기</string>
+    <string name="title_more">더보기</string>
+    <string name="subtitle_nutrition">영양소</string>
     <string name="dialog_select_date">날짜 선택</string>
 
     <string name="msg_meal_empty">급식 정보가 없습니다</string>

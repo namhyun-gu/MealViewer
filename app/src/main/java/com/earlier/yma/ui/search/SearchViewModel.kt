@@ -19,11 +19,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.earlier.yma.data.School
 import com.earlier.yma.data.SearchSource
+import com.earlier.yma.data.model.School
 import com.earlier.yma.data.preferences.PreferenceStorage
 import com.earlier.yma.data.preferences.UserPreferences
-import com.earlier.yma.data.remote.MealViewerService
+import com.earlier.yma.data.remote.NeisService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val mealViewerService: MealViewerService,
+    private val neisService: NeisService,
     private val preferenceStorage: PreferenceStorage,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
@@ -48,7 +48,7 @@ class SearchViewModel @Inject constructor(
 
     fun search(keyword: CharSequence) {
         val pagingFlow = Pager(PagingConfig(100)) {
-            SearchSource(mealViewerService, keyword.toString())
+            SearchSource(neisService, keyword.toString())
         }.flow
 
         _uiState.value = SearchUiState.Requested(

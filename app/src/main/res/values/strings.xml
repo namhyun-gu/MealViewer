@@ -14,6 +14,10 @@
     <string name="msg_search_error">Can\'t receive search result</string>
     <string name="msg_search_error_code">Can\'t receive search result (code: %1$d)</string>
     <string name="msg_search_no_more">No more school information to receive</string>
+    <string name="dialog_title_select_school">Select school</string>
+    <string name="confirm_select_school">\'%1$s\' is Correct?</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_dismiss">Cancel</string>
 
     <!--  Main  -->
     <string name="type_breakfast">Breakfast</string>
@@ -22,7 +26,8 @@
 
     <string name="dialog_select_date">Select date</string>
     <string name="subtitle_calorie">Calorie</string>
-    <string name="subtitle_more">More</string>
+    <string name="subtitle_nutrition">Nutrition</string>
+    <string name="title_more">More</string>
 
     <string name="msg_meal_empty">Empty meal data</string>
     <string name="msg_meal_error">Can\'t receive meal</string>

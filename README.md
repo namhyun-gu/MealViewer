@@ -4,17 +4,16 @@
     <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/>
 </p>
 
-<p align="center">
+<!-- <p align="center">
 🚧 Under construction 🚧
-</p>
+</p> -->
 
-<!-- ## Preview
+## Preview
 
 <p align="center">
-    <img src="images/preview_1.png" width="32%"/>
-    <img src="images/preview_2.png" width="32%"/>
-    <img src="images/preview_3.png" width="32%"/>
-</p> -->
+    <img src="images/img_search.png" width="32%"/>
+    <img src="images/img_main.png" width="32%"/>
+</p>
 
 ## Architecture
 

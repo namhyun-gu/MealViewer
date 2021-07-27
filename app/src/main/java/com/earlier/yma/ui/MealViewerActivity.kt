@@ -33,11 +33,15 @@ import com.earlier.yma.ui.spash.SplashViewModel
 import com.earlier.yma.ui.theme.MealViewerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-enum class AppScreens {
-    Splash,
-    Main,
-    Search,
-    Settings
+sealed class AppScreens(val route: String) {
+
+    object Splash : AppScreens("splash")
+
+    object Main : AppScreens("main")
+
+    object Search : AppScreens("search")
+
+    object Settings : AppScreens("settings")
 }
 
 @AndroidEntryPoint
@@ -56,21 +60,21 @@ fun App() {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = AppScreens.Splash.name
+            startDestination = AppScreens.Splash.route
         ) {
-            composable(AppScreens.Splash.name) {
+            composable(AppScreens.Splash.route) {
                 val viewModel = hiltViewModel<SplashViewModel>()
                 Splash(navController, viewModel)
             }
-            composable(AppScreens.Main.name) {
+            composable(AppScreens.Main.route) {
                 val viewModel = hiltViewModel<MainViewModel>()
                 Main(navController, viewModel)
             }
-            composable(AppScreens.Search.name) {
+            composable(AppScreens.Search.route) {
                 val viewModel = hiltViewModel<SearchViewModel>()
                 Search(navController, viewModel)
             }
-            composable(AppScreens.Settings.name) {
+            composable(AppScreens.Settings.route) {
                 Settings(navController)
             }
         }

@@ -56,6 +56,7 @@ fun AppBar(
     title: @Composable () -> Unit = {},
     subtitle: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
+    hideNavigationIcon: Boolean = false
 ) {
     val appBarHorizontalPadding = 4.dp
     val titleInset = Modifier.width(16.dp - appBarHorizontalPadding)
@@ -65,13 +66,15 @@ fun AppBar(
         color = backgroundColor,
     ) {
         Column {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .padding(horizontal = appBarHorizontalPadding),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                navigationIcon()
+            if (!hideNavigationIcon) {
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .padding(horizontal = appBarHorizontalPadding),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    navigationIcon()
+                }
             }
             if (expandSpace != null) {
                 AppBarPanel {
