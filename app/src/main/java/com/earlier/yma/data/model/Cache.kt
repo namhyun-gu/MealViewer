@@ -21,5 +21,5 @@ import androidx.room.PrimaryKey
 @Entity
 data class Cache(
     @PrimaryKey val key: String,
-    val content: String
+    val content: MealResponse
 )

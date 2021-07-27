@@ -20,22 +20,10 @@ import com.earlier.yma.data.model.Cache
 import com.earlier.yma.data.model.MealResponse
 import com.earlier.yma.data.model.School
 import com.earlier.yma.util.CacheUtils
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 class LocalMealDataSource(
     val cacheDao: CacheDao
 ) : MealDataSource {
-    private val jsonAdapter: JsonAdapter<MealResponse>
-
-    init {
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-
-        jsonAdapter = moshi.adapter(MealResponse::class.java)
-    }
 
     override suspend fun read(
         school: School,
@@ -44,8 +32,7 @@ class LocalMealDataSource(
     ): MealResponse? {
         val cacheKey = CacheUtils.makeKey(school, date, type)
         val cache = cacheDao.loadByKey(cacheKey) ?: return null
-
-        return jsonAdapter.fromJson(cache.content)
+        return cache.content
     }
 
     override suspend fun write(
@@ -54,12 +41,10 @@ class LocalMealDataSource(
         type: String,
         meal: MealResponse
     ) {
-        val json = jsonAdapter.toJson(meal)
         val cache = Cache(
             key = CacheUtils.makeKey(school, date, type),
-            content = json
+            content = meal
         )
-
         cacheDao.insert(cache)
     }
 }

@@ -21,6 +21,7 @@ import com.earlier.yma.data.model.School
 import com.earlier.yma.data.remote.NeisService
 import com.earlier.yma.data.remote.ResponseParser
 import com.earlier.yma.util.EmptyResponseException
+import com.skydoves.sandwich.getOrThrow
 
 class SearchSource(val neisService: NeisService, val keyword: String) :
     PagingSource<Int, School>() {
@@ -35,7 +36,8 @@ class SearchSource(val neisService: NeisService, val keyword: String) :
         return try {
             val page = params.key ?: 1
             val response = neisService.search(keyword, page = page)
-            val searchResponse = ResponseParser.parseSearchResponse(response)
+            val data = response.getOrThrow()
+            val searchResponse = ResponseParser.parseSearchResponse(data)
                 ?: return LoadResult.Error(EmptyResponseException())
 
             LoadResult.Page(

@@ -15,81 +15,29 @@
  */
 package com.earlier.yma.di
 
-import android.content.Context
-import androidx.room.Room
-import com.earlier.yma.appPrefDataStore
 import com.earlier.yma.data.MealDataSource
 import com.earlier.yma.data.MealRepository
 import com.earlier.yma.data.MealRepositoryImpl
-import com.earlier.yma.data.local.AppDatabase
+import com.earlier.yma.data.local.CacheDao
 import com.earlier.yma.data.local.LocalMealDataSource
-import com.earlier.yma.data.preferences.AppPreferenceStorage
-import com.earlier.yma.data.preferences.PreferenceStorage
 import com.earlier.yma.data.remote.NeisService
 import com.earlier.yma.data.remote.RemoteMealDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.create
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "app-db"
-        ).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideNeisService(): NeisService {
-        val client = OkHttpClient.Builder()
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-            )
-            .addInterceptor { chain ->
-                val request = chain.request()
-                val newUrl =
-                    request
-                        .url
-                        .newBuilder()
-                        .addQueryParameter("TYPE", "json")
-                        .addQueryParameter("KEY", "39f312e68dea4568a6a1167bb98ec38c")
-                        .build()
-                val newRequest = request.newBuilder().url(newUrl).build()
-                chain.proceed(newRequest)
-            }
-            .build()
-
-        return Retrofit.Builder()
-            .baseUrl("https://open.neis.go.kr/")
-            .client(client)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-            .create()
-    }
-
-    @Provides
-    @Singleton
     @LocalSource
     fun provideLocalMealDataSource(
-        db: AppDatabase,
+        cacheDao: CacheDao,
     ): MealDataSource {
-        return LocalMealDataSource(db.cacheDao())
+        return LocalMealDataSource(cacheDao)
     }
 
     @Provides
@@ -111,11 +59,5 @@ object DataModule {
             localSource,
             remoteSource
         )
-    }
-
-    @Provides
-    @Singleton
-    fun provideAppPreferenceStorage(@ApplicationContext context: Context): PreferenceStorage {
-        return AppPreferenceStorage(context.appPrefDataStore)
     }
 }

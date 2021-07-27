@@ -18,6 +18,7 @@ package com.earlier.yma.data.remote
 import com.earlier.yma.data.MealDataSource
 import com.earlier.yma.data.model.MealResponse
 import com.earlier.yma.data.model.School
+import com.skydoves.sandwich.getOrNull
 
 class RemoteMealDataSource(
     val service: NeisService
@@ -28,7 +29,7 @@ class RemoteMealDataSource(
         date: String,
         type: String
     ): MealResponse? {
-        val response = with(school) {
+        val response = school.run {
             service.getMeal(
                 orgCode,
                 code,
@@ -37,7 +38,8 @@ class RemoteMealDataSource(
             )
         }
 
-        return ResponseParser.parseMealResponse(response)
+        val data = response.getOrNull() ?: return null
+        return ResponseParser.parseMealResponse(data)
     }
 
     override suspend fun write(school: School, date: String, type: String, meal: MealResponse) {

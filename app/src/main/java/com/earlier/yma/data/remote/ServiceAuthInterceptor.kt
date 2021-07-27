@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.earlier.yma.data.local
+package com.earlier.yma.data.remote
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.earlier.yma.data.model.Cache
+import okhttp3.Interceptor
+import okhttp3.Response
 
-@Database(
-    entities = [Cache::class],
-    version = 1,
-    exportSchema = true
-)
-@TypeConverters(value = [MealResponseConverter::class])
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun cacheDao(): CacheDao
+class ServiceAuthInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val newUrl =
+            request
+                .url
+                .newBuilder()
+                .addQueryParameter("TYPE", "json")
+                .addQueryParameter("KEY", "39f312e68dea4568a6a1167bb98ec38c")
+                .build()
+        val newRequest = request.newBuilder().url(newUrl).build()
+        return chain.proceed(newRequest)
+    }
 }
